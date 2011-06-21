@@ -1,0 +1,9 @@
+<stack>
+  <description brief="geographic_info">Geographic information</description>
+  <author>Maintained by Jack O'Quin</author>
+  <license>BSD</license>  
+  <review status="experimental" notes=""/>
+  <url>http://ros.org/wiki/geographic_info</url>
+  <depend stack="common_msgs" />
+  <depend stack="ros" />
+</stack>
