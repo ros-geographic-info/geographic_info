@@ -1,5 +1,4 @@
 # Geographic pose, using the WGS 84 reference ellipsoid.
-# $Id$
 #
 # Orientation uses the East-North-Up (ENU) frame of reference.
 # (But, what about singularities at the poles?)
