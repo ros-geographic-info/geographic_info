@@ -2,6 +2,8 @@
 \mainpage
 \htmlinclude manifest.html
 
-ROS messages for Geographic Information.
+This package provides ROS messages for Geographic Information.  
+
+It has no nodes, utilities, scripts or C++ API.
 
 */

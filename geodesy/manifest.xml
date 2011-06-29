@@ -1,0 +1,16 @@
+<package>
+  <description brief="geodetic coordinate transforms">
+
+     C++ interfaces for manipulating geodetic coordinates.
+
+  </description>
+  <author>Jack O'Quin</author>
+  <license>BSD</license>
+  <review status="experiemental" notes=""/>
+  <url>http://ros.org/wiki/geodesy</url>
+  <depend package="geographic_msgs"/>
+  <depend package="geometry_msgs"/>
+
+</package>
+
+
