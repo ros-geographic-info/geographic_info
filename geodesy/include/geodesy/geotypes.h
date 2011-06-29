@@ -39,12 +39,13 @@
 #define _GEOTYPES_H_
 
 #include <limits>
+#include <ctype.h>
 #include <ros/ros.h>
 #include <geographic_msgs/GeoPoint.h>
 
 /** @file
 
-    @brief Geodetic coordinates interface
+    @brief Geodetic coordinates data types
 
     @author Jack O'Quin
  */
@@ -101,10 +102,26 @@ class GridPoint
   geographic_msgs::GeoPoint toGeoPoint();
 
   /** return true if this point has no altitude */
-  bool isFlat()
+  bool isFlat(void)
   {
     // true if altitude is a NaN
     return (altitude != altitude);
+  }
+
+  /** return true if this point has a valid value */
+  bool isValid(void)
+  {
+    if (zone < 1 || zone > 60)
+      return false;
+
+    if (!isupper(band) || band == 'I' || band == 'O')
+      return false;
+
+    // the Universal Polar Stereographic bands are not currently supported
+    if (band < 'C' || band > 'X')
+      return false;
+
+    return true;
   }
 
   // data members

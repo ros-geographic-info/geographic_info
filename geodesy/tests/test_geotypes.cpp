@@ -53,6 +53,7 @@ TEST(GeoTypes, nullConstructor)
   EXPECT_TRUE(gpt.isFlat());
   EXPECT_EQ(gpt.zone, 0);
   EXPECT_EQ(gpt.band, ' ');
+  EXPECT_FALSE(gpt.isValid());
 }
 
 // Test flat constructor
@@ -69,10 +70,11 @@ TEST(GeoTypes, flatConstructor)
   EXPECT_TRUE(gpt.isFlat());
   EXPECT_EQ(gpt.zone, z);
   EXPECT_EQ(gpt.band, b);
+  EXPECT_TRUE(gpt.isValid());
 }
 
 // Test 3D constructor
-TEST(GeoTypes, altConstructor)
+TEST(GeoTypes, hasAltitude)
 {
   double e = 1000.0;
   double n = 2400.0;
@@ -86,6 +88,60 @@ TEST(GeoTypes, altConstructor)
   EXPECT_FALSE(gpt.isFlat());
   EXPECT_EQ(gpt.zone, z);
   EXPECT_EQ(gpt.band, b);
+  EXPECT_TRUE(gpt.isValid());
+}
+
+// Test zone numbers
+TEST(GeoTypes, testZones)
+{
+  geodesy::GridPoint gpt;
+  gpt.band = 'X';                       // supply a valid band letter
+
+  gpt.zone = 0;
+  EXPECT_FALSE(gpt.isValid());
+
+  gpt.zone = 61;
+  EXPECT_FALSE(gpt.isValid());
+
+  gpt.zone = 255;
+  EXPECT_FALSE(gpt.isValid());
+
+  // these should all work
+  for (uint8_t b = 1; b <= 60; ++b)
+    {
+      gpt.zone = b;
+      EXPECT_TRUE(gpt.isValid());
+    }
+}
+
+// Test band letters
+TEST(GeoTypes, testBands)
+{
+  geodesy::GridPoint gpt;
+  gpt.zone = 14;                        // supply a valid zone number
+  EXPECT_FALSE(gpt.isValid());
+
+  gpt.band = '9';
+  EXPECT_FALSE(gpt.isValid());
+
+  gpt.band = ';';
+  EXPECT_FALSE(gpt.isValid());
+
+  gpt.band = 'I';
+  EXPECT_FALSE(gpt.isValid());
+
+  gpt.band = 'O';
+  EXPECT_FALSE(gpt.isValid());
+
+  gpt.band = 'Y';
+  EXPECT_FALSE(gpt.isValid());
+
+  gpt.band = 'r';
+  EXPECT_FALSE(gpt.isValid());
+
+  // this should work
+  gpt.band = 'X';
+  EXPECT_TRUE(gpt.isValid());
 }
 
 // Run all the tests that were declared with TEST()
