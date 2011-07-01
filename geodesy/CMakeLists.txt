@@ -18,3 +18,4 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 # unit tests
 rosbuild_add_gtest(test_utm tests/test_utm.cpp)
+rosbuild_add_gtest(test_geodetic_system tests/test_geodetic_system.cpp)
