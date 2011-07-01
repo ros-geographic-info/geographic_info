@@ -35,104 +35,64 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-#ifndef _GEOTYPES_H_
-#define _GEOTYPES_H_
+#ifndef _GEODETIC_SYSTEM_H_
+#define _GEODETIC_SYSTEM_H_
 
 #include <limits>
 #include <ctype.h>
 #include <ros/ros.h>
 #include <geographic_msgs/GeoPoint.h>
+#include <geographic_msgs/GeoPose.h>
 
 /** @file
 
-    @brief Geodetic coordinates data types
+    @brief Geodetic system for ROS latitude and longitude messages
 
+    Standard ROS lat/long coordinates are defined in terms of the
+    World Geodetic System (WGS 84) ellipsoid.  Most GPS receivers use
+    WGS 84.
+
+    Many other geodetic datums and ellipsoids are defined.  Those
+    coordinates should always be converted to WGS 84 when publishing
+    ROS messages to avoid confusion among subscribers.
+    
     @author Jack O'Quin
  */
 
 namespace geodesy
 {
 
-/** Military Grid Reference System point. */
-class GridPoint
-{
- public:
-
-  /** null constructor */
-  GridPoint():
-    easting(0.0),
-    northing(0.0),
-    altitude(std::numeric_limits<double>::signaling_NaN()),
-    zone(0),
-    band(' ')
-  {}
-
-  /** copy constructor */
-  GridPoint(const GridPoint &that):
-    easting(that.easting),
-    northing(that.northing),
-    altitude(that.altitude),
-    zone(that.zone),
-    band(that.band)
-  {}
-  
-  /** create from GeoPoint message */
-  GridPoint(geographic_msgs::GeoPoint latlong);
-
-  /** create flat grid point */
-  GridPoint(double _easting, double _northing, uint8_t _zone, char _band):
-    easting(_easting),
-    northing(_northing),
-    altitude(std::numeric_limits<double>::signaling_NaN()),
-    zone(_zone),
-    band(_band)
-  {}
-
-  /** create 3-D grid point */
-  GridPoint(double _easting, double _northing, double _altitude,
-            uint8_t _zone, char _band):
-    easting(_easting),
-    northing(_northing),
-    altitude(_altitude),
-    zone(_zone),
-    band(_band)
-  {}
-
-  /** convert grid point to GeoPoint message */
-  geographic_msgs::GeoPoint toGeoPoint();
-
-  /** return true if this point has no altitude */
-  bool isFlat(void)
+  /** return true if no altitude specified */
+  bool isFlat(const geographic_msgs::GeoPoint &pt)
   {
-    // true if altitude is a NaN
-    return (altitude != altitude);
+    return (pt.altitude != pt.altitude);
   }
 
-  /** return true if this point has a valid value */
-  bool isValid(void)
+  /** return true if pose has no altitude */
+  bool isFlat(const geographic_msgs::GeoPose &pose)
   {
-    if (zone < 1 || zone > 60)
+    return isFlat(pose.position);
+  }
+
+  /** return true if point is valid */
+  bool isValid(const geographic_msgs::GeoPoint &pt)
+  {
+    if (pt.latitude < -90.0 || pt.latitude > 90.0)
       return false;
 
-    if (!isupper(band) || band == 'I' || band == 'O')
-      return false;
-
-    // the Universal Polar Stereographic bands are not currently supported
-    if (band < 'C' || band > 'X')
+    if (pt.longitude < -180.0 || pt.longitude > 180.0)
       return false;
 
     return true;
   }
 
-  // data members
-  double easting;           ///< easting within zone [meters]
-  double northing;          ///< northing within zone [meters] 
-  double altitude;          ///< altitude [meters], NaN if unspecified
-  uint8_t zone;             ///< UTM longitude zone number
-  char   band;              ///< MGRS latitude band letter
-
-}; // class GridPoint
+  /** return true if point is valid */
+  bool isValid(const geographic_msgs::GeoPose &pose)
+  {
+    /// @todo check validity of orientation quaternion
+    return isValid(pose.position);
+  }
 
 }; // namespace geodesy
 
-#endif // _GEOTYPES_H_
+#endif // _GEODETIC_SYSTEM_H_

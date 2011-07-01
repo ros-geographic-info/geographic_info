@@ -34,114 +34,112 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-#include <ros/ros.h>
 #include <gtest/gtest.h>
-#include <geographic_msgs/GeoPoint.h>
-#include "geodesy/geotypes.h"
+#include "geodesy/utm.h"
 
 ///////////////////////////////////////////////////////////////
 // Test cases
 ///////////////////////////////////////////////////////////////
 
 // Test null constructor
-TEST(GeoTypes, nullConstructor)
+TEST(UTMPoint, nullConstructor)
 {
-  geodesy::GridPoint gpt;
+  geodesy::UTMPoint pt;
 
-  EXPECT_EQ(gpt.easting, 0.0);
-  EXPECT_EQ(gpt.northing, 0.0);
-  EXPECT_TRUE(gpt.isFlat());
-  EXPECT_EQ(gpt.zone, 0);
-  EXPECT_EQ(gpt.band, ' ');
-  EXPECT_FALSE(gpt.isValid());
+  EXPECT_EQ(pt.easting, 0.0);
+  EXPECT_EQ(pt.northing, 0.0);
+  EXPECT_TRUE(geodesy::isFlat(pt));
+  EXPECT_EQ(pt.zone, 0);
+  EXPECT_EQ(pt.band, ' ');
+  EXPECT_FALSE(geodesy::isValid(pt));
 }
 
 // Test flat constructor
-TEST(GeoTypes, flatConstructor)
+TEST(UTMPoint, flatConstructor)
 {
   double e = 1000.0;
   double n = 2400.0;
   uint8_t z = 14;
   char b = 'R';
-  geodesy::GridPoint gpt(e, n, z, b);
+  geodesy::UTMPoint pt(e, n, z, b);
 
-  EXPECT_EQ(gpt.easting, e);
-  EXPECT_EQ(gpt.northing, n);
-  EXPECT_TRUE(gpt.isFlat());
-  EXPECT_EQ(gpt.zone, z);
-  EXPECT_EQ(gpt.band, b);
-  EXPECT_TRUE(gpt.isValid());
+  EXPECT_EQ(pt.easting, e);
+  EXPECT_EQ(pt.northing, n);
+  EXPECT_TRUE(geodesy::isFlat(pt));
+  EXPECT_EQ(pt.zone, z);
+  EXPECT_EQ(pt.band, b);
+  EXPECT_TRUE(geodesy::isValid(pt));
 }
 
 // Test 3D constructor
-TEST(GeoTypes, hasAltitude)
+TEST(UTMPoint, hasAltitude)
 {
   double e = 1000.0;
   double n = 2400.0;
   double a = 200.0;
   uint8_t z = 14;
   char b = 'R';
-  geodesy::GridPoint gpt(e, n, a, z, b);
+  geodesy::UTMPoint pt(e, n, a, z, b);
 
-  EXPECT_EQ(gpt.easting, e);
-  EXPECT_EQ(gpt.northing, n);
-  EXPECT_FALSE(gpt.isFlat());
-  EXPECT_EQ(gpt.zone, z);
-  EXPECT_EQ(gpt.band, b);
-  EXPECT_TRUE(gpt.isValid());
+  EXPECT_EQ(pt.easting, e);
+  EXPECT_EQ(pt.northing, n);
+  EXPECT_FALSE(geodesy::isFlat(pt));
+  EXPECT_EQ(pt.zone, z);
+  EXPECT_EQ(pt.band, b);
+  EXPECT_TRUE(geodesy::isValid(pt));
 }
 
 // Test zone numbers
-TEST(GeoTypes, testZones)
+TEST(UTMPoint, testZones)
 {
-  geodesy::GridPoint gpt;
-  gpt.band = 'X';                       // supply a valid band letter
+  geodesy::UTMPoint pt;
+  pt.band = 'X';                        // supply a valid band letter
 
-  gpt.zone = 0;
-  EXPECT_FALSE(gpt.isValid());
+  pt.zone = 0;
+  EXPECT_FALSE(geodesy::isValid(pt));
 
-  gpt.zone = 61;
-  EXPECT_FALSE(gpt.isValid());
+  pt.zone = 61;
+  EXPECT_FALSE(geodesy::isValid(pt));
 
-  gpt.zone = 255;
-  EXPECT_FALSE(gpt.isValid());
+  pt.zone = 255;
+  EXPECT_FALSE(geodesy::isValid(pt));
 
   // these should all work
   for (uint8_t b = 1; b <= 60; ++b)
     {
-      gpt.zone = b;
-      EXPECT_TRUE(gpt.isValid());
+      pt.zone = b;
+      EXPECT_TRUE(geodesy::isValid(pt));
     }
 }
 
 // Test band letters
-TEST(GeoTypes, testBands)
+TEST(UTMPoint, testBands)
 {
-  geodesy::GridPoint gpt;
-  gpt.zone = 14;                        // supply a valid zone number
-  EXPECT_FALSE(gpt.isValid());
+  geodesy::UTMPoint pt;
+  pt.zone = 14;                         // supply a valid zone number
+  EXPECT_FALSE(geodesy::isValid(pt));
 
-  gpt.band = '9';
-  EXPECT_FALSE(gpt.isValid());
+  pt.band = '9';
+  EXPECT_FALSE(geodesy::isValid(pt));
 
-  gpt.band = ';';
-  EXPECT_FALSE(gpt.isValid());
+  pt.band = ';';
+  EXPECT_FALSE(geodesy::isValid(pt));
 
-  gpt.band = 'I';
-  EXPECT_FALSE(gpt.isValid());
+  pt.band = 'I';
+  EXPECT_FALSE(geodesy::isValid(pt));
 
-  gpt.band = 'O';
-  EXPECT_FALSE(gpt.isValid());
+  pt.band = 'O';
+  EXPECT_FALSE(geodesy::isValid(pt));
 
-  gpt.band = 'Y';
-  EXPECT_FALSE(gpt.isValid());
+  pt.band = 'Y';
+  EXPECT_FALSE(geodesy::isValid(pt));
 
-  gpt.band = 'r';
-  EXPECT_FALSE(gpt.isValid());
+  pt.band = 'r';
+  EXPECT_FALSE(geodesy::isValid(pt));
 
   // this should work
-  gpt.band = 'X';
-  EXPECT_TRUE(gpt.isValid());
+  pt.band = 'X';
+  EXPECT_TRUE(geodesy::isValid(pt));
 }
 
 // Run all the tests that were declared with TEST()
