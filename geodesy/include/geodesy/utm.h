@@ -148,6 +148,13 @@ class UTMPose
     position(that.position),
     orientation(that.orientation)
   {}
+
+  /** create from a UTMPoint message and a quaternion */
+  UTMPose(UTMPoint pt,
+          geometry_msgs::Quaternion q):
+    position(pt),
+    orientation(q)
+  {}
   
   /** create from a GeoPose message */
   UTMPose(geographic_msgs::GeoPose pose);
@@ -178,6 +185,13 @@ bool isFlat(const UTMPoint &pt)
   return (pt.altitude != pt.altitude);
 }
 
+/** return true if no altitude specified */
+bool isFlat(const UTMPose &pose)
+{
+  // true if position has no altitude
+  return isFlat(pose.position);
+}
+
 /** return true if point is valid */
 bool isValid(const UTMPoint &pt)
 {
@@ -192,6 +206,17 @@ bool isValid(const UTMPoint &pt)
   // zone number will be ignored).
   if (pt.band < 'C' || pt.band > 'X')
     return false;
+
+  return true;
+}
+
+/** return true if pose is valid */
+bool isValid(const UTMPose &pose)
+{
+  if (!isValid(pose.position))
+    return false;
+
+  /// @todo validate orientation quaternion (should be normalized)
 
   return true;
 }

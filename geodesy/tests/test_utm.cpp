@@ -89,6 +89,25 @@ TEST(UTMPoint, hasAltitude)
   EXPECT_TRUE(geodesy::isValid(pt));
 }
 
+// Test copy constructor
+TEST(UTMPoint, copyConstructor)
+{
+  double e = 1000.0;
+  double n = 2400.0;
+  double a = 200.0;
+  uint8_t z = 14;
+  char b = 'R';
+  geodesy::UTMPoint pt1(e, n, a, z, b);
+  geodesy::UTMPoint pt2(pt1);
+
+  EXPECT_EQ(pt2.easting, e);
+  EXPECT_EQ(pt2.northing, n);
+  EXPECT_FALSE(geodesy::isFlat(pt2));
+  EXPECT_EQ(pt2.zone, z);
+  EXPECT_EQ(pt2.band, b);
+  EXPECT_TRUE(geodesy::isValid(pt2));
+}
+
 // Test zone numbers
 TEST(UTMPoint, testZones)
 {
@@ -140,6 +159,45 @@ TEST(UTMPoint, testBands)
   // this should work
   pt.band = 'X';
   EXPECT_TRUE(geodesy::isValid(pt));
+}
+
+// Test null pose constructor
+TEST(UTMPose, nullConstructor)
+{
+  geodesy::UTMPose pose;
+
+  EXPECT_TRUE(geodesy::isFlat(pose));
+  EXPECT_FALSE(geodesy::isValid(pose));
+}
+
+// Test constructor from UTMPoint and a Quaternion
+TEST(UTMPose, fromPointAndQuaternion)
+{
+  double e = 1000.0;
+  double n = 2400.0;
+  double a = 200.0;
+  uint8_t z = 14;
+  char b = 'R';
+  geodesy::UTMPoint pt(e, n, a, z, b);
+  geometry_msgs::Quaternion q;
+  q.w = 1.0;
+  q.x = 0.0;
+  q.y = 0.0;
+  q.z = 0.0;
+  geodesy::UTMPose pose(pt, q);
+
+  EXPECT_FALSE(geodesy::isFlat(pose));
+  EXPECT_TRUE(geodesy::isValid(pose));
+
+  EXPECT_EQ(pose.position.easting, e);
+  EXPECT_EQ(pose.position.northing, n);
+  EXPECT_EQ(pose.position.zone, z);
+  EXPECT_EQ(pose.position.band, b);
+
+  EXPECT_EQ(pose.orientation.w, q.w);
+  EXPECT_EQ(pose.orientation.x, q.x);
+  EXPECT_EQ(pose.orientation.y, q.y);
+  EXPECT_EQ(pose.orientation.z, q.z);
 }
 
 // Run all the tests that were declared with TEST()
