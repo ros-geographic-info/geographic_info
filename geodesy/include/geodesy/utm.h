@@ -172,10 +172,10 @@ class UTMPose
 
 }; // class UTMPose
 
-/** convert UTM point to geographic point */
+/** transform UTM point to geographic point */
 geographic_msgs::GeoPoint fromUTMPoint(const UTMPoint &pt);
 
-/** convert UTM pose to geographic point */
+/** transform UTM pose to geographic point */
 geographic_msgs::GeoPose fromUTMPose(const UTMPose &pt);
 
 /** return true if no altitude specified */
@@ -221,10 +221,10 @@ bool isValid(const UTMPose &pose)
   return true;
 }
 
-/** convert geographic point to UTM point */
+/** transform geographic point to UTM point */
 UTMPoint toUTMPoint(const geographic_msgs::GeoPoint &pt);
 
-/** convert geographic pose to UTM pose */
+/** transform geographic pose to UTM pose */
 UTMPose toUTMPose(const geographic_msgs::GeoPose &pt);
 
 }; // namespace geodesy

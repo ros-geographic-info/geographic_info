@@ -8,6 +8,7 @@
   <license>BSD</license>
   <review status="experiemental" notes=""/>
   <url>http://ros.org/wiki/geodesy</url>
+  <depend package="angles"/>
   <depend package="geographic_msgs"/>
   <depend package="geometry_msgs"/>
 

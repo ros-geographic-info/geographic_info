@@ -16,6 +16,8 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #set the default path for built libraries to the "lib" directory
 set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
+add_subdirectory(src/conv)
+
 # unit tests
 rosbuild_add_gtest(test_utm tests/test_utm.cpp)
 rosbuild_add_gtest(test_geodetic_system tests/test_geodetic_system.cpp)
