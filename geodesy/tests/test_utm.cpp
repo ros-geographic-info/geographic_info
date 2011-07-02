@@ -48,7 +48,7 @@ TEST(UTMPoint, nullConstructor)
 
   EXPECT_EQ(pt.easting, 0.0);
   EXPECT_EQ(pt.northing, 0.0);
-  EXPECT_TRUE(geodesy::isFlat(pt));
+  EXPECT_TRUE(geodesy::is2D(pt));
   EXPECT_EQ(pt.zone, 0);
   EXPECT_EQ(pt.band, ' ');
   EXPECT_FALSE(geodesy::isValid(pt));
@@ -65,7 +65,7 @@ TEST(UTMPoint, flatConstructor)
 
   EXPECT_EQ(pt.easting, e);
   EXPECT_EQ(pt.northing, n);
-  EXPECT_TRUE(geodesy::isFlat(pt));
+  EXPECT_TRUE(geodesy::is2D(pt));
   EXPECT_EQ(pt.zone, z);
   EXPECT_EQ(pt.band, b);
   EXPECT_TRUE(geodesy::isValid(pt));
@@ -83,7 +83,7 @@ TEST(UTMPoint, hasAltitude)
 
   EXPECT_EQ(pt.easting, e);
   EXPECT_EQ(pt.northing, n);
-  EXPECT_FALSE(geodesy::isFlat(pt));
+  EXPECT_FALSE(geodesy::is2D(pt));
   EXPECT_EQ(pt.zone, z);
   EXPECT_EQ(pt.band, b);
   EXPECT_TRUE(geodesy::isValid(pt));
@@ -102,7 +102,7 @@ TEST(UTMPoint, copyConstructor)
 
   EXPECT_EQ(pt2.easting, e);
   EXPECT_EQ(pt2.northing, n);
-  EXPECT_FALSE(geodesy::isFlat(pt2));
+  EXPECT_FALSE(geodesy::is2D(pt2));
   EXPECT_EQ(pt2.zone, z);
   EXPECT_EQ(pt2.band, b);
   EXPECT_TRUE(geodesy::isValid(pt2));
@@ -166,7 +166,7 @@ TEST(UTMPose, nullConstructor)
 {
   geodesy::UTMPose pose;
 
-  EXPECT_TRUE(geodesy::isFlat(pose));
+  EXPECT_TRUE(geodesy::is2D(pose));
   EXPECT_FALSE(geodesy::isValid(pose));
 }
 
@@ -192,7 +192,7 @@ TEST(UTMConverson, fromLatLongToUtm)
   char b = 'R';
   double abs_err = 0.01;
 
-  EXPECT_FALSE(geodesy::isFlat(pt));
+  EXPECT_FALSE(geodesy::is2D(pt));
   EXPECT_TRUE(geodesy::isValid(pt));
 
   EXPECT_NEAR(pt.easting, e, abs_err);

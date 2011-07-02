@@ -47,7 +47,7 @@ TEST(GeoPoint, nullConstructor)
 {
   geographic_msgs::GeoPoint pt;
 
-  EXPECT_FALSE(geodesy::isFlat(pt));
+  EXPECT_FALSE(geodesy::is2D(pt));
   EXPECT_TRUE(geodesy::isValid(pt));
 }
 
@@ -57,7 +57,7 @@ TEST(GeoPoint, noAltitude)
   geographic_msgs::GeoPoint pt;
 
   pt.altitude = std::numeric_limits<double>::signaling_NaN();
-  EXPECT_TRUE(geodesy::isFlat(pt));
+  EXPECT_TRUE(geodesy::is2D(pt));
 }
 
 // Test point with valid altitude
@@ -66,16 +66,16 @@ TEST(GeoPoint, hasAltitude)
   geographic_msgs::GeoPoint pt;
 
   pt.altitude = 200.0;
-  EXPECT_FALSE(geodesy::isFlat(pt));
+  EXPECT_FALSE(geodesy::is2D(pt));
 
   pt.altitude = -100.0;
-  EXPECT_FALSE(geodesy::isFlat(pt));
+  EXPECT_FALSE(geodesy::is2D(pt));
 
   pt.altitude = 20000.0;
-  EXPECT_FALSE(geodesy::isFlat(pt));
+  EXPECT_FALSE(geodesy::is2D(pt));
 
   pt.altitude = 0.0;
-  EXPECT_FALSE(geodesy::isFlat(pt));
+  EXPECT_FALSE(geodesy::is2D(pt));
 }
 
 // Test valid latitudes and longitudes
@@ -127,7 +127,7 @@ TEST(GeoPose, nullConstructor)
 {
   geographic_msgs::GeoPose pose;
 
-  EXPECT_FALSE(geodesy::isFlat(pose));
+  EXPECT_FALSE(geodesy::is2D(pose));
   EXPECT_TRUE(geodesy::isValid(pose));
 }
 

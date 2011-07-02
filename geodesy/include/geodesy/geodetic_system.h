@@ -63,15 +63,15 @@ namespace geodesy
 {
 
   /** return true if no altitude specified */
-  bool isFlat(const geographic_msgs::GeoPoint &pt)
+  bool is2D(const geographic_msgs::GeoPoint &pt)
   {
     return (pt.altitude != pt.altitude);
   }
 
   /** return true if pose has no altitude */
-  bool isFlat(const geographic_msgs::GeoPose &pose)
+  bool is2D(const geographic_msgs::GeoPose &pose)
   {
-    return isFlat(pose.position);
+    return is2D(pose.position);
   }
 
   /** return true if point is valid */

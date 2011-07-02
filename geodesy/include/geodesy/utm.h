@@ -176,17 +176,17 @@ geographic_msgs::GeoPoint fromUTMPoint(const UTMPoint &pt);
 geographic_msgs::GeoPose fromUTMPose(const UTMPose &pose);
 
 /** @return true if no altitude specified. */
-bool isFlat(const UTMPoint &pt)
+bool is2D(const UTMPoint &pt)
 {
   // true if altitude is a NaN
   return (pt.altitude != pt.altitude);
 }
 
 /** @return true if no altitude specified. */
-bool isFlat(const UTMPose &pose)
+bool is2D(const UTMPose &pose)
 {
   // true if position has no altitude
-  return isFlat(pose.position);
+  return is2D(pose.position);
 }
 
 /** @return true if point is valid. */
