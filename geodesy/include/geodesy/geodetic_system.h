@@ -89,7 +89,7 @@ namespace geodesy
   /** return true if point is valid */
   bool isValid(const geographic_msgs::GeoPose &pose)
   {
-    /// @todo check validity of orientation quaternion
+    /// @todo validate orientation quaternion (should be normalized)
     return isValid(pose.position);
   }
 

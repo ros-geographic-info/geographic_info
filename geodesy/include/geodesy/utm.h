@@ -62,19 +62,23 @@
 namespace geodesy
 {
 
-/** Universal Transverse Mercator (UTM) point
+/** Universal Transverse Mercator (UTM) point.
  *
- *  This representation is more general than pure UTM.  By including
- *  the top-level grid zone designator (GZD) from the Military Grid
- *  Reference System (MGRS), it allows unambiguous use of Universal
- *  Polar Stereographic (UPS) coordinates for the polar regions not
- *  covered by UTM.
+ *  The @c altitude may or may not be specified, making the point
+ *  either 3D or 2D (flattened). The @c altitude of a 2D point is not
+ *  a number (NaN).
+ *
+ *  Including the top-level grid zone designator (GZD) from the
+ *  Military Grid Reference System (MGRS) permits unambiguous use of
+ *  Universal Polar Stereographic (UPS) coordinates for the polar
+ *  regions not covered by UTM, making this representation more
+ *  general than pure UTM.
  */
 class UTMPoint
 {
  public:
 
-  /** null constructor */
+  /** Null constructor. Makes a 2D, invalid point object. */
   UTMPoint():
     easting(0.0),
     northing(0.0),
@@ -83,7 +87,7 @@ class UTMPoint
     band(' ')
   {}
 
-  /** copy constructor */
+  /** Copy constructor. */
   UTMPoint(const UTMPoint &that):
     easting(that.easting),
     northing(that.northing),
@@ -92,10 +96,9 @@ class UTMPoint
     band(that.band)
   {}
   
-  /** create from GeoPoint message */
   UTMPoint(const geographic_msgs::GeoPoint &pt);
 
-  /** create 2-D grid point */
+  /** Create a flattened 2-D grid point. */
   UTMPoint(double _easting, double _northing, uint8_t _zone, char _band):
     easting(_easting),
     northing(_northing),
@@ -104,7 +107,7 @@ class UTMPoint
     band(_band)
   {}
 
-  /** create 3-D grid point */
+  /** Create a 3-D grid point. */
   UTMPoint(double _easting, double _northing, double _altitude,
             uint8_t _zone, char _band):
     easting(_easting),
@@ -123,46 +126,37 @@ class UTMPoint
 
 }; // class UTMPoint
 
-/** Universal Transverse Mercator (UTM) pose
- *
- *  This representation is more general than pure UTM.  By including
- *  the top-level grid zone designator (GZD) from the Military Grid
- *  Reference System (MGRS), it allows unambiguous use of Universal
- *  Polar Stereographic (UPS) coordinates for the polar regions not
- *  covered by UTM.
- *
- *  @todo add Universal Polar Stereographic support
- */
+/** Universal Transverse Mercator (UTM) pose */
 class UTMPose
 {
  public:
 
-  /** null constructor */
+  /** Null constructor. Makes a 2D, invalid pose object. */
   UTMPose():
     position(),
     orientation()
   {}
 
-  /** copy constructor */
+  /** Copy constructor. */
   UTMPose(const UTMPose &that):
     position(that.position),
     orientation(that.orientation)
   {}
-
-  /** create from a UTMPoint message and a quaternion */
-  UTMPose(UTMPoint pt,
-          geometry_msgs::Quaternion q):
-    position(pt),
-    orientation(q)
-  {}
   
-  /** create from a GeoPose message */
+  /** Create from a WGS 84 geodetic pose. */
   UTMPose(const geographic_msgs::GeoPose &pose):
     position(pose.position),
     orientation(pose.orientation)
   {}
 
-  /** create from a GeoPoint message and a quaternion */
+  /** Create from a UTMPoint and a quaternion. */
+  UTMPose(UTMPoint pt,
+          const geometry_msgs::Quaternion &q):
+    position(pt),
+    orientation(q)
+  {}
+
+  /** Create from a WGS 84 geodetic point and a quaternion. */
   UTMPose(const geographic_msgs::GeoPoint &pt,
           const geometry_msgs::Quaternion &q):
     position(pt),
