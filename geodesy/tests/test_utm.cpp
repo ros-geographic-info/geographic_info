@@ -37,6 +37,23 @@
 #include <gtest/gtest.h>
 #include "geodesy/utm.h"
 
+
+///////////////////////////////////////////////////////////////
+// Utility functions
+///////////////////////////////////////////////////////////////
+
+// check that two UTM points are near each other
+void check_utm_near(const geodesy::UTMPoint &pt1,
+                    const geodesy::UTMPoint &pt2,
+                    double abs_err)
+{
+  EXPECT_NEAR(pt1.easting, pt2.easting, abs_err);
+  EXPECT_NEAR(pt1.northing, pt2.northing, abs_err);
+  EXPECT_NEAR(pt1.altitude, pt2.altitude, abs_err);
+  EXPECT_EQ(pt1.zone, pt2.zone);
+  EXPECT_EQ(pt1.band, pt2.band);
+}
+
 ///////////////////////////////////////////////////////////////
 // Test cases
 ///////////////////////////////////////////////////////////////
@@ -170,7 +187,7 @@ TEST(UTMPose, nullConstructor)
   EXPECT_FALSE(geodesy::isValid(pose));
 }
 
-// Test constructor from UTMPoint and a Quaternion
+// Test conversion from WGS 84 to UTM
 TEST(UTMConverson, fromLatLongToUtm)
 {
   // University of Texas, Austin, Pickle Research Campus
@@ -200,6 +217,28 @@ TEST(UTMConverson, fromLatLongToUtm)
   EXPECT_NEAR(pt.altitude, alt, abs_err);
   EXPECT_EQ(pt.zone, z);
   EXPECT_EQ(pt.band, b);
+}
+
+// Test conversion from UTMPoint to WGS 84 and back
+TEST(UTMConverson, fromUtmToLatLongAndBack)
+{
+  // University of Texas, Austin, Pickle Research Campus
+  double e = 500000.0;                  // central meridian of each zone
+  double n = 1000.0;
+  double alt = 100.0;
+  char b = 'N';
+
+  // try every possible zone of longitude
+  for (uint8_t z = 1; z <= 60; ++z)
+    {
+      geodesy::UTMPoint pt1(e, n, alt, z, b);
+      geographic_msgs::GeoPoint ll(geodesy::fromUTMPoint(pt1));
+      geodesy::UTMPoint pt2(ll);
+
+      EXPECT_TRUE(geodesy::isValid(pt1));
+      EXPECT_TRUE(geodesy::isValid(pt2));
+      check_utm_near(pt1, pt2, 0.000001);
+    }
 }
 
 // Run all the tests that were declared with TEST()
