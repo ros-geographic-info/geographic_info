@@ -81,9 +81,11 @@ static char UTMLetterDesignator(double Lat)
   return LetterDesignator;
 }
 
-
-/** create UTM point form GeoPoint message */
-UTMPoint::UTMPoint(geographic_msgs::GeoPoint pt)
+/** Create UTM point from WGS 84 geodetic point.
+ *
+ *  Equations from USGS Bulletin 1532
+ */
+UTMPoint::UTMPoint(const geographic_msgs::GeoPoint &pt)
 {
   double Lat = pt.latitude;
   double Long = pt.longitude;
@@ -160,22 +162,12 @@ UTMPoint::UTMPoint(geographic_msgs::GeoPoint pt)
     }
 }
 
-/**
- *  Convert lat/long to UTM coords.  Equations from USGS Bulletin 1532 
- */
-UTMPoint toUTMPoint(const geographic_msgs::GeoPoint &pt)
-{
-  return UTMPoint(pt);
-}
-
-/**
- * Converts UTM coords to lat/long.  Equations from USGS Bulletin 1532 
+/** Transform UTM point to WGS 84 geodetic point.
+ *
+ *  Equations from USGS Bulletin 1532
  */
 geographic_msgs::GeoPoint fromUTMPoint(const UTMPoint &utm)
 {
-  // static void UTMtoLL(const double UTMNorthing, const double UTMEasting,
-  //                     const char* UTMZone, double& Lat,  double& Long )
-
   //remove 500,000 meter offset for longitude
   double x = utm.easting - 500000.0;
   double y = utm.northing;
@@ -239,6 +231,18 @@ geographic_msgs::GeoPoint fromUTMPoint(const UTMPoint &utm)
   pt.longitude = LongOrigin + angles::to_degrees(pt.longitude);
 
   return pt;
+}
+
+/** Transform WGS 84 geodetic point to UTM point. */
+UTMPoint toUTMPoint(const geographic_msgs::GeoPoint &pt)
+{
+  return UTMPoint(pt);
+}
+
+/** Transform WGS 84 geodetic pose to UTM pose. */
+UTMPose toUTMPose(const geographic_msgs::GeoPose &pose)
+{
+  return UTMPose(pose.position, pose.orientation);
 }
 
 } // end namespace geodesy

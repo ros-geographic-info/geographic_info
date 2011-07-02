@@ -93,7 +93,7 @@ class UTMPoint
   {}
   
   /** create from GeoPoint message */
-  UTMPoint(geographic_msgs::GeoPoint latlong);
+  UTMPoint(const geographic_msgs::GeoPoint &pt);
 
   /** create 2-D grid point */
   UTMPoint(double _easting, double _northing, uint8_t _zone, char _band):
@@ -157,11 +157,14 @@ class UTMPose
   {}
   
   /** create from a GeoPose message */
-  UTMPose(geographic_msgs::GeoPose pose);
+  UTMPose(const geographic_msgs::GeoPose &pose):
+    position(pose.position),
+    orientation(pose.orientation)
+  {}
 
   /** create from a GeoPoint message and a quaternion */
-  UTMPose(geographic_msgs::GeoPoint pt,
-          geometry_msgs::Quaternion q):
+  UTMPose(const geographic_msgs::GeoPoint &pt,
+          const geometry_msgs::Quaternion &q):
     position(pt),
     orientation(q)
   {}
@@ -172,27 +175,27 @@ class UTMPose
 
 }; // class UTMPose
 
-/** transform UTM point to geographic point */
+/** Transform UTM point to WGS 84 geodetic point. */
 geographic_msgs::GeoPoint fromUTMPoint(const UTMPoint &pt);
 
-/** transform UTM pose to geographic point */
-geographic_msgs::GeoPose fromUTMPose(const UTMPose &pt);
+/** Transform UTM pose to WGS 84 geodetic pose. */
+geographic_msgs::GeoPose fromUTMPose(const UTMPose &pose);
 
-/** return true if no altitude specified */
+/** @return true if no altitude specified. */
 bool isFlat(const UTMPoint &pt)
 {
   // true if altitude is a NaN
   return (pt.altitude != pt.altitude);
 }
 
-/** return true if no altitude specified */
+/** @return true if no altitude specified. */
 bool isFlat(const UTMPose &pose)
 {
   // true if position has no altitude
   return isFlat(pose.position);
 }
 
-/** return true if point is valid */
+/** @return true if point is valid. */
 bool isValid(const UTMPoint &pt)
 {
   if (pt.zone < 1 || pt.zone > 60)
@@ -210,7 +213,7 @@ bool isValid(const UTMPoint &pt)
   return true;
 }
 
-/** return true if pose is valid */
+/** @return true if pose is valid. */
 bool isValid(const UTMPose &pose)
 {
   if (!isValid(pose.position))
@@ -221,11 +224,11 @@ bool isValid(const UTMPose &pose)
   return true;
 }
 
-/** transform geographic point to UTM point */
+/** Transform WGS 84 geodetic point to UTM point. */
 UTMPoint toUTMPoint(const geographic_msgs::GeoPoint &pt);
 
-/** transform geographic pose to UTM pose */
-UTMPose toUTMPose(const geographic_msgs::GeoPose &pt);
+/** Transform WGS 84 geodetic pose to UTM pose. */
+UTMPose toUTMPose(const geographic_msgs::GeoPose &pose);
 
 }; // namespace geodesy
 
