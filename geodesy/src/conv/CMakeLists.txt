@@ -1,1 +1,1 @@
-rosbuild_add_library(libgeoconv utm_conversions.cpp)
+rosbuild_add_library(geoconv utm_conversions.cpp)

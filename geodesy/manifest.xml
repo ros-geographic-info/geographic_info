@@ -12,6 +12,11 @@
   <depend package="geographic_msgs"/>
   <depend package="geometry_msgs"/>
 
+  <export>
+    <cpp cflags="-I${prefix}/include"
+         lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lgeoconv"/>
+  </export>
+
 </package>
 
 

@@ -171,33 +171,35 @@ TEST(UTMPose, nullConstructor)
 }
 
 // Test constructor from UTMPoint and a Quaternion
-TEST(UTMPose, fromPointAndQuaternion)
+TEST(UTMConverson, fromLatLongToUtm)
 {
-  double e = 1000.0;
-  double n = 2400.0;
-  double a = 200.0;
+  // University of Texas, Austin, Pickle Research Campus
+  double lat = 30.385315;
+  double lon = -97.728524;
+  double alt = 209.0;
+
+  geographic_msgs::GeoPoint ll;
+  ll.latitude = lat;
+  ll.longitude = lon;
+  ll.altitude = alt;
+
+  // convert point to UTM
+  geodesy::UTMPoint pt(ll);
+
+  double e = 622159.34;
+  double n = 3362168.30;
   uint8_t z = 14;
   char b = 'R';
-  geodesy::UTMPoint pt(e, n, a, z, b);
-  geometry_msgs::Quaternion q;
-  q.w = 1.0;
-  q.x = 0.0;
-  q.y = 0.0;
-  q.z = 0.0;
-  geodesy::UTMPose pose(pt, q);
+  double abs_err = 0.01;
 
-  EXPECT_FALSE(geodesy::isFlat(pose));
-  EXPECT_TRUE(geodesy::isValid(pose));
+  EXPECT_FALSE(geodesy::isFlat(pt));
+  EXPECT_TRUE(geodesy::isValid(pt));
 
-  EXPECT_EQ(pose.position.easting, e);
-  EXPECT_EQ(pose.position.northing, n);
-  EXPECT_EQ(pose.position.zone, z);
-  EXPECT_EQ(pose.position.band, b);
-
-  EXPECT_EQ(pose.orientation.w, q.w);
-  EXPECT_EQ(pose.orientation.x, q.x);
-  EXPECT_EQ(pose.orientation.y, q.y);
-  EXPECT_EQ(pose.orientation.z, q.z);
+  EXPECT_NEAR(pt.easting, e, abs_err);
+  EXPECT_NEAR(pt.northing, n, abs_err);
+  EXPECT_NEAR(pt.altitude, alt, abs_err);
+  EXPECT_EQ(pt.zone, z);
+  EXPECT_EQ(pt.band, b);
 }
 
 // Run all the tests that were declared with TEST()
