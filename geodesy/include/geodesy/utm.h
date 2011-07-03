@@ -169,60 +169,37 @@ class UTMPose
 
 }; // class UTMPose
 
-/** Transform UTM point to WGS 84 geodetic point. */
 geographic_msgs::GeoPoint fromUTMPoint(const UTMPoint &pt);
-
-/** Transform UTM pose to WGS 84 geodetic pose. */
 geographic_msgs::GeoPose fromUTMPose(const UTMPose &pose);
 
 /** @return true if no altitude specified. */
-bool is2D(const UTMPoint &pt)
+inline bool is2D(const UTMPoint &pt)
 {
   // true if altitude is a NaN
   return (pt.altitude != pt.altitude);
 }
 
 /** @return true if no altitude specified. */
-bool is2D(const UTMPose &pose)
+inline bool is2D(const UTMPose &pose)
 {
   // true if position has no altitude
   return is2D(pose.position);
 }
 
-/** @return true if point is valid. */
-bool isValid(const UTMPoint &pt)
-{
-  if (pt.zone < 1 || pt.zone > 60)
-    return false;
-
-  if (!isupper(pt.band) || pt.band == 'I' || pt.band == 'O')
-    return false;
-
-  // The Universal Polar Stereographic bands are not currently
-  // supported.  When they are: A, B, Y and Z will be valid (and the
-  // zone number will be ignored).
-  if (pt.band < 'C' || pt.band > 'X')
-    return false;
-
-  return true;
-}
-
-/** @return true if pose is valid. */
-bool isValid(const UTMPose &pose)
-{
-  if (!isValid(pose.position))
-    return false;
-
-  /// @todo validate orientation quaternion (should be normalized)
-
-  return true;
-}
+bool isValid(const UTMPoint &pt);
+bool isValid(const UTMPose &pose);
 
 /** Transform WGS 84 geodetic point to UTM point. */
-UTMPoint toUTMPoint(const geographic_msgs::GeoPoint &pt);
+inline UTMPoint toUTMPoint(const geographic_msgs::GeoPoint &pt)
+{
+  return UTMPoint(pt);
+}
 
 /** Transform WGS 84 geodetic pose to UTM pose. */
-UTMPose toUTMPose(const geographic_msgs::GeoPose &pose);
+inline UTMPose toUTMPose(const geographic_msgs::GeoPose &pose)
+{
+  return UTMPose(pose.position, pose.orientation);
+}
 
 }; // namespace geodesy
 

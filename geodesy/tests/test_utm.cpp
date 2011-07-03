@@ -71,7 +71,7 @@ TEST(UTMPoint, nullConstructor)
   EXPECT_FALSE(geodesy::isValid(pt));
 }
 
-// Test flat constructor
+// Test 2D constructor
 TEST(UTMPoint, flatConstructor)
 {
   double e = 1000.0;
@@ -80,12 +80,13 @@ TEST(UTMPoint, flatConstructor)
   char b = 'R';
   geodesy::UTMPoint pt(e, n, z, b);
 
+  EXPECT_TRUE(geodesy::is2D(pt));
+  EXPECT_TRUE(geodesy::isValid(pt));
+
   EXPECT_EQ(pt.easting, e);
   EXPECT_EQ(pt.northing, n);
-  EXPECT_TRUE(geodesy::is2D(pt));
   EXPECT_EQ(pt.zone, z);
   EXPECT_EQ(pt.band, b);
-  EXPECT_TRUE(geodesy::isValid(pt));
 }
 
 // Test 3D constructor
@@ -98,12 +99,13 @@ TEST(UTMPoint, hasAltitude)
   char b = 'R';
   geodesy::UTMPoint pt(e, n, a, z, b);
 
+  EXPECT_FALSE(geodesy::is2D(pt));
+  EXPECT_TRUE(geodesy::isValid(pt));
+
   EXPECT_EQ(pt.easting, e);
   EXPECT_EQ(pt.northing, n);
-  EXPECT_FALSE(geodesy::is2D(pt));
   EXPECT_EQ(pt.zone, z);
   EXPECT_EQ(pt.band, b);
-  EXPECT_TRUE(geodesy::isValid(pt));
 }
 
 // Test copy constructor
@@ -117,12 +119,13 @@ TEST(UTMPoint, copyConstructor)
   geodesy::UTMPoint pt1(e, n, a, z, b);
   geodesy::UTMPoint pt2(pt1);
 
+  EXPECT_FALSE(geodesy::is2D(pt2));
+  EXPECT_TRUE(geodesy::isValid(pt2));
+
   EXPECT_EQ(pt2.easting, e);
   EXPECT_EQ(pt2.northing, n);
-  EXPECT_FALSE(geodesy::is2D(pt2));
   EXPECT_EQ(pt2.zone, z);
   EXPECT_EQ(pt2.band, b);
-  EXPECT_TRUE(geodesy::isValid(pt2));
 }
 
 // Test zone numbers
@@ -187,6 +190,38 @@ TEST(UTMPose, nullConstructor)
   EXPECT_FALSE(geodesy::isValid(pose));
 }
 
+// Test pose copy constructor
+TEST(UTMPose, copyConstructor)
+{
+  double e = 1000.0;
+  double n = 2400.0;
+  double a = 200.0;
+  uint8_t z = 14;
+  char b = 'R';
+  geodesy::UTMPoint pt(e, n, a, z, b);
+
+  geometry_msgs::Quaternion q;
+  q.w = 1.0;
+  q.x = 0.0;
+  q.y = 0.0;
+  q.z = 0.0;
+  geodesy::UTMPose pose(pt, q);
+
+  EXPECT_FALSE(geodesy::is2D(pose));
+  EXPECT_TRUE(geodesy::isValid(pose));
+
+  EXPECT_EQ(pose.position.easting, pt.easting);
+  EXPECT_EQ(pose.position.northing, pt.northing);
+  EXPECT_EQ(pose.position.altitude, pt.altitude);
+  EXPECT_EQ(pose.position.zone, pt.zone);
+  EXPECT_EQ(pose.position.band, pt.band);
+
+  EXPECT_EQ(pose.orientation.w, q.w);
+  EXPECT_EQ(pose.orientation.x, q.x);
+  EXPECT_EQ(pose.orientation.y, q.y);
+  EXPECT_EQ(pose.orientation.z, q.z);
+}
+
 // Test conversion from WGS 84 to UTM
 TEST(UTMConverson, fromLatLongToUtm)
 {
@@ -222,7 +257,6 @@ TEST(UTMConverson, fromLatLongToUtm)
 // Test conversion from UTMPoint to WGS 84 and back
 TEST(UTMConverson, fromUtmToLatLongAndBack)
 {
-  // University of Texas, Austin, Pickle Research Campus
   double e = 500000.0;                  // central meridian of each zone
   double n = 1000.0;
   double alt = 100.0;
