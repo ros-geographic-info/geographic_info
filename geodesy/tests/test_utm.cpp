@@ -128,6 +128,38 @@ TEST(UTMPoint, copyConstructor)
   EXPECT_EQ(pt2.band, b);
 }
 
+// Test UTM point constructor from WGS 84
+TEST(UTMPoint, fromLatLong)
+{
+  // University of Texas, Austin, Pickle Research Campus
+  double lat = 30.385315;
+  double lon = -97.728524;
+  double alt = 209.0;
+
+  geographic_msgs::GeoPoint ll;
+  ll.latitude = lat;
+  ll.longitude = lon;
+  ll.altitude = alt;
+
+  // convert point to UTM
+  geodesy::UTMPoint pt(ll);
+
+  double e = 622159.34;
+  double n = 3362168.30;
+  uint8_t z = 14;
+  char b = 'R';
+  double abs_err = 0.01;
+
+  EXPECT_FALSE(geodesy::is2D(pt));
+  EXPECT_TRUE(geodesy::isValid(pt));
+
+  EXPECT_NEAR(pt.easting, e, abs_err);
+  EXPECT_NEAR(pt.northing, n, abs_err);
+  EXPECT_NEAR(pt.altitude, alt, abs_err);
+  EXPECT_EQ(pt.zone, z);
+  EXPECT_EQ(pt.band, b);
+}
+
 // Test zone numbers
 TEST(UTMPoint, testZones)
 {
@@ -222,40 +254,10 @@ TEST(UTMPose, copyConstructor)
   EXPECT_EQ(pose.orientation.z, q.z);
 }
 
-// Test conversion from WGS 84 to UTM
-TEST(UTMConverson, fromLatLongToUtm)
-{
-  // University of Texas, Austin, Pickle Research Campus
-  double lat = 30.385315;
-  double lon = -97.728524;
-  double alt = 209.0;
-
-  geographic_msgs::GeoPoint ll;
-  ll.latitude = lat;
-  ll.longitude = lon;
-  ll.altitude = alt;
-
-  // convert point to UTM
-  geodesy::UTMPoint pt(ll);
-
-  double e = 622159.34;
-  double n = 3362168.30;
-  uint8_t z = 14;
-  char b = 'R';
-  double abs_err = 0.01;
-
-  EXPECT_FALSE(geodesy::is2D(pt));
-  EXPECT_TRUE(geodesy::isValid(pt));
-
-  EXPECT_NEAR(pt.easting, e, abs_err);
-  EXPECT_NEAR(pt.northing, n, abs_err);
-  EXPECT_NEAR(pt.altitude, alt, abs_err);
-  EXPECT_EQ(pt.zone, z);
-  EXPECT_EQ(pt.band, b);
-}
-
+#if 0
 // Test conversion from UTMPoint to WGS 84 and back
-TEST(UTMConverson, fromUtmToLatLongAndBack)
+// uses DEPRECATED fromUTMPoint() interface
+TEST(UTMConversion, fromUtmToLatLongAndBack)
 {
   double e = 500000.0;                  // central meridian of each zone
   double n = 1000.0;
@@ -274,8 +276,9 @@ TEST(UTMConverson, fromUtmToLatLongAndBack)
       check_utm_near(pt1, pt2, 0.000001);
     }
 }
+#endif
 
-// Test conversion from UTMPoint to WGS 84 and back
+// Test conversion from UTM to WGS 84 and back
 TEST(UTMConvert, fromUtmToLatLongAndBack)
 {
   double e = 500000.0;                  // central meridian of each zone
@@ -289,12 +292,40 @@ TEST(UTMConvert, fromUtmToLatLongAndBack)
       geodesy::UTMPoint pt1(e, n, alt, z, b);
       geographic_msgs::GeoPoint ll;
       convert(pt1, ll);
-      geodesy::UTMPoint pt2(ll);
+      geodesy::UTMPoint pt2;
       convert(ll, pt2);
 
       EXPECT_TRUE(geodesy::isValid(pt1));
       EXPECT_TRUE(geodesy::isValid(pt2));
       check_utm_near(pt1, pt2, 0.000001);
+    }
+}
+
+// Test conversion from WGS 84 to UTM and back
+TEST(UTMConvert, fromLatLongToUtmAndBack)
+{
+  double alt = 100.0;
+
+  // try every possible degree of latitude and longitude
+  for (double lon = -180.0; lon < 180.0; lon += 1.0)
+    {
+      for (double lat = -80.0; lat < 84.0; lat += 2.0)
+        {
+          geographic_msgs::GeoPoint pt1;
+          pt1.latitude = lat;
+          pt1.longitude = lon;
+          pt1.altitude = alt;
+
+          geodesy::UTMPoint utm;
+          convert(pt1, utm);
+          EXPECT_TRUE(geodesy::isValid(utm));
+
+          geographic_msgs::GeoPoint pt2;
+          convert(utm, pt2);
+          EXPECT_NEAR(pt1.latitude,  pt2.latitude,  0.0000001);
+          EXPECT_NEAR(pt1.longitude, pt2.longitude, 0.0000012);
+          EXPECT_NEAR(pt1.altitude,  pt2.altitude,  0.000001);
+        }
     }
 }
 
