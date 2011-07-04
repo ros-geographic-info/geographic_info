@@ -306,10 +306,12 @@ TEST(UTMConvert, fromLatLongToUtmAndBack)
 {
   double alt = 100.0;
 
-  // try every possible degree of latitude and longitude
-  for (double lon = -180.0; lon < 180.0; lon += 1.0)
+  // Try every possible degree of latitude and longitude. Avoid the
+  // international date line. Even though the converted longitude is
+  // close, it may end up less than -180 and hence inValid().
+  for (double lon = -179.5; lon < 180.0; lon += 1.0)
     {
-      for (double lat = -80.0; lat < 84.0; lat += 2.0)
+      for (double lat = -80.0; lat <= 84.0; lat += 1.0)
         {
           geographic_msgs::GeoPoint pt1;
           pt1.latitude = lat;
@@ -322,10 +324,44 @@ TEST(UTMConvert, fromLatLongToUtmAndBack)
 
           geographic_msgs::GeoPoint pt2;
           convert(utm, pt2);
+          EXPECT_TRUE(geodesy::isValid(pt2));
           EXPECT_NEAR(pt1.latitude,  pt2.latitude,  0.0000001);
           EXPECT_NEAR(pt1.longitude, pt2.longitude, 0.0000012);
           EXPECT_NEAR(pt1.altitude,  pt2.altitude,  0.000001);
         }
+    }
+}
+
+// Test conversion from WGS 84 to UTM and back at international date line
+TEST(UTMConvert, internationalDateLine)
+{
+  double alt = 100.0;
+  double lon = -180.0;
+
+  for (double lat = -80.0; lat <= 84.0; lat += 1.0)
+    {
+      geographic_msgs::GeoPoint pt1;
+      pt1.latitude = lat;
+      pt1.longitude = lon;
+      pt1.altitude = alt;
+
+      geodesy::UTMPoint utm;
+      convert(pt1, utm);
+      EXPECT_TRUE(geodesy::isValid(utm));
+
+      geographic_msgs::GeoPoint pt2;
+      convert(utm, pt2);
+      EXPECT_TRUE(geodesy::isValid(pt2));
+      EXPECT_NEAR(pt1.latitude,  pt2.latitude,  0.0000001);
+      EXPECT_NEAR(pt1.altitude,  pt2.altitude,  0.000001);
+
+      if (pt2.longitude - pt1.longitude > 359.0)
+        {
+          // pt2 seems to be slightly across the international date
+          // line from pt2, so de-normalize it
+          pt2.longitude -= 360.0;
+        }
+      EXPECT_NEAR(pt1.longitude, pt2.longitude, 0.0000012);
     }
 }
 

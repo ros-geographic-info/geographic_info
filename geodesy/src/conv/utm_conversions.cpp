@@ -111,6 +111,8 @@ static char UTMLetterDesignator(double Lat)
 /** Convert UTM point to WGS 84 geodetic point.
  *
  *  Equations from USGS Bulletin 1532
+ *  
+ *  @bug does not normalize resulting longitude to [-180, 180]
  */
 void convert(const UTMPoint &utm, geographic_msgs::GeoPoint &pt)
 {
@@ -174,6 +176,13 @@ void convert(const UTMPoint &utm, geographic_msgs::GeoPoint &pt)
                    *D*D*D*D*D/120)
                   / cos(phi1Rad));
   pt.longitude = LongOrigin + angles::to_degrees(pt.longitude);
+
+  // Normalize longitude to valid range, it could be fraction of a
+  // degree over the international date line.
+  if (pt.longitude < -180.0)
+    pt.longitude += 360.0;
+  else if (pt.longitude > 180.0)
+    pt.longitude -= 360.0;
 }
 
 
