@@ -63,34 +63,49 @@ namespace geodesy
 {
 
   /** @return true if no altitude specified. */
-  inline bool is2D(const geographic_msgs::GeoPoint &pt)
+  static inline bool is2D(const geographic_msgs::GeoPoint &pt)
   {
     return (pt.altitude != pt.altitude);
   }
 
   /** @return true if pose has no altitude. */
-  inline bool is2D(const geographic_msgs::GeoPose &pose)
+  static inline bool is2D(const geographic_msgs::GeoPose &pose)
   {
     return is2D(pose.position);
   }
 
   /** @return true if point is valid. */
-  bool isValid(const geographic_msgs::GeoPoint &pt)
+  static inline bool isValid(const geographic_msgs::GeoPoint &pt)
   {
     if (pt.latitude < -90.0 || pt.latitude > 90.0)
       return false;
 
-    if (pt.longitude < -180.0 || pt.longitude > 180.0)
+    if (pt.longitude < -180.0 || pt.longitude >= 180.0)
       return false;
 
     return true;
   }
 
   /** @return true if point is valid. */
-  bool isValid(const geographic_msgs::GeoPose &pose)
+  static inline bool isValid(const geographic_msgs::GeoPose &pose)
   {
     /// @todo validate orientation quaternion (should be normalized)
     return isValid(pose.position);
+  }
+
+  /** normalize
+   *
+   *  @param pt point to be normalized
+   *
+   *  Normalizes the longitude to [-180, 180).
+   *  Clamps latitude to [-90, 90].
+   */
+  static inline void normalize(geographic_msgs::GeoPoint &pt)
+  {
+    pt.longitude = (fmod(fmod((pt.longitude + 180.0), 360.0) + 360.0,
+                         360.0)
+                    - 180.0);
+    pt.latitude = std::min(std::max(pt.latitude, -90.0), 90.0);
   }
 
 }; // namespace geodesy

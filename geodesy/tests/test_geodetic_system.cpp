@@ -39,6 +39,22 @@
 #include "geodesy/geodetic_system.h"
 
 ///////////////////////////////////////////////////////////////
+// Utility functions
+///////////////////////////////////////////////////////////////
+
+// check that normalize of lat1, lon1 yields lat2, lon2
+void check_normalize(double lat1, double lon1, double lat2, double lon2)
+{
+ double epsilon = 1e-9;
+ geographic_msgs::GeoPoint pt;
+ pt.latitude = lat1;
+ pt.longitude = lon1;
+ geodesy::normalize(pt);
+ EXPECT_NEAR(lat2, pt.latitude, epsilon);
+ EXPECT_NEAR(lon2, pt.longitude, epsilon);
+}
+
+///////////////////////////////////////////////////////////////
 // Test cases
 ///////////////////////////////////////////////////////////////
 
@@ -93,9 +109,6 @@ TEST(GeoPoint, validLatLong)
   pt.longitude = -97.0;
   EXPECT_TRUE(geodesy::isValid(pt));
 
-  pt.longitude = 180.0;
-  EXPECT_TRUE(geodesy::isValid(pt));
-
   pt.longitude = -180.0;
   EXPECT_TRUE(geodesy::isValid(pt));
 }
@@ -115,11 +128,82 @@ TEST(GeoPoint, invalidLatLong)
   pt.longitude = -1000.0;
   EXPECT_FALSE(geodesy::isValid(pt));
 
+  pt.longitude = 180.0;
+  EXPECT_FALSE(geodesy::isValid(pt));
+
   pt.longitude = 180.0001;
   EXPECT_FALSE(geodesy::isValid(pt));
 
   pt.longitude = -180.999;
   EXPECT_FALSE(geodesy::isValid(pt));
+}
+
+TEST(GeoPoint, normalize)
+{
+ check_normalize(0, 0, 0, 0);
+
+ // longitude range
+ check_normalize(0, 90,  0, 90);
+ check_normalize(0, 180, 0, -180);
+ check_normalize(0, 270, 0, -90);
+ check_normalize(0, 360, 0, 0);
+ check_normalize(0, 450, 0, 90);
+ check_normalize(0, 540, 0, -180);
+ check_normalize(0, 630, 0, -90);
+ check_normalize(0, 720, 0, 0);
+
+ check_normalize(0, -90,  0, -90);
+ check_normalize(0, -180, 0, -180);
+ check_normalize(0, -270, 0, 90);
+ check_normalize(0, -360, 0, 0);
+ check_normalize(0, -450, 0, -90);
+ check_normalize(0, -540, 0, -180);
+ check_normalize(0, -630, 0, 90);
+ check_normalize(0, -720, 0, 0);
+
+ check_normalize(0, 45,   0, 45);
+ check_normalize(0, 135,  0, 135);
+ check_normalize(0, 225,  0, -135);
+ check_normalize(0, 315,  0, -45);
+
+ check_normalize(0, -45,   0, -45);
+ check_normalize(0, -135,  0, -135);
+ check_normalize(0, -225,  0, 135);
+ check_normalize(0, -315,  0, 45);
+
+ check_normalize(0, 91,  0, 91);
+ check_normalize(0, 181, 0, -179);
+ check_normalize(0, 271, 0, -89);
+ check_normalize(0, 361, 0, 1);
+ check_normalize(0, 451, 0, 91);
+
+ check_normalize(0, -91,  0, -91);
+ check_normalize(0, -181, 0, 179);
+ check_normalize(0, -271, 0, 89);
+ check_normalize(0, -361, 0, -1);
+ check_normalize(0, -451, 0, -91);
+
+ // latitude range
+ check_normalize(15, 0, 15, 0);
+ check_normalize(30, 0, 30, 0);
+ check_normalize(45, 0, 45, 0);
+ check_normalize(60, 0, 60, 0);
+ check_normalize(75, 0, 75, 0);
+ check_normalize(90, 0, 90, 0);
+ check_normalize(105, 0, 90, 0);
+ check_normalize(89.999999, 0, 89.999999, 0);
+ check_normalize(90.000001, 0, 90, 0);
+
+ check_normalize(-15, 0, -15, 0);
+ check_normalize(-30, 0, -30, 0);
+ check_normalize(-45, 0, -45, 0);
+ check_normalize(-60, 0, -60, 0);
+ check_normalize(-75, 0, -75, 0);
+ check_normalize(-90, 0, -90, 0);
+ check_normalize(-105, 0, -90, 0);
+ check_normalize(-89.999999, 0, -89.999999, 0);
+ check_normalize(-90.000001, 0, -90, 0);
+
 }
 
 // Test null pose constructor

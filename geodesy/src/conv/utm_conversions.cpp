@@ -74,12 +74,12 @@ namespace geodesy
 
 
 /**
- * Determine the correct UTM letter designator for the
- * given latitude.  (Does not handle UPS zones: A, B, Y, Z).
+ * Determine the correct UTM band letter for the given latitude.
+ * (Does not currently handle polar (UPS) zones: A, B, Y, Z).
  *
  * @return ' ' if latitude is outside the UTM limits of +84 to -80
  */
-static char UTMLetterDesignator(double Lat)
+static char UTMBand(double Lat, double Lon)
 {
   char LetterDesignator;
 
@@ -105,6 +105,7 @@ static char UTMLetterDesignator(double Lat)
   else if((-72 > Lat) && (Lat >= -80)) LetterDesignator = 'C';
   // '_' is an error flag, the Latitude is outside the UTM limits
   else LetterDesignator = ' ';
+
   return LetterDesignator;
 }
 
@@ -206,7 +207,8 @@ void convert(const geographic_msgs::GeoPoint &from, UTMPoint &to)
   double eccPrimeSquared;
   double N, T, C, A, M;
 	
-  //Make sure the longitude is between -180.00 .. 179.9
+  // Make sure the longitude is between -180.00 .. 179.9
+  // (JOQ: this is broken for Long < -180, do a real normalize)
   double LongTemp = (Long+180)-int((Long+180)/360)*360-180;
   double LatRad = angles::from_degrees(Lat);
   double LongRad = angles::from_degrees(LongTemp);
@@ -231,7 +233,7 @@ void convert(const geographic_msgs::GeoPoint &from, UTMPoint &to)
   LongOriginRad = angles::from_degrees(LongOrigin);
 
   // compute the UTM band from the latitude
-  to.band = UTMLetterDesignator(Lat);
+  to.band = UTMBand(Lat, LongTemp);
 #if 0
   if (to.band == ' ')
     throw std::range_error;
