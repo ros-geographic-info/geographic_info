@@ -49,12 +49,12 @@
     @brief Geodetic system for ROS latitude and longitude messages
 
     Standard ROS lat/long coordinates are defined in terms of the
-    World Geodetic System (WGS 84) ellipsoid.  Most GPS receivers use
-    WGS 84.
+    World Geodetic System (WGS 84) ellipsoid used by most navigation
+    satellite receivers.
 
-    Many other geodetic datums and ellipsoids are defined.  Those
-    coordinates should always be converted to WGS 84 when publishing
-    ROS messages to avoid confusion among subscribers.
+    Many other geodetic coordinate systems can be defined.  They
+    should always be converted to WGS 84 when publishing ROS messages
+    to avoid confusion among subscribers.
     
     @author Jack O'Quin
  */

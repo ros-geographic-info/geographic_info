@@ -169,6 +169,13 @@ class UTMPose
 
 }; // class UTMPose
 
+// conversion functions
+void convert(const UTMPoint &from, geographic_msgs::GeoPoint &to);
+void convert(const UTMPose &from, geographic_msgs::GeoPose &to);
+void convert(const geographic_msgs::GeoPoint &from, UTMPoint &to);
+void convert(const geographic_msgs::GeoPose &from, UTMPose &to);
+
+// deprecated conversions:
 geographic_msgs::GeoPoint fromUTMPoint(const UTMPoint &pt);
 geographic_msgs::GeoPose fromUTMPose(const UTMPose &pose);
 
@@ -188,6 +195,8 @@ inline bool is2D(const UTMPose &pose)
 
 bool isValid(const UTMPoint &pt);
 bool isValid(const UTMPose &pose);
+
+// deprecated conversions:
 
 /** Transform WGS 84 geodetic point to UTM point. */
 inline UTMPoint toUTMPoint(const geographic_msgs::GeoPoint &pt)

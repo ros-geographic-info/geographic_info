@@ -275,6 +275,29 @@ TEST(UTMConverson, fromUtmToLatLongAndBack)
     }
 }
 
+// Test conversion from UTMPoint to WGS 84 and back
+TEST(UTMConvert, fromUtmToLatLongAndBack)
+{
+  double e = 500000.0;                  // central meridian of each zone
+  double n = 1000.0;
+  double alt = 100.0;
+  char b = 'N';
+
+  // try every possible zone of longitude
+  for (uint8_t z = 1; z <= 60; ++z)
+    {
+      geodesy::UTMPoint pt1(e, n, alt, z, b);
+      geographic_msgs::GeoPoint ll;
+      convert(pt1, ll);
+      geodesy::UTMPoint pt2(ll);
+      convert(ll, pt2);
+
+      EXPECT_TRUE(geodesy::isValid(pt1));
+      EXPECT_TRUE(geodesy::isValid(pt2));
+      check_utm_near(pt1, pt2, 0.000001);
+    }
+}
+
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {
