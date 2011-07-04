@@ -112,14 +112,15 @@ static char UTMBand(double Lat, double Lon)
 /** Convert UTM point to WGS 84 geodetic point.
  *
  *  Equations from USGS Bulletin 1532
- *  
- *  @bug does not normalize resulting longitude to [-180, 180]
+ *
+ *  @param from WGS 84 point message.
+ *  @param to UTM point.
  */
-void convert(const UTMPoint &utm, geographic_msgs::GeoPoint &pt)
+void convert(const UTMPoint &from, geographic_msgs::GeoPoint &to)
 {
   //remove 500,000 meter offset for longitude
-  double x = utm.easting - 500000.0;
-  double y = utm.northing;
+  double x = from.easting - 500000.0;
+  double y = from.northing;
 
   double k0 = UTM_K0;
   double a = WGS84_A;
@@ -131,7 +132,7 @@ void convert(const UTMPoint &utm, geographic_msgs::GeoPoint &pt)
   double mu, phi1, phi1Rad;
   int NorthernHemisphere; //1 for northern hemispher, 0 for southern
 
-  if((utm.band - 'N') >= 0)
+  if((from.band - 'N') >= 0)
     {
       //point is in northern hemisphere
       NorthernHemisphere = 1;
@@ -145,7 +146,7 @@ void convert(const UTMPoint &utm, geographic_msgs::GeoPoint &pt)
     }
 
   //+3 puts origin in middle of zone
-  LongOrigin = (utm.zone - 1)*6 - 180 + 3;
+  LongOrigin = (from.zone - 1)*6 - 180 + 3;
   eccPrimeSquared = (eccSquared)/(1-eccSquared);
 
   M = y / k0;
@@ -164,26 +165,22 @@ void convert(const UTMPoint &utm, geographic_msgs::GeoPoint &pt)
   D = x/(N1*k0);
 
   // function result
-  pt.altitude = utm.altitude;
-  pt.latitude =
+  to.altitude = from.altitude;
+  to.latitude =
     phi1Rad - ((N1*tan(phi1Rad)/R1)
                *(D*D/2
                  -(5+3*T1+10*C1-4*C1*C1-9*eccPrimeSquared)*D*D*D*D/24
                  +(61+90*T1+298*C1+45*T1*T1-252*eccPrimeSquared
                    -3*C1*C1)*D*D*D*D*D*D/720));
-  pt.latitude = angles::to_degrees(pt.latitude);
-  pt.longitude = ((D-(1+2*T1+C1)*D*D*D/6
+  to.latitude = angles::to_degrees(to.latitude);
+  to.longitude = ((D-(1+2*T1+C1)*D*D*D/6
                    +(5-2*C1+28*T1-3*C1*C1+8*eccPrimeSquared+24*T1*T1)
                    *D*D*D*D*D/120)
                   / cos(phi1Rad));
-  pt.longitude = LongOrigin + angles::to_degrees(pt.longitude);
+  to.longitude = LongOrigin + angles::to_degrees(to.longitude);
 
-  // Normalize longitude to valid range, it could be fraction of a
-  // degree over the international date line.
-  if (pt.longitude < -180.0)
-    pt.longitude += 360.0;
-  else if (pt.longitude > 180.0)
-    pt.longitude -= 360.0;
+  // Normalize latitude and longitude to valid ranges.
+  normalize(to);
 }
 
 
@@ -277,93 +274,6 @@ UTMPoint::UTMPoint(const geographic_msgs::GeoPoint &pt)
   convert(pt, *this);
 }
 
-/** Transform UTM point to WGS 84 geodetic point.
- *
- *  @deprecated
- *
- *  Equations from USGS Bulletin 1532
- */
-geographic_msgs::GeoPoint fromUTMPoint(const UTMPoint &utm)
-{
-  //remove 500,000 meter offset for longitude
-  double x = utm.easting - 500000.0;
-  double y = utm.northing;
-
-  double k0 = UTM_K0;
-  double a = WGS84_A;
-  double eccSquared = UTM_E2;
-  double eccPrimeSquared;
-  double e1 = (1-sqrt(1-eccSquared))/(1+sqrt(1-eccSquared));
-  double N1, T1, C1, R1, D, M;
-  double LongOrigin;
-  double mu, phi1, phi1Rad;
-  int NorthernHemisphere; //1 for northern hemispher, 0 for southern
-
-  if((utm.band - 'N') >= 0)
-    {
-      //point is in northern hemisphere
-      NorthernHemisphere = 1;
-    }
-  else
-    {
-      //point is in southern hemisphere
-      NorthernHemisphere = 0;
-      //remove 10,000,000 meter offset used for southern hemisphere
-      y -= 10000000.0;
-    }
-
-  //+3 puts origin in middle of zone
-  LongOrigin = (utm.zone - 1)*6 - 180 + 3;
-  eccPrimeSquared = (eccSquared)/(1-eccSquared);
-
-  M = y / k0;
-  mu = M/(a*(1-eccSquared/4-3*eccSquared*eccSquared/64
-             -5*eccSquared*eccSquared*eccSquared/256));
-
-  phi1Rad = mu + ((3*e1/2-27*e1*e1*e1/32)*sin(2*mu) 
-                  + (21*e1*e1/16-55*e1*e1*e1*e1/32)*sin(4*mu)
-                  + (151*e1*e1*e1/96)*sin(6*mu));
-  phi1 = angles::to_degrees(phi1Rad);
-
-  N1 = a/sqrt(1-eccSquared*sin(phi1Rad)*sin(phi1Rad));
-  T1 = tan(phi1Rad)*tan(phi1Rad);
-  C1 = eccPrimeSquared*cos(phi1Rad)*cos(phi1Rad);
-  R1 = a*(1-eccSquared)/pow(1-eccSquared*sin(phi1Rad)*sin(phi1Rad), 1.5);
-  D = x/(N1*k0);
-
-  // function result
-  geographic_msgs::GeoPoint pt;
-  pt.altitude = utm.altitude;
-  pt.latitude =
-    phi1Rad - ((N1*tan(phi1Rad)/R1)
-               *(D*D/2
-                 -(5+3*T1+10*C1-4*C1*C1-9*eccPrimeSquared)*D*D*D*D/24
-                 +(61+90*T1+298*C1+45*T1*T1-252*eccPrimeSquared
-                   -3*C1*C1)*D*D*D*D*D*D/720));
-  pt.latitude = angles::to_degrees(pt.latitude);
-  pt.longitude = ((D-(1+2*T1+C1)*D*D*D/6
-                   +(5-2*C1+28*T1-3*C1*C1+8*eccPrimeSquared+24*T1*T1)
-                   *D*D*D*D*D/120)
-                  / cos(phi1Rad));
-  pt.longitude = LongOrigin + angles::to_degrees(pt.longitude);
-
-  return pt;
-}
-
-/** Transform UTM pose to WGS 84 geodetic pose.
- *
- *  @deprecated
- *
- *  @todo define the orientation transformation properly
- */
-geographic_msgs::GeoPose fromUTMPose(const UTMPose &utm)
-{
-  geographic_msgs::GeoPose pose;
-  pose.position = fromUTMPoint(utm.position);
-  pose.orientation = utm.orientation;
-  return pose;
-}
-
 /** @return true if point is valid. */
 bool isValid(const UTMPoint &pt)
 {
@@ -380,6 +290,32 @@ bool isValid(const UTMPoint &pt)
     return false;
 
   return true;
+}
+
+/** Convert UTM pose to WGS 84 geodetic pose.
+ *
+ *  @param from UTM pose.
+ *  @param to WGS 84 pose message.
+ *
+ *  @todo define the orientation transformation properly
+ */
+void convert(const UTMPose &from, geographic_msgs::GeoPose &to)
+{
+  convert(from.position, to.position);
+  to.orientation = from.orientation;
+}
+
+/** Convert WGS 84 geodetic pose to UTM pose.
+ *
+ *  @param from WGS 84 pose message.
+ *  @param to UTM pose.
+ *
+ *  @todo define the orientation transformation properly
+ */
+void convert(const geographic_msgs::GeoPose &from, UTMPose &to)
+{
+  convert(from.position, to.position);
+  to.orientation = from.orientation;
 }
 
 /** @return true if pose is valid. */

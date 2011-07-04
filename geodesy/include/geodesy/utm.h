@@ -175,12 +175,6 @@ void convert(const UTMPose &from, geographic_msgs::GeoPose &to);
 void convert(const geographic_msgs::GeoPoint &from, UTMPoint &to);
 void convert(const geographic_msgs::GeoPose &from, UTMPose &to);
 
-#if 0
-// deprecated conversions:
-geographic_msgs::GeoPoint fromUTMPoint(const UTMPoint &pt);
-geographic_msgs::GeoPose fromUTMPose(const UTMPose &pose);
-#endif
-
 /** @return true if no altitude specified. */
 static inline bool is2D(const UTMPoint &pt)
 {
@@ -211,21 +205,6 @@ static inline void normalize(UTMPoint &pt)
   normalize(ll);
   convert(ll, pt);
 }
-
-// deprecated conversions:
-#if 0
-/** Transform WGS 84 geodetic point to UTM point. */
-inline UTMPoint toUTMPoint(const geographic_msgs::GeoPoint &pt)
-{
-  return UTMPoint(pt);
-}
-
-/** Transform WGS 84 geodetic pose to UTM pose. */
-inline UTMPose toUTMPose(const geographic_msgs::GeoPose &pose)
-{
-  return UTMPose(pose.position, pose.orientation);
-}
-#endif
 
 }; // namespace geodesy
 
