@@ -43,10 +43,11 @@
 #include <ros/ros.h>
 #include <geographic_msgs/GeoPoint.h>
 #include <geographic_msgs/GeoPose.h>
+#include <sensor_msgs/NavSatFix.h>
 
 /** @file
 
-    @brief Geodetic system for ROS latitude and longitude messages
+    @brief WGS 84 geodetic system for ROS latitude and longitude messages
 
     Standard ROS lat/long coordinates are defined in terms of the
     World Geodetic System (WGS 84) ellipsoid used by most navigation
@@ -61,6 +62,37 @@
 
 namespace geodesy
 {
+  /** @return a 2D WGS 84 geodetic point message */
+  static inline geographic_msgs::GeoPoint toMsg(double lat, double lon)
+  {
+    geographic_msgs::GeoPoint pt;
+    pt.latitude = lat;
+    pt.longitude = lon;
+    pt.altitude = std::numeric_limits<double>::signaling_NaN();
+    return pt;
+  }
+
+  /** @return a 3D WGS 84 geodetic point message */
+  static inline geographic_msgs::GeoPoint toMsg(double lat,
+                                                double lon,
+                                                double alt)
+  {
+    geographic_msgs::GeoPoint pt;
+    pt.latitude = lat;
+    pt.longitude = lon;
+    pt.altitude = alt;
+    return pt;
+  }
+
+  /** @return a WGS 84 geodetic point message from a NavSatFix */
+  static inline geographic_msgs::GeoPoint toMsg(sensor_msgs::NavSatFix fix)
+  {
+    geographic_msgs::GeoPoint pt;
+    pt.latitude = fix.latitude;
+    pt.longitude = fix.longitude;
+    pt.altitude = fix.altitude;
+    return pt;
+  }
 
   /** @return true if no altitude specified. */
   static inline bool is2D(const geographic_msgs::GeoPoint &pt)

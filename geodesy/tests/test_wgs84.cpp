@@ -70,18 +70,35 @@ TEST(GeoPoint, nullConstructor)
 // Test point with no altitude
 TEST(GeoPoint, noAltitude)
 {
-  geographic_msgs::GeoPoint pt;
-
-  pt.altitude = std::numeric_limits<double>::signaling_NaN();
+  geographic_msgs::GeoPoint pt(geodesy::toMsg(0.0, 0.0));
   EXPECT_TRUE(geodesy::is2D(pt));
+}
+
+// Test creating point from NavSatFix message
+TEST(GeoPoint, fromNavSatFix)
+{
+  double lat = 30.0;
+  double lon = -97.0;
+  double alt = 208.0;
+  sensor_msgs::NavSatFix fix;
+  fix.latitude = lat;
+  fix.longitude = lon;
+  fix.altitude = alt;
+
+  geographic_msgs::GeoPoint pt(geodesy::toMsg(fix));
+
+  EXPECT_FALSE(geodesy::is2D(pt));
+  EXPECT_TRUE(geodesy::isValid(pt));
+
+  EXPECT_EQ(pt.latitude, lat);
+  EXPECT_EQ(pt.longitude, lon);
+  EXPECT_EQ(pt.altitude, alt);
 }
 
 // Test point with valid altitude
 TEST(GeoPoint, hasAltitude)
 {
-  geographic_msgs::GeoPoint pt;
-
-  pt.altitude = 200.0;
+  geographic_msgs::GeoPoint pt(geodesy::toMsg(30.0, 206.0, -97.0));
   EXPECT_FALSE(geodesy::is2D(pt));
 
   pt.altitude = -100.0;
@@ -107,6 +124,9 @@ TEST(GeoPoint, validLatLong)
 
   pt.latitude = 30.0;
   pt.longitude = -97.0;
+  EXPECT_TRUE(geodesy::isValid(pt));
+
+  pt.longitude = 179.999999;
   EXPECT_TRUE(geodesy::isValid(pt));
 
   pt.longitude = -180.0;
