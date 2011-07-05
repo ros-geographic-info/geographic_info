@@ -36,7 +36,7 @@
 
 #include <gtest/gtest.h>
 #include <limits>
-#include "geodesy/geodetic_system.h"
+#include "geodesy/wgs84.h"
 
 ///////////////////////////////////////////////////////////////
 // Utility functions

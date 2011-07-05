@@ -21,4 +21,4 @@ add_subdirectory(src/conv)
 # unit tests
 rosbuild_add_gtest(test_utm tests/test_utm.cpp)
 target_link_libraries(test_utm geoconv)
-rosbuild_add_gtest(test_geodetic_system tests/test_geodetic_system.cpp)
+rosbuild_add_gtest(test_wgs84 tests/test_wgs84.cpp)

@@ -41,7 +41,7 @@
 #include <limits>
 #include <ctype.h>
 #include <ros/ros.h>
-#include <geodesy/geodetic_system.h>
+#include <geodesy/wgs84.h>
 
 /** @file
 

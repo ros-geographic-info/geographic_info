@@ -35,8 +35,8 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-#ifndef _GEODETIC_SYSTEM_H_
-#define _GEODETIC_SYSTEM_H_
+#ifndef _WGS84_H_
+#define _WGS84_H_
 
 #include <limits>
 #include <ctype.h>
@@ -102,12 +102,11 @@ namespace geodesy
    */
   static inline void normalize(geographic_msgs::GeoPoint &pt)
   {
-    pt.longitude = (fmod(fmod((pt.longitude + 180.0), 360.0) + 360.0,
-                         360.0)
-                    - 180.0);
+    pt.longitude =
+      (fmod(fmod((pt.longitude + 180.0), 360.0) + 360.0, 360.0) - 180.0);
     pt.latitude = std::min(std::max(pt.latitude, -90.0), 90.0);
   }
 
 }; // namespace geodesy
 
-#endif // _GEODETIC_SYSTEM_H_
+#endif // _WGS84_H_
