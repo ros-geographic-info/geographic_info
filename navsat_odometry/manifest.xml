@@ -13,7 +13,7 @@
   <depend package="geodesy"/>
   <depend package="geographic_msgs"/>
   <depend package="geometry_msgs"/>
-  <depend package="navigation_msgs"/>
+  <depend package="nav_msgs"/>
   <depend package="sensor_msgs"/>
   <depend package="tf"/>
 
