@@ -1,0 +1,22 @@
+<package>
+  <description brief="Navigation satellite odometry">
+
+    A nodelet for publishing Odometry and transforms from navigation
+    satellite fixes and IMU.
+
+  </description>
+  <author>Jack O'Quin</author>
+  <license>BSD</license>
+  <review status="experimental" notes=""/>
+  <url>http://ros.org/wiki/navsat_odometry</url>
+
+  <depend package="geodesy"/>
+  <depend package="geographic_msgs"/>
+  <depend package="geometry_msgs"/>
+  <depend package="navigation_msgs"/>
+  <depend package="sensor_msgs"/>
+  <depend package="tf"/>
+
+</package>
+
+
