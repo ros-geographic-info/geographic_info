@@ -114,9 +114,9 @@ static char UTMBand(double Lat, double Lon)
  *  Equations from USGS Bulletin 1532
  *
  *  @param from WGS 84 point message.
- *  @param to UTM point.
+ *  @return UTM point.
  */
-void convert(const UTMPoint &from, geographic_msgs::GeoPoint &to)
+geographic_msgs::GeoPoint toMsg(const UTMPoint &from)
 {
   //remove 500,000 meter offset for longitude
   double x = from.easting - 500000.0;
@@ -165,6 +165,7 @@ void convert(const UTMPoint &from, geographic_msgs::GeoPoint &to)
   D = x/(N1*k0);
 
   // function result
+  geographic_msgs::GeoPoint to;
   to.altitude = from.altitude;
   to.latitude =
     phi1Rad - ((N1*tan(phi1Rad)/R1)
@@ -181,8 +182,8 @@ void convert(const UTMPoint &from, geographic_msgs::GeoPoint &to)
 
   // Normalize latitude and longitude to valid ranges.
   normalize(to);
+  return to;
 }
-
 
 /** Convert WGS 84 geodetic point to UTM point.
  *
@@ -191,7 +192,7 @@ void convert(const UTMPoint &from, geographic_msgs::GeoPoint &to)
  *  @param from WGS 84 point message.
  *  @param to UTM point.
  */
-void convert(const geographic_msgs::GeoPoint &from, UTMPoint &to)
+void fromMsg(const geographic_msgs::GeoPoint &from, UTMPoint &to)
 {
   double Lat = from.latitude;
   double Long = from.longitude;
@@ -268,12 +269,6 @@ void convert(const geographic_msgs::GeoPoint &from, UTMPoint &to)
     }
 }
 
-/** Create UTM point from WGS 84 geodetic point. */
-UTMPoint::UTMPoint(const geographic_msgs::GeoPoint &pt)
-{
-  convert(pt, *this);
-}
-
 /** @return true if point is valid. */
 bool isValid(const UTMPoint &pt)
 {
@@ -291,18 +286,11 @@ bool isValid(const UTMPoint &pt)
 
   return true;
 }
-
-/** Convert UTM pose to WGS 84 geodetic pose.
- *
- *  @param from UTM pose.
- *  @param to WGS 84 pose message.
- *
- *  @todo define the orientation transformation properly
- */
-void convert(const UTMPose &from, geographic_msgs::GeoPose &to)
+ 
+/** Create UTM point from WGS 84 geodetic point. */
+UTMPoint::UTMPoint(const geographic_msgs::GeoPoint &pt)
 {
-  convert(from.position, to.position);
-  to.orientation = from.orientation;
+  fromMsg(pt, *this);
 }
 
 /** Convert WGS 84 geodetic pose to UTM pose.
@@ -312,9 +300,9 @@ void convert(const UTMPose &from, geographic_msgs::GeoPose &to)
  *
  *  @todo define the orientation transformation properly
  */
-void convert(const geographic_msgs::GeoPose &from, UTMPose &to)
+void fromMsg(const geographic_msgs::GeoPose &from, UTMPose &to)
 {
-  convert(from.position, to.position);
+  fromMsg(from.position, to.position);
   to.orientation = from.orientation;
 }
 

@@ -62,36 +62,48 @@
 
 namespace geodesy
 {
-  /** @return a 2D WGS 84 geodetic point message */
-  static inline geographic_msgs::GeoPoint toMsg(double lat, double lon)
+  /** Convert any coordinate to any other via intermediate WGS 84
+   *  message representation.
+   *
+   *  @author Tully Foote
+   *
+   *  @note Every coordinate type @b must implement fromMsg() and
+   *        toMsg() functions for both points and poses.
+   */
+  template <class From, class To>
+  void convert(const From &from, To &to)
   {
-    geographic_msgs::GeoPoint pt;
-    pt.latitude = lat;
-    pt.longitude = lon;
-    pt.altitude = std::numeric_limits<double>::signaling_NaN();
-    return pt;
+    fromMsg(toMsg(from), to);
   }
 
-  /** @return a 3D WGS 84 geodetic point message */
-  static inline geographic_msgs::GeoPoint toMsg(double lat,
-                                                double lon,
-                                                double alt)
+  /** Convert any coordinate to itself. */
+  template <class Same>
+  void convert(const Same &from, Same &to)
   {
-    geographic_msgs::GeoPoint pt;
-    pt.latitude = lat;
-    pt.longitude = lon;
-    pt.altitude = alt;
-    return pt;
+    if (&from != &to)
+      to = from;
   }
 
-  /** @return a WGS 84 geodetic point message from a NavSatFix */
-  static inline geographic_msgs::GeoPoint toMsg(sensor_msgs::NavSatFix fix)
+  /** Convert one WGS 84 geodetic point to another.
+   *
+   *  @param from WGS 84 point message.
+   *  @param to another point.
+   */
+  static inline void fromMsg(const geographic_msgs::GeoPoint &from,
+                             geographic_msgs::GeoPoint &to)
   {
-    geographic_msgs::GeoPoint pt;
-    pt.latitude = fix.latitude;
-    pt.longitude = fix.longitude;
-    pt.altitude = fix.altitude;
-    return pt;
+    convert(from, to);
+  }
+
+  /** Convert one WGS 84 geodetic pose to another.
+   *
+   *  @param from WGS 84 pose message.
+   *  @param to another pose.
+   */
+  static inline void fromMsg(const geographic_msgs::GeoPose &from,
+                             geographic_msgs::GeoPose &to)
+  {
+    convert(from, to);
   }
 
   /** @return true if no altitude specified. */
@@ -125,9 +137,9 @@ namespace geodesy
     return isValid(pose.position);
   }
 
-  /** normalize
+  /** Normalize a WGS 84 geodetic point.
    *
-   *  @param pt point to be normalized
+   *  @param pt point to normalize.
    *
    *  Normalizes the longitude to [-180, 180).
    *  Clamps latitude to [-90, 90].
@@ -137,6 +149,52 @@ namespace geodesy
     pt.longitude =
       (fmod(fmod((pt.longitude + 180.0), 360.0) + 360.0, 360.0) - 180.0);
     pt.latitude = std::min(std::max(pt.latitude, -90.0), 90.0);
+  }
+
+  /** @return a 2D WGS 84 geodetic point message. */
+  static inline geographic_msgs::GeoPoint toMsg(double lat, double lon)
+  {
+    geographic_msgs::GeoPoint pt;
+    pt.latitude = lat;
+    pt.longitude = lon;
+    pt.altitude = std::numeric_limits<double>::signaling_NaN();
+    return pt;
+  }
+
+  /** @return a 3D WGS 84 geodetic point message. */
+  static inline geographic_msgs::GeoPoint
+    toMsg(double lat, double lon, double alt)
+  {
+    geographic_msgs::GeoPoint pt;
+    pt.latitude = lat;
+    pt.longitude = lon;
+    pt.altitude = alt;
+    return pt;
+  }
+
+  /** @return a WGS 84 geodetic point message from a NavSatFix. */
+  static inline geographic_msgs::GeoPoint
+    toMsg(const sensor_msgs::NavSatFix &fix)
+  {
+    geographic_msgs::GeoPoint pt;
+    pt.latitude = fix.latitude;
+    pt.longitude = fix.longitude;
+    pt.altitude = fix.altitude;
+    return pt;
+  }
+
+  /** @return a WGS 84 geodetic point message from another. */
+  static inline geographic_msgs::GeoPoint
+    toMsg(const geographic_msgs::GeoPoint &from)
+  {
+    return from;
+  }
+
+  /** @return a WGS 84 geodetic pose message from another. */
+  static inline geographic_msgs::GeoPose
+    toMsg(const geographic_msgs::GeoPose &from)
+  {
+    return from;
   }
 
 }; // namespace geodesy

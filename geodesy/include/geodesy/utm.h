@@ -170,10 +170,10 @@ class UTMPose
 }; // class UTMPose
 
 // conversion functions
-void convert(const UTMPoint &from, geographic_msgs::GeoPoint &to);
-void convert(const UTMPose &from, geographic_msgs::GeoPose &to);
-void convert(const geographic_msgs::GeoPoint &from, UTMPoint &to);
-void convert(const geographic_msgs::GeoPose &from, UTMPose &to);
+void fromMsg(const geographic_msgs::GeoPoint &from, UTMPoint &to);
+void fromMsg(const geographic_msgs::GeoPose &from, UTMPose &to);
+geographic_msgs::GeoPoint toMsg(const UTMPoint &from);
+geographic_msgs::GeoPose toMsg(const UTMPose &from);
 
 /** @return true if no altitude specified. */
 static inline bool is2D(const UTMPoint &pt)
@@ -196,14 +196,13 @@ bool isValid(const UTMPose &pose);
  *
  *  @param pt point to be normalized
  *
- *  Ensures the point is within its canonical zone and band.
+ *  Ensures the point is within its canonical zone and band square.
  */
 static inline void normalize(UTMPoint &pt)
 {
-  geographic_msgs::GeoPoint ll;
-  convert(pt, ll);
+  geographic_msgs::GeoPoint ll(toMsg(pt));
   normalize(ll);
-  convert(ll, pt);
+  fromMsg(ll, pt);
 }
 
 }; // namespace geodesy

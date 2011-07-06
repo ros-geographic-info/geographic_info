@@ -141,7 +141,7 @@ TEST(UTMPoint, fromLatLong)
   ll.longitude = lon;
   ll.altitude = alt;
 
-  // convert point to UTM
+  // create UTM from point
   geodesy::UTMPoint pt(ll);
 
   double e = 622159.34;
@@ -254,30 +254,6 @@ TEST(UTMPose, copyConstructor)
   EXPECT_EQ(pose.orientation.z, q.z);
 }
 
-#if 0
-// Test conversion from UTMPoint to WGS 84 and back
-// uses DEPRECATED fromUTMPoint() interface
-TEST(UTMConversion, fromUtmToLatLongAndBack)
-{
-  double e = 500000.0;                  // central meridian of each zone
-  double n = 1000.0;
-  double alt = 100.0;
-  char b = 'N';
-
-  // try every possible zone of longitude
-  for (uint8_t z = 1; z <= 60; ++z)
-    {
-      geodesy::UTMPoint pt1(e, n, alt, z, b);
-      geographic_msgs::GeoPoint ll(geodesy::fromUTMPoint(pt1));
-      geodesy::UTMPoint pt2(ll);
-
-      EXPECT_TRUE(geodesy::isValid(pt1));
-      EXPECT_TRUE(geodesy::isValid(pt2));
-      check_utm_near(pt1, pt2, 0.000001);
-    }
-}
-#endif
-
 // Test conversion from UTM to WGS 84 and back
 TEST(UTMConvert, fromUtmToLatLongAndBack)
 {
@@ -313,18 +289,15 @@ TEST(UTMConvert, fromLatLongToUtmAndBack)
     {
       for (double lat = -80.0; lat <= 84.0; lat += 1.0)
         {
-          geographic_msgs::GeoPoint pt1;
-          pt1.latitude = lat;
-          pt1.longitude = lon;
-          pt1.altitude = alt;
+          geographic_msgs::GeoPoint pt1(geodesy::toMsg(lat, lon, alt));
+          EXPECT_TRUE(geodesy::isValid(pt1));
 
-          geodesy::UTMPoint utm;
-          convert(pt1, utm);
+          geodesy::UTMPoint utm(pt1);
           EXPECT_TRUE(geodesy::isValid(utm));
 
-          geographic_msgs::GeoPoint pt2;
-          convert(utm, pt2);
+          geographic_msgs::GeoPoint pt2(geodesy::toMsg(utm));
           EXPECT_TRUE(geodesy::isValid(pt2));
+
           EXPECT_NEAR(pt1.latitude,  pt2.latitude,  0.0000001);
           EXPECT_NEAR(pt1.longitude, pt2.longitude, 0.0000012);
           EXPECT_NEAR(pt1.altitude,  pt2.altitude,  0.000001);
@@ -340,17 +313,14 @@ TEST(UTMConvert, internationalDateLine)
 
   for (double lat = -80.0; lat <= 84.0; lat += 1.0)
     {
-      geographic_msgs::GeoPoint pt1;
-      pt1.latitude = lat;
-      pt1.longitude = lon;
-      pt1.altitude = alt;
+      geographic_msgs::GeoPoint pt1(geodesy::toMsg(lat, lon, alt));
+      EXPECT_TRUE(geodesy::isValid(pt1));
 
       geodesy::UTMPoint utm;
-      convert(pt1, utm);
+      geodesy::fromMsg(pt1, utm);
       EXPECT_TRUE(geodesy::isValid(utm));
 
-      geographic_msgs::GeoPoint pt2;
-      convert(utm, pt2);
+      geographic_msgs::GeoPoint pt2(geodesy::toMsg(utm));
       EXPECT_TRUE(geodesy::isValid(pt2));
       EXPECT_NEAR(pt1.latitude,  pt2.latitude,  0.0000001);
       EXPECT_NEAR(pt1.altitude,  pt2.altitude,  0.000001);
