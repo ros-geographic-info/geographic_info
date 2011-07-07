@@ -42,29 +42,51 @@
 
     @brief ROS class for generating odometry from navigation satellite
            data.
+
+@par Subscribes
+
+ - @b gps (sensor_msgs/NavSatFix): Satellite position fix.
+
+ - @b imu (sensor_msgs/Imu): Inertial measurements.
+
+@par Publishes
+
+ - @b odom (nav_msgs/Odometry): Current estimate of robot position and
+velocity in three dimensions, including roll, pitch, and yaw.  All
+data are in the @b /odom frame of reference, location in UTM coordinates.
+
+ - @b tf: broadcast transform from @b /base_link frame to @b /odom frame.
+
 */
 
-namespace navsat_odom
-{
+using namespace navsat_odom;
 
-/** Navigation satellite odometry implementation. */
-  NavSatOdom::NavSatOdom(ros::NodeHandle node, ros::NodeHandle priv_nh):
-    node_(node),
-    priv_nh_(priv_nh)
+/** Navigation satellite odometry constructor. */
+NavSatOdom::NavSatOdom(ros::NodeHandle node, ros::NodeHandle priv_nh):
+  node_(node),
+  priv_nh_(priv_nh)
 {
-};
+  // connect to ROS topics
+  // no delay: we always want the most recent data
+  ros::TransportHints noDelay = ros::TransportHints().tcpNoDelay(true);
 
-/** Odometry initialization.
- *
- *  @note MUST return immediately.
- */
-void NavSatOdom::setup(void)
-{
+  gps_sub_ =
+    node_.subscribe("gps", 1, &NavSatOdom::processImu, this, noDelay);
+  imu_sub_ =
+    node_.subscribe("imu", 1, &NavSatOdom::processGps, this, noDelay);
+
+  odom_pub_ = node_.advertise<nav_msgs::Odometry>("odom", 1);
+  // setup tf::TransformBroadcaster odom_broadcaster_;
 }
 
-/** Odometry shutdown. */
-void NavSatOdom::shutdown(void)
+/** Navigation satellite message callback */
+void NavSatOdom::processGps(const sensor_msgs::NavSatFix::ConstPtr &msgIn)
 {
+  gps_msg_ = *msgIn;
 }
 
-} // namespace navsat_odom
+/** Inertial measurement message callback */
+void NavSatOdom::processImu(const sensor_msgs::Imu::ConstPtr &msgIn)
+{
+  imu_msg_ = *msgIn;
+}

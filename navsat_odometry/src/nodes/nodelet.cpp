@@ -55,11 +55,7 @@ namespace navsat_odom
   {
   public:
     NavSatOdomNodelet() {};
-    ~NavSatOdomNodelet()
-    {
-      if (odom_)
-        odom_->shutdown();
-    };
+    ~NavSatOdomNodelet() {};
 
   private:
     virtual void onInit();
@@ -77,7 +73,6 @@ namespace navsat_odom
     ros::NodeHandle priv_nh(getPrivateNodeHandle());
     ros::NodeHandle node(getNodeHandle());
     odom_.reset(new NavSatOdom(node, priv_nh));
-    odom_->setup();
   }
 
 } // namespace navsat_odom

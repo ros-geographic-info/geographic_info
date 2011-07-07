@@ -62,13 +62,24 @@ public:
   // public methods
   NavSatOdom(ros::NodeHandle node, ros::NodeHandle priv_nh);
   ~NavSatOdom();
-  void setup(void);
-  void shutdown(void);
 
 private:
 
+  // subscription callbacks
+  void processGps(const sensor_msgs::NavSatFix::ConstPtr &msgIn);
+  void processImu(const sensor_msgs::Imu::ConstPtr &msgIn);
+
   ros::NodeHandle node_;                // node handle
   ros::NodeHandle priv_nh_;             // private node handle
+
+  ros::Subscriber gps_sub_;             // NavSatFix message subscriber
+  ros::Subscriber imu_sub_;             // Imu message subscriber
+
+  ros::Publisher odom_pub_;
+  //tf::TransformBroadcaster odom_broadcaster_;
+
+  sensor_msgs::NavSatFix gps_msg_;
+  sensor_msgs::Imu       imu_msg_;
 
 }; // end class NavSatOdom
 
