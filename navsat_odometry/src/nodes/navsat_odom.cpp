@@ -79,13 +79,6 @@ NavSatOdom::NavSatOdom(ros::NodeHandle node, ros::NodeHandle priv_nh):
   // setup tf::TransformBroadcaster odom_broadcaster_;
 }
 
-/** @return true if there are new GPS and IMU data to publish. */
-bool NavSatOdom::haveNewData(void)
-{
-  /// @todo check that both messages have arrived recently
-  return true;
-}
-
 /** Navigation satellite message callback. */
 void NavSatOdom::processGps(const sensor_msgs::NavSatFix::ConstPtr &msgIn)
 {
