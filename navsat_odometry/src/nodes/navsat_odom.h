@@ -1,3 +1,4 @@
+/* -*- mode: C++ -*- */
 /* $Id$ */
 
 /*********************************************************************
@@ -34,15 +35,19 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
+#ifndef _NAVSAT_ODOM_H_
+#define _NAVSAT_ODOM_H_
+
 #include <ros/ros.h>
-#include <pluginlib/class_list_macros.h>
-#include <nodelet/nodelet.h>
+#include <nav_msgs/Odometry.h>
+#include <sensor_msgs/Imu.h>
+#include <sensor_msgs/NavSatFix.h>
 
 #include "navsat_odom.h"
 
 /** @file
 
-    @brief ROS nodelet for generating odometry from navigation
+    @brief ROS class interface for generating odometry from navigation
            satellite data.
 
 */
@@ -50,40 +55,23 @@
 namespace navsat_odom
 {
 
-  /** Navigation satellite odometry nodelet. */
-  class NavSatOdomNodelet: public nodelet::Nodelet
-  {
-  public:
-    NavSatOdomNodelet() {};
-    ~NavSatOdomNodelet()
-    {
-      if (odom_)
-        odom_->shutdown();
-    };
+class NavSatOdom
+{
+public:
 
-  private:
-    virtual void onInit();
+  // public methods
+  NavSatOdom(ros::NodeHandle node, ros::NodeHandle priv_nh);
+  ~NavSatOdom();
+  void setup(void);
+  void shutdown(void);
 
-    /** navigation satellite odometry */
-    boost::shared_ptr<navsat_odom::NavSatOdom> odom_;
-  };
+private:
 
-  /** Nodelet initialization.
-   *
-   *  @note MUST return immediately.
-   */
-  void NavSatOdomNodelet::onInit()
-  {
-    ros::NodeHandle priv_nh(getPrivateNodeHandle());
-    ros::NodeHandle node(getNodeHandle());
-    odom_.reset(new NavSatOdom(node, priv_nh));
-    odom_->setup();
-  }
+  ros::NodeHandle node_;                // node handle
+  ros::NodeHandle priv_nh_;             // private node handle
 
-} // namespace navsat_odom
+}; // end class NavSatOdom
 
-// Register this plugin with pluginlib.  Names must match nodelet_velodyne.xml.
-//
-// parameters are: package, class name, class type, base class type
-PLUGINLIB_DECLARE_CLASS(navsat_odom, nodelet,
-                        navsat_odom::NavSatOdomNodelet, nodelet::Nodelet);
+}; // end namespace navsat_odom
+
+#endif // _NAVSAT_ODOM_H_

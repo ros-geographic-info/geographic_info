@@ -35,55 +35,36 @@
 *********************************************************************/
 
 #include <ros/ros.h>
-#include <pluginlib/class_list_macros.h>
-#include <nodelet/nodelet.h>
 
 #include "navsat_odom.h"
 
 /** @file
 
-    @brief ROS nodelet for generating odometry from navigation
-           satellite data.
-
+    @brief ROS class for generating odometry from navigation satellite
+           data.
 */
 
 namespace navsat_odom
 {
 
-  /** Navigation satellite odometry nodelet. */
-  class NavSatOdomNodelet: public nodelet::Nodelet
-  {
-  public:
-    NavSatOdomNodelet() {};
-    ~NavSatOdomNodelet()
-    {
-      if (odom_)
-        odom_->shutdown();
-    };
+/** Navigation satellite odometry implementation. */
+  NavSatOdom::NavSatOdom(ros::NodeHandle node, ros::NodeHandle priv_nh):
+    node_(node),
+    priv_nh_(priv_nh)
+{
+};
 
-  private:
-    virtual void onInit();
+/** Odometry initialization.
+ *
+ *  @note MUST return immediately.
+ */
+void NavSatOdom::setup(void)
+{
+}
 
-    /** navigation satellite odometry */
-    boost::shared_ptr<navsat_odom::NavSatOdom> odom_;
-  };
-
-  /** Nodelet initialization.
-   *
-   *  @note MUST return immediately.
-   */
-  void NavSatOdomNodelet::onInit()
-  {
-    ros::NodeHandle priv_nh(getPrivateNodeHandle());
-    ros::NodeHandle node(getNodeHandle());
-    odom_.reset(new NavSatOdom(node, priv_nh));
-    odom_->setup();
-  }
+/** Odometry shutdown. */
+void NavSatOdom::shutdown(void)
+{
+}
 
 } // namespace navsat_odom
-
-// Register this plugin with pluginlib.  Names must match nodelet_velodyne.xml.
-//
-// parameters are: package, class name, class type, base class type
-PLUGINLIB_DECLARE_CLASS(navsat_odom, nodelet,
-                        navsat_odom::NavSatOdomNodelet, nodelet::Nodelet);
