@@ -49,9 +49,9 @@
 
     @brief WGS 84 geodetic system for ROS latitude and longitude messages
 
-    Standard ROS lat/long coordinates are defined in terms of the
-    World Geodetic System (WGS 84) ellipsoid used by most navigation
-    satellite receivers.
+    Standard ROS latitude and longitude coordinates are defined in
+    terms of the World Geodetic System (WGS 84) ellipsoid used by most
+    navigation satellite receivers.
 
     Many other geodetic coordinate systems can be defined.  They
     should always be converted to WGS 84 when publishing ROS messages
@@ -63,7 +63,7 @@
 namespace geodesy
 {
   /** Convert any coordinate to any other via intermediate WGS 84
-   *  message representation.
+   *  representation.
    *
    *  @author Tully Foote
    *
@@ -188,6 +188,19 @@ namespace geodesy
     toMsg(const geographic_msgs::GeoPoint &from)
   {
     return from;
+  }
+
+  /** @return a WGS 84 geodetic pose message from a point and a
+   *          quaternion.
+   */
+  static inline geographic_msgs::GeoPose
+    toMsg(const geographic_msgs::GeoPoint &pt,
+          const geometry_msgs::Quaternion &q)
+  {
+    geographic_msgs::GeoPose pose;
+    pose.position = pt;
+    pose.orientation = q;
+    return pose;
   }
 
   /** @return a WGS 84 geodetic pose message from a NavSatFix and a

@@ -66,9 +66,8 @@ namespace geodesy
 
 /** Universal Transverse Mercator (UTM) point.
  *
- *  The @c altitude may or may not be specified, making the point
- *  either 3D or 2D (flattened). The @c altitude of a 2D point is not
- *  a number (NaN).
+ *  The @c altitude may be specified (3D) or not (2D).  The @c
+ *  altitude of a 2D point is not a number (NaN).
  *
  *  Including the top-level grid zone designator (GZD) from the
  *  Military Grid Reference System (MGRS) permits unambiguous use of
@@ -120,9 +119,9 @@ class UTMPoint
   {}
 
   // data members
-  double easting;           ///< easting within zone [meters]
-  double northing;          ///< northing within zone [meters] 
-  double altitude;          ///< altitude [meters], NaN if unspecified
+  double easting;           ///< easting within grid zone [meters]
+  double northing;          ///< northing within grid zone [meters] 
+  double altitude;          ///< altitude above ellipsoid [meters] or NaN
   uint8_t zone;             ///< UTM longitude zone number
   char   band;              ///< MGRS latitude band letter
 
@@ -194,11 +193,9 @@ static inline bool is2D(const UTMPose &pose)
 bool isValid(const UTMPoint &pt);
 bool isValid(const UTMPose &pose);
 
-/** normalize UTM point
+/** Normalize UTM point.
  *
- *  @param pt point to be normalized
- *
- *  Ensures the point is within its canonical zone and band square.
+ *  Ensures the point is within its canonical grid zone.
  */
 static inline void normalize(UTMPoint &pt)
 {

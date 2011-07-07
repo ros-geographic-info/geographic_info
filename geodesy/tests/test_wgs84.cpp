@@ -42,7 +42,7 @@
 // Utility functions
 ///////////////////////////////////////////////////////////////
 
-// check that normalize of lat1, lon1 yields lat2, lon2
+// check that normalize of (lat1, lon1) yields (lat2, lon2)
 void check_normalize(double lat1, double lon1, double lat2, double lon2)
 {
  double epsilon = 1e-9;
@@ -234,6 +234,35 @@ TEST(GeoPose, nullConstructor)
   EXPECT_FALSE(geodesy::is2D(pose));
   EXPECT_TRUE(geodesy::isValid(pose));
 }
+
+// Test trivial point conversion
+TEST(Convert, GeoPointToGeoPoint)
+{
+  geographic_msgs::GeoPoint pt1(geodesy::toMsg(30.0, 206.0, -97.0));
+  geographic_msgs::GeoPoint pt2;
+
+  geodesy::convert(pt1, pt2);
+
+  EXPECT_EQ(pt1.latitude, pt2.latitude);
+  EXPECT_EQ(pt1.longitude, pt2.longitude);
+  EXPECT_EQ(pt1.altitude, pt2.altitude);
+}
+
+// Test trivial pose conversion
+TEST(Convert, GeoPoseToGeoPose)
+{
+  geographic_msgs::GeoPoint pt(geodesy::toMsg(30.0, 206.0, -97.0));
+  geometry_msgs::Quaternion q;
+  geographic_msgs::GeoPose pose1(geodesy::toMsg(pt, q));
+  geographic_msgs::GeoPose pose2;
+
+  geodesy::convert(pose1, pose2);
+
+  EXPECT_EQ(pose1.position.latitude, pose2.position.latitude);
+  EXPECT_EQ(pose1.position.longitude, pose2.position.longitude);
+  EXPECT_EQ(pose1.position.altitude, pose2.position.altitude);
+}
+
 
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
