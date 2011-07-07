@@ -122,7 +122,7 @@ void NavSatOdom::publishOdom(void)
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 3; ++j)
       {
-        msg->pose.covariance[i+6*j] = gps_msg_.position_covariance[i+3*j];
+        msg->pose.covariance[6*i+j] = gps_msg_.position_covariance[3*i+j];
       }
 
   // Unpack IMU data.  Copy the (3x3) orientation covariance to the
@@ -134,10 +134,10 @@ void NavSatOdom::publishOdom(void)
   for (int i = 0; i < 3; ++i)
     for (int j = 0; j < 3; ++j)
       {
-        msg->pose.covariance[i+3+6*(j+3)] =
-          imu_msg_.orientation_covariance[i+3*j];
-        msg->twist.covariance[i+3+6*(j+3)] =
-          imu_msg_.angular_velocity_covariance[i+3*j];
+        msg->pose.covariance[6*(i+3)+(j+3)] =
+          imu_msg_.orientation_covariance[3*i+j];
+        msg->twist.covariance[6*(i+3)+(j+3)] =
+          imu_msg_.angular_velocity_covariance[3*i+j];
       }
 
   // use the most recent input message time stamp
