@@ -35,6 +35,7 @@
 *********************************************************************/
 
 #include <ros/ros.h>
+#include <geodesy/utm.h>
 
 #include "navsat_odom.h"
 
@@ -105,6 +106,16 @@ void NavSatOdom::publishOdom(void)
 {
   // allocate shared pointer to enable zero-copy publication
   boost::shared_ptr<nav_msgs::Odometry> msg(new nav_msgs::Odometry);
+
+  // Convert the GPS message to a WGS 84 latitude/longitude point,
+  // then to a UTM point.
+  geographic_msgs::GeoPoint lat_lon(geodesy::toMsg(gps_msg_));
+  geodesy::UTMPoint utm(lat_lon);
+
+  /// @todo make a conversion from UTMPoint to geometry_msgs::Point
+  msg->pose.pose.position.x = utm.easting;
+  msg->pose.pose.position.y = utm.northing;
+  msg->pose.pose.position.z = utm.altitude; // what if 2D?
 
   // use the most recent input message time stamp
   pub_time_ = gps_msg_.header.stamp;
