@@ -79,14 +79,49 @@ NavSatOdom::NavSatOdom(ros::NodeHandle node, ros::NodeHandle priv_nh):
   // setup tf::TransformBroadcaster odom_broadcaster_;
 }
 
-/** Navigation satellite message callback */
+/** @return true if there are new GPS and IMU data to publish. */
+bool NavSatOdom::haveNewData(void)
+{
+  /// @todo check that both messages have arrived recently
+  return true;
+}
+
+/** Navigation satellite message callback. */
 void NavSatOdom::processGps(const sensor_msgs::NavSatFix::ConstPtr &msgIn)
 {
   gps_msg_ = *msgIn;
+
+  if (haveNewData())
+    publishOdom();
 }
 
-/** Inertial measurement message callback */
+/** Inertial measurement message callback. */
 void NavSatOdom::processImu(const sensor_msgs::Imu::ConstPtr &msgIn)
 {
   imu_msg_ = *msgIn;
+
+  if (haveNewData())
+    publishOdom();
+}
+
+/** Publish odometry and transforms.
+ *
+ *  @pre Both gps_msg_ and imu_msg_ contain recent data to publish.
+ */
+void NavSatOdom::publishOdom(void)
+{
+  // allocate shared pointer to enable zero-copy publication
+  boost::shared_ptr<nav_msgs::Odometry> msg(new nav_msgs::Odometry);
+
+  // use the most recent input message time stamp
+  pub_time_ = gps_msg_.header.stamp;
+  if (imu_msg_.header.stamp > pub_time_)
+    pub_time_ = imu_msg_.header.stamp;
+  msg->header.stamp = pub_time_;
+
+  /// @todo use tf_prefix, if defined
+  msg->header.frame_id = "/odom";
+  msg->child_frame_id = "/base_link";
+
+  odom_pub_.publish(msg);
 }

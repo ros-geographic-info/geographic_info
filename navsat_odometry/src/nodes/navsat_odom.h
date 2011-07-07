@@ -61,13 +61,14 @@ public:
 
   // public methods
   NavSatOdom(ros::NodeHandle node, ros::NodeHandle priv_nh);
-  ~NavSatOdom();
+  ~NavSatOdom() {};
 
 private:
 
-  // subscription callbacks
+  bool haveNewData(void);
   void processGps(const sensor_msgs::NavSatFix::ConstPtr &msgIn);
   void processImu(const sensor_msgs::Imu::ConstPtr &msgIn);
+  void publishOdom(void);
 
   ros::NodeHandle node_;                // node handle
   ros::NodeHandle priv_nh_;             // private node handle
@@ -80,6 +81,7 @@ private:
 
   sensor_msgs::NavSatFix gps_msg_;
   sensor_msgs::Imu       imu_msg_;
+  ros::Time pub_time_;                  ///< last publication time
 
 }; // end class NavSatOdom
 
