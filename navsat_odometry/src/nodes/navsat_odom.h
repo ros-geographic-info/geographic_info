@@ -39,16 +39,15 @@
 #define _NAVSAT_ODOM_H_
 
 #include <ros/ros.h>
+#include <geodesy/utm.h>
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/Imu.h>
 #include <sensor_msgs/NavSatFix.h>
 
-#include "navsat_odom.h"
-
 /** @file
 
-    @brief ROS class interface for generating odometry from navigation
-           satellite data.
+    @brief Class interface for generating odometry from navigation
+           satellite and inertial measurement data.
 
 */
 
@@ -89,6 +88,8 @@ private:
   sensor_msgs::NavSatFix gps_msg_;
   sensor_msgs::Imu       imu_msg_;
   ros::Time pub_time_;                  ///< last publication time
+
+  geodesy::UTMPose prev_pose_;          ///< previous UTM pose
 
 }; // end class NavSatOdom
 

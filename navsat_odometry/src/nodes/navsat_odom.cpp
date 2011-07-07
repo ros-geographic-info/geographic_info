@@ -41,8 +41,8 @@
 
 /** @file
 
-    @brief ROS class for generating odometry from navigation satellite
-           data.
+    @brief Class for generating odometry from navigation satellite and
+           inertial measurement data.
 
 @par Subscribes
 
@@ -54,9 +54,10 @@
 
  - @b odom (nav_msgs/Odometry): Current estimate of robot position and
 velocity in three dimensions, including roll, pitch, and yaw.  All
-data are in the @b /odom frame of reference, location in UTM coordinates.
+position data are in UTM coordinates.
 
- - @b tf: broadcast transform from @b /base_link frame to @b /odom frame.
+ - @b tf: broadcast transform from @b /odom frame to @b /base_link.
+   (The actual frame IDs come from the GPS and IMU messages.)
 
 */
 
@@ -67,8 +68,7 @@ NavSatOdom::NavSatOdom(ros::NodeHandle node, ros::NodeHandle priv_nh):
   node_(node),
   priv_nh_(priv_nh)
 {
-  // connect to ROS topics
-  // no delay: we always want the most recent data
+  // Connect to ROS topics, no delay: always the most recent data.
   ros::TransportHints noDelay = ros::TransportHints().tcpNoDelay(true);
 
   gps_sub_ =
@@ -107,48 +107,71 @@ void NavSatOdom::publishOdom(void)
   // allocate shared pointer to enable zero-copy publication
   boost::shared_ptr<nav_msgs::Odometry> msg(new nav_msgs::Odometry);
 
-  // Convert the GPS message to a WGS 84 latitude/longitude point,
-  // then to a UTM point.
-  geographic_msgs::GeoPoint lat_lon(geodesy::toMsg(gps_msg_));
-  geodesy::UTMPoint utm(lat_lon);
-
-  /// @todo make a conversion from UTMPoint to geometry_msgs::Point
-  msg->pose.pose.position.x = utm.easting;
-  msg->pose.pose.position.y = utm.northing;
-  msg->pose.pose.position.z = utm.altitude; // what if 2D?
-
-  // Copy the (3x3) position covariance to the upper left corner of
-  // the (6x6) pose covariance.
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j)
-      {
-        msg->pose.covariance[6*i+j] = gps_msg_.position_covariance[3*i+j];
-      }
-
-  // Unpack IMU data.  Copy the (3x3) orientation covariance to the
-  // lower right corner of the (6x6) pose covariance.  Also copy the
-  // (3x3) angular velocity covariance to the lower right corner of
-  // the (6x6) twist covariance.
-  msg->pose.pose.orientation = imu_msg_.orientation;
-  msg->twist.twist.angular = imu_msg_.angular_velocity;
-  for (int i = 0; i < 3; ++i)
-    for (int j = 0; j < 3; ++j)
-      {
-        msg->pose.covariance[6*(i+3)+(j+3)] =
-          imu_msg_.orientation_covariance[3*i+j];
-        msg->twist.covariance[6*(i+3)+(j+3)] =
-          imu_msg_.angular_velocity_covariance[3*i+j];
-      }
-
-  // use the most recent input message time stamp
+  // Use the most recent input message time stamp, get odometry frame
+  // from GPS message, child frame from IMU message.
   pub_time_ = gps_msg_.header.stamp;
   if (imu_msg_.header.stamp > pub_time_)
     pub_time_ = imu_msg_.header.stamp;
   msg->header.stamp = pub_time_;
+  msg->header.frame_id = gps_msg_.header.frame_id;
+  msg->child_frame_id = imu_msg_.header.frame_id;;
 
-  /// @todo use tf_prefix, if defined
-  msg->header.frame_id = "/odom";
-  msg->child_frame_id = "/base_link";
+  /// @todo Provide options to override the GPS and IMU frame IDs
+  /// (using tf_prefix, if defined).
 
-  odom_pub_.publish(msg);
+  // Convert the GPS message to a WGS 84 latitude/longitude pose, then
+  // to a UTM pose.
+  geographic_msgs::GeoPose ll_pose(geodesy::toMsg(gps_msg_,
+                                                  imu_msg_.orientation));
+  geodesy::UTMPose utm_pose(ll_pose);
+
+  if (isValid(prev_pose_))              // not the first time through?
+    {
+      // Check the UTM grid zone designator, warn if it changes.
+      if (!sameGridZone(prev_pose_, utm_pose))
+        {
+          /// @todo Add operator<< for UTMPoint and UTMPose
+          ROS_WARN_STREAM_THROTTLE(30, "leaving previous UTM grid zone");
+
+          /// @todo Now, what?
+        }
+
+      /// convert the current UTM pose to a geometry_msgs::Pose
+      msg->pose.pose = toGeometry(utm_pose);
+
+      // Copy the (3x3) position covariance to the upper left corner
+      // of the (6x6) pose covariance.
+      for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j)
+          {
+            msg->pose.covariance[6*i+j] = gps_msg_.position_covariance[3*i+j];
+          }
+
+      // Unpack IMU data.  Copy the (3x3) orientation covariance to
+      // the lower right corner of the (6x6) pose covariance.  Also
+      // copy the (3x3) angular velocity covariance to the lower right
+      // corner of the (6x6) twist covariance.
+      msg->twist.twist.angular = imu_msg_.angular_velocity;
+      for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j)
+          {
+            msg->pose.covariance[6*(i+3)+(j+3)] =
+              imu_msg_.orientation_covariance[3*i+j];
+            msg->twist.covariance[6*(i+3)+(j+3)] =
+              imu_msg_.angular_velocity_covariance[3*i+j];
+          }
+
+      /// @todo Since twist.twist.linear is not available, compute
+      /// position change since the previous pose divided by the time
+      /// between the last two GPS messages.  Although position is in
+      /// the parent frame, twist must be in the child frame.
+
+      odom_pub_.publish(msg);
+
+      /// @todo Publish transform.
+
+    }
+
+  // track previous UTM pose
+  prev_pose_ = utm_pose;
 }

@@ -35,13 +35,15 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-#ifndef _UTMPOINT_H_
-#define _UTMPOINT_H_
+#ifndef _UTM_H_
+#define _UTM_H_
 
 #include <limits>
 #include <ctype.h>
 #include <ros/ros.h>
 #include <geodesy/wgs84.h>
+#include <geometry_msgs/Point.h>
+#include <geometry_msgs/Pose.h>
 
 /** @file
 
@@ -169,7 +171,7 @@ class UTMPose
 
 }; // class UTMPose
 
-// conversion functions
+// conversion function prototypes
 void fromMsg(const geographic_msgs::GeoPoint &from, UTMPoint &to);
 void fromMsg(const geographic_msgs::GeoPose &from, UTMPose &to);
 geographic_msgs::GeoPoint toMsg(const UTMPoint &from);
@@ -205,6 +207,37 @@ static inline void normalize(UTMPoint &pt)
   fromMsg(ll, pt);
 }
 
+/** @return true if two points have the same Grid Zone Designator */
+static inline bool sameGridZone(const UTMPoint &pt1, const UTMPoint &pt2)
+{
+  return ((pt1.zone == pt2.zone) && (pt1.band == pt2.band));
+}
+
+/** @return true if two poses have the same Grid Zone Designator */
+static inline bool sameGridZone(const UTMPose &pose1, const UTMPose &pose2)
+{
+  return sameGridZone(pose1.position, pose2.position);
+}
+
+/** @return a geometry Point corresponding to a UTM point. */
+static inline geometry_msgs::Point toGeometry(const UTMPoint &from)
+{
+  geometry_msgs::Point to;
+  to.x = from.easting;
+  to.y = from.northing;
+  to.z = from.altitude;
+  return to;
+}
+
+/** @return a geometry Pose corresponding to a UTM pose. */
+static inline geometry_msgs::Pose toGeometry(const UTMPose &from)
+{
+  geometry_msgs::Pose to;
+  to.position = toGeometry(from.position);
+  to.orientation = from.orientation;
+  return to;
+}
+
 }; // namespace geodesy
 
-#endif // _UTMPOINT_H_
+#endif // _UTM_H_

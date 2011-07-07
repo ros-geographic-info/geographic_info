@@ -190,6 +190,19 @@ namespace geodesy
     return from;
   }
 
+  /** @return a WGS 84 geodetic pose message from a NavSatFix and a
+   *          quaternion.
+   */
+  static inline geographic_msgs::GeoPose
+    toMsg(const sensor_msgs::NavSatFix &fix,
+          const geometry_msgs::Quaternion &q)
+  {
+    geographic_msgs::GeoPose pose;
+    pose.position = toMsg(fix);
+    pose.orientation = q;
+    return pose;
+  }
+
   /** @return a WGS 84 geodetic pose message from another. */
   static inline geographic_msgs::GeoPose
     toMsg(const geographic_msgs::GeoPose &from)
