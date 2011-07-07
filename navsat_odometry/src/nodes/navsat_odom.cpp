@@ -117,6 +117,29 @@ void NavSatOdom::publishOdom(void)
   msg->pose.pose.position.y = utm.northing;
   msg->pose.pose.position.z = utm.altitude; // what if 2D?
 
+  // Copy the (3x3) position covariance to the upper left corner of
+  // the (6x6) pose covariance.
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j)
+      {
+        msg->pose.covariance[i+6*j] = gps_msg_.position_covariance[i+3*j];
+      }
+
+  // Unpack IMU data.  Copy the (3x3) orientation covariance to the
+  // lower right corner of the (6x6) pose covariance.  Also copy the
+  // (3x3) angular velocity covariance to the lower right corner of
+  // the (6x6) twist covariance.
+  msg->pose.pose.orientation = imu_msg_.orientation;
+  msg->twist.twist.angular = imu_msg_.angular_velocity;
+  for (int i = 0; i < 3; ++i)
+    for (int j = 0; j < 3; ++j)
+      {
+        msg->pose.covariance[i+3+6*(j+3)] =
+          imu_msg_.orientation_covariance[i+3*j];
+        msg->twist.covariance[i+3+6*(j+3)] =
+          imu_msg_.angular_velocity_covariance[i+3*j];
+      }
+
   // use the most recent input message time stamp
   pub_time_ = gps_msg_.header.stamp;
   if (imu_msg_.header.stamp > pub_time_)
