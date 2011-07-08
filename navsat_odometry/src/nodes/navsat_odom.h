@@ -85,10 +85,12 @@ private:
   ros::Publisher odom_pub_;
   //tf::TransformBroadcaster odom_broadcaster_;
 
-  sensor_msgs::NavSatFix gps_msg_;
-  sensor_msgs::Imu       imu_msg_;
-  ros::Time pub_time_;                  ///< last publication time
+  sensor_msgs::NavSatFix gps_msg_;      ///< latest GPS message
+  sensor_msgs::NavSatFix gps_prev_;     ///< previous GPS message
+  sensor_msgs::Imu       imu_msg_;      ///< latest IMU message
+  sensor_msgs::Imu       imu_prev_;     ///< previous IMU message
 
+  ros::Time pub_time_;                  ///< latest publication time
   geodesy::UTMPose prev_pose_;          ///< previous UTM pose
 
 }; // end class NavSatOdom

@@ -83,6 +83,7 @@ NavSatOdom::NavSatOdom(ros::NodeHandle node, ros::NodeHandle priv_nh):
 /** Navigation satellite message callback. */
 void NavSatOdom::processGps(const sensor_msgs::NavSatFix::ConstPtr &msgIn)
 {
+  gps_prev_ = gps_msg_;                 // save previous message
   gps_msg_ = *msgIn;
 
   if (haveNewData())
@@ -92,6 +93,7 @@ void NavSatOdom::processGps(const sensor_msgs::NavSatFix::ConstPtr &msgIn)
 /** Inertial measurement message callback. */
 void NavSatOdom::processImu(const sensor_msgs::Imu::ConstPtr &msgIn)
 {
+  imu_prev_ = imu_msg_;                 // save previous message
   imu_msg_ = *msgIn;
 
   if (haveNewData())
