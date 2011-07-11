@@ -39,6 +39,7 @@
 #define _NAVSAT_ODOM_H_
 
 #include <ros/ros.h>
+#include <tf/transform_broadcaster.h>
 #include <geodesy/utm.h>
 #include <nav_msgs/Odometry.h>
 #include <sensor_msgs/Imu.h>
@@ -83,7 +84,7 @@ private:
   ros::Subscriber imu_sub_;             // Imu message subscriber
 
   ros::Publisher odom_pub_;
-  //tf::TransformBroadcaster odom_broadcaster_;
+  tf::TransformBroadcaster odom_broadcaster_;
 
   sensor_msgs::NavSatFix gps_msg_;      ///< latest GPS message
   sensor_msgs::NavSatFix gps_prev_;     ///< previous GPS message

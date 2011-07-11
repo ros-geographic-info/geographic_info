@@ -170,8 +170,13 @@ void NavSatOdom::publishOdom(void)
 
       odom_pub_.publish(msg);
 
-      /// @todo Publish transform.
-
+      // publish transform from /odom to /base_link
+      tf::Pose odom_tf;
+      tf::poseMsgToTF(msg->pose.pose, odom_tf);
+      tf::StampedTransform tfMsg(odom_tf, pub_time_,
+                                 msg->header.frame_id,
+                                 msg->child_frame_id);
+      odom_broadcaster_.sendTransform(tfMsg);
     }
 
   // track previous UTM pose
