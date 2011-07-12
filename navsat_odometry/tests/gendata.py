@@ -22,8 +22,14 @@ def test(hz):
     gps_pub = rospy.Publisher('gps', NavSatFix)
     imu_pub = rospy.Publisher('imu', Imu)
 
+    # set position at University of Texas, Austin, Pickle Research Campus
     fix = NavSatFix()
+    fix.latitude = 30.385315
+    fix.longitude = -97.728524
+    fix.altitude = 209.0
     fix.header.frame_id = "/odom"
+
+    # set IMU not moving
     imu = Imu()
     imu.header.frame_id = "/base_link"
 
