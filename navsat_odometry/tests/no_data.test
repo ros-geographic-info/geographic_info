@@ -1,0 +1,25 @@
+<!-- -*- mode: XML -*- -->
+
+<!-- Navigation satellite odometry nodelet test.
+
+     Verifies that the nodelet publishes nothing when no input data
+     are present.
+
+  -->
+
+<launch>
+
+  <!-- run the odometry nodelet -->
+  <node pkg="nodelet" type="nodelet" name="navsat_odom_nodelet"
+        args="standalone navsat_odom/nodelet" />
+
+  <test test-name="nodelet_no_data_test"
+        pkg="rostest" type="hztest" name="nodelet_no_data" >
+    <param name="hz" value="0.0" />
+    <param name="hzerror" value="0.0" />
+    <param name="test_duration" value="10.0" />    
+    <param name="topic" value="/odom" />  
+    <param name="wait_time" value="5.0" />  
+  </test>
+
+</launch>

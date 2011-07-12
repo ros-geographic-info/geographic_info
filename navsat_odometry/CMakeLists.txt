@@ -18,3 +18,5 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 
 add_subdirectory(src/nodes)
 
+# nodelet unit tests
+rosbuild_add_rostest(tests/no_data.test)
