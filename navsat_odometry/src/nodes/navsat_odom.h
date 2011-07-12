@@ -65,10 +65,10 @@ public:
 
 private:
 
-  /** @return true if there are new GPS and IMU data to publish. */
+  /** @return true if there are new GPS and IMU data since the last
+      publication. */
   bool haveNewData(void)
   {
-    // check that both messages have arrived since the last publish()
     return ((pub_time_ < gps_msg_.header.stamp)
             && (pub_time_ < imu_msg_.header.stamp));
   }
