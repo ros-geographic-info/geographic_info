@@ -45,6 +45,7 @@ def test(hz):
     # set IMU not moving
     imu = Imu()
     imu.header.frame_id = "/base_link"
+    imu.orientation.w = 1.0
 
     # set IMU covariance matrices to known, artificial values
     imu.orientation_covariance[0] = 33.0
