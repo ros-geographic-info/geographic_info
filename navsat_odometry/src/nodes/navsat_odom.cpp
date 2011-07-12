@@ -132,10 +132,10 @@ void NavSatOdom::publishOdom(void)
       // Check the UTM grid zone designator, warn if it changes.
       if (!sameGridZone(prev_pose_, utm_pose))
         {
-          /// @todo Add operator<< for UTMPoint and UTMPose
+          /// @todo log UTMPose values
           ROS_WARN_STREAM_THROTTLE(30, "leaving previous UTM grid zone");
 
-          /// @todo Now, what?
+          /// @todo The robot just entered a new UTM grid zone. Now, what?
         }
 
       /// convert the current UTM pose to a geometry_msgs::Pose

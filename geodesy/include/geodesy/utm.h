@@ -57,6 +57,7 @@
     latitude and longitude.
 
     @todo add Universal Polar Stereographic support
+    @todo Add operator<< for UTMPoint and UTMPose
 
     @author Jack O'Quin
  */
