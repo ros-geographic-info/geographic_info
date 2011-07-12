@@ -72,9 +72,9 @@ NavSatOdom::NavSatOdom(ros::NodeHandle node, ros::NodeHandle priv_nh):
   ros::TransportHints noDelay = ros::TransportHints().tcpNoDelay(true);
 
   gps_sub_ =
-    node_.subscribe("gps", 1, &NavSatOdom::processImu, this, noDelay);
+    node_.subscribe("gps", 1, &NavSatOdom::processGps, this, noDelay);
   imu_sub_ =
-    node_.subscribe("imu", 1, &NavSatOdom::processGps, this, noDelay);
+    node_.subscribe("imu", 1, &NavSatOdom::processImu, this, noDelay);
 
   odom_pub_ = node_.advertise<nav_msgs::Odometry>("odom", 1);
   // setup tf::TransformBroadcaster odom_broadcaster_;
