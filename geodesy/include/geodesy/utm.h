@@ -206,7 +206,7 @@ static inline void normalize(UTMPoint &pt)
   fromMsg(ll, pt);
 }
 
-/** Print operator for UTM point. */
+/** Output stream operator for UTM point. */
 std::ostream& operator<<(std::ostream& out, const UTMPoint &pt)
 {
   out << "(" << std::setprecision(10) << pt.easting << ", "
@@ -215,7 +215,7 @@ std::ostream& operator<<(std::ostream& out, const UTMPoint &pt)
   return out;
 }
 
-/** Print operator for UTM pose. */
+/** Output stream operator for UTM pose. */
 std::ostream& operator<<(std::ostream& out, const UTMPose &pose)
 {
   out << pose.position << ", (["

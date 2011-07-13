@@ -70,11 +70,6 @@ TEST(UTMPoint, nullConstructor)
   EXPECT_EQ(pt.zone, 0);
   EXPECT_EQ(pt.band, ' ');
   EXPECT_FALSE(geodesy::isValid(pt));
-
-  std::ostringstream out;
-  out << pt;
-  std::string expected("(0, 0, nan [0 ])");
-  EXPECT_EQ(out.str(), expected);
 }
 
 // Test 2D constructor
@@ -155,11 +150,6 @@ TEST(UTMPoint, fromLatLong)
   uint8_t z = 14;
   char b = 'R';
   double abs_err = 0.01;
-
-  std::ostringstream out;
-  out << pt;
-  std::string expected("(622159.338, 3362168.303, 209 [14R])");
-  EXPECT_EQ(out.str(), expected);
 
   EXPECT_FALSE(geodesy::is2D(pt));
   EXPECT_TRUE(geodesy::isValid(pt));
@@ -249,11 +239,6 @@ TEST(UTMPose, copyConstructor)
   q.y = 0.0;
   q.z = 0.0;
   geodesy::UTMPose pose(pt, q);
-
-  std::ostringstream out;
-  out << pose;
-  std::string expected("(1000, 2400, 200 [14R]), ([0, 0, 0], 1)");
-  EXPECT_EQ(out.str(), expected);
 
   EXPECT_FALSE(geodesy::is2D(pose));
   EXPECT_TRUE(geodesy::isValid(pose));
@@ -349,6 +334,39 @@ TEST(UTMConvert, internationalDateLine)
         }
       EXPECT_NEAR(pt1.longitude, pt2.longitude, 0.0000012);
     }
+}
+
+// Test point output stream operator
+TEST(OStream, point)
+{
+  geodesy::UTMPoint pt1;
+  std::ostringstream out1;
+  out1 << pt1;
+  std::string expected("(0, 0, nan [0 ])");
+  EXPECT_EQ(out1.str(), expected);
+
+  geodesy::UTMPoint pt2(622159.338, 3362168.303, 209, 14, 'R');
+  std::ostringstream out2;
+  out2 << pt2;
+  expected = "(622159.338, 3362168.303, 209 [14R])";
+  EXPECT_EQ(out2.str(), expected);
+}
+
+// Test pose output stream operator
+TEST(OStream, pose)
+{
+  geodesy::UTMPoint pt(1000.0, 2400.0, 200.0, 14, 'R');
+  geometry_msgs::Quaternion q;
+  q.w = 1.0;
+  q.x = 0.0;
+  q.y = 0.0;
+  q.z = 0.0;
+  geodesy::UTMPose pose(pt, q);
+
+  std::ostringstream out;
+  out << pose;
+  std::string expected("(1000, 2400, 200 [14R]), ([0, 0, 0], 1)");
+  EXPECT_EQ(out.str(), expected);
 }
 
 // Run all the tests that were declared with TEST()
