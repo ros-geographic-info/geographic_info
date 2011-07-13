@@ -40,6 +40,8 @@
 
 #include <limits>
 #include <ctype.h>
+#include <iostream>
+#include <iomanip>
 #include <ros/ros.h>
 #include <geodesy/wgs84.h>
 #include <geometry_msgs/Point.h>
@@ -57,7 +59,6 @@
     latitude and longitude.
 
     @todo add Universal Polar Stereographic support
-    @todo Add operator<< for UTMPoint and UTMPose
 
     @author Jack O'Quin
  */
@@ -203,6 +204,26 @@ static inline void normalize(UTMPoint &pt)
   geographic_msgs::GeoPoint ll(toMsg(pt));
   normalize(ll);
   fromMsg(ll, pt);
+}
+
+/** Print operator for UTM point. */
+std::ostream& operator<<(std::ostream& out, const UTMPoint &pt)
+{
+  out << "(" << std::setprecision(10) << pt.easting << ", "
+      << pt.northing << ", " << std::setprecision(6) << pt.altitude
+      << " [" << (unsigned) pt.zone << pt.band << "])";
+  return out;
+}
+
+/** Print operator for UTM pose. */
+std::ostream& operator<<(std::ostream& out, const UTMPose &pose)
+{
+  out << pose.position << ", (["
+      << pose.orientation.x << ", "
+      << pose.orientation.y << ", "
+      << pose.orientation.z << "], "
+      << pose.orientation.w << ")";
+  return out;
 }
 
 /** @return true if two points have the same Grid Zone Designator */

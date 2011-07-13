@@ -34,6 +34,7 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
+#include <sstream>
 #include <gtest/gtest.h>
 #include "geodesy/utm.h"
 
@@ -69,6 +70,11 @@ TEST(UTMPoint, nullConstructor)
   EXPECT_EQ(pt.zone, 0);
   EXPECT_EQ(pt.band, ' ');
   EXPECT_FALSE(geodesy::isValid(pt));
+
+  std::ostringstream out;
+  out << pt;
+  std::string expected("(0, 0, nan [0 ])");
+  EXPECT_EQ(out.str(), expected);
 }
 
 // Test 2D constructor
@@ -149,6 +155,11 @@ TEST(UTMPoint, fromLatLong)
   uint8_t z = 14;
   char b = 'R';
   double abs_err = 0.01;
+
+  std::ostringstream out;
+  out << pt;
+  std::string expected("(622159.338, 3362168.303, 209 [14R])");
+  EXPECT_EQ(out.str(), expected);
 
   EXPECT_FALSE(geodesy::is2D(pt));
   EXPECT_TRUE(geodesy::isValid(pt));
@@ -238,6 +249,11 @@ TEST(UTMPose, copyConstructor)
   q.y = 0.0;
   q.z = 0.0;
   geodesy::UTMPose pose(pt, q);
+
+  std::ostringstream out;
+  out << pose;
+  std::string expected("(1000, 2400, 200 [14R]), ([0, 0, 0], 1)");
+  EXPECT_EQ(out.str(), expected);
 
   EXPECT_FALSE(geodesy::is2D(pose));
   EXPECT_TRUE(geodesy::isValid(pose));
