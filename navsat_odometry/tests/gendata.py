@@ -69,12 +69,14 @@ def test(hz):
 
     while not rospy.is_shutdown():
 
+        # stagger publication of the two topics
         fix.header.stamp = rospy.Time.now()
         gps_pub.publish(fix)
+        rospy.sleep(0.5/hz)
+
         imu.header.stamp = fix.header.stamp
         imu_pub.publish(imu)
-
-        rospy.sleep(1.0/hz)
+        rospy.sleep(0.5/hz)
 
 if __name__ == '__main__':
     rospy.init_node('gendata')
