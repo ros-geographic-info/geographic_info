@@ -83,8 +83,14 @@ NavSatOdom::NavSatOdom(ros::NodeHandle node, ros::NodeHandle priv_nh):
 /** Navigation satellite message callback. */
 void NavSatOdom::processGps(const sensor_msgs::NavSatFix::ConstPtr &msgIn)
 {
-  gps_prev_ = gps_msg_;                 // save previous message
+  // save previous message and its UTM point
+  gps_prev_ = gps_msg_;
+  gps_prev_pt_ = gps_msg_pt_;
+
+  // save latest message, convert latitude and longitude to a UTM point
   gps_msg_ = *msgIn;
+  geographic_msgs::GeoPoint latlon(geodesy::toMsg(gps_msg_));
+  convert(latlon, gps_msg_pt_);
 
   if (haveNewData())
     publishOdom();
@@ -121,11 +127,9 @@ void NavSatOdom::publishOdom(void)
   /// @todo Provide options to override the GPS and IMU frame IDs
   /// (using tf_prefix, if defined).
 
-  // Convert the GPS message to a WGS 84 latitude/longitude pose, then
-  // to a UTM pose.
-  geographic_msgs::GeoPose ll_pose(geodesy::toMsg(gps_msg_,
-                                                  imu_msg_.orientation));
-  geodesy::UTMPose utm_pose(ll_pose);
+  // Create a UTM pose from the latest GPS point and the latest IMU
+  // orientation.
+  geodesy::UTMPose utm_pose(gps_msg_pt_, imu_msg_.orientation);
 
   if (isValid(prev_pose_))              // not the first time through?
     {
@@ -164,13 +168,6 @@ void NavSatOdom::publishOdom(void)
               imu_msg_.angular_velocity_covariance[3*i+j];
           }
 
-      /// @todo Since twist.twist.linear is not available, compute
-      /// position change since the previous pose divided by the time
-      /// between the last two GPS messages.  Although position is in
-      /// the parent frame, twist must be in the child frame.
-
-      odom_pub_.publish(msg);
-
       // publish transform from /odom to /base_link
       tf::Pose odom_tf;
       tf::poseMsgToTF(msg->pose.pose, odom_tf);
@@ -178,6 +175,19 @@ void NavSatOdom::publishOdom(void)
                                  msg->header.frame_id,
                                  msg->child_frame_id);
       odom_broadcaster_.sendTransform(tfMsg);
+
+      // Since twist.twist.linear is not directly available, compute
+      // position change since the previous point divided by the time
+      // between the last two GPS messages.  Although position is in
+      // the parent frame, twist must be reported in the child frame.
+      btVector3 pt0(toBullet(gps_prev_pt_));
+      btVector3 pt1(toBullet(gps_msg_pt_));
+      ros::Duration dt(gps_msg_.header.stamp - gps_prev_.header.stamp);
+      btVector3 vel((pt1 - pt0) / dt.toSec());
+      /// @todo transform velocity into child frame
+      tf::vector3TFToMsg(vel, msg->twist.twist.linear);
+
+      odom_pub_.publish(msg);
     }
 
   // track previous UTM pose
