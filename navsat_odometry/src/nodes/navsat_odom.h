@@ -65,34 +65,34 @@ public:
 
 private:
 
-  /** @return true if there are new GPS and IMU data since the last
+  /** @return true if there are new fix and IMU data since the last
       publication. */
   bool haveNewData(void)
   {
-    return ((pub_time_ < gps_msg_.header.stamp)
+    return ((pub_time_ < fix_msg_.header.stamp)
             && (pub_time_ < imu_msg_.header.stamp));
   }
 
-  void processGps(const sensor_msgs::NavSatFix::ConstPtr &msgIn);
+  void processFix(const sensor_msgs::NavSatFix::ConstPtr &msgIn);
   void processImu(const sensor_msgs::Imu::ConstPtr &msgIn);
   void publishOdom(void);
 
   ros::NodeHandle node_;                // node handle
   ros::NodeHandle priv_nh_;             // private node handle
 
-  ros::Subscriber gps_sub_;             // NavSatFix message subscriber
+  ros::Subscriber fix_sub_;             // NavSatFix message subscriber
   ros::Subscriber imu_sub_;             // Imu message subscriber
 
   ros::Publisher odom_pub_;
   tf::TransformBroadcaster odom_broadcaster_;
 
-  sensor_msgs::NavSatFix gps_msg_;      ///< latest fix message
-  sensor_msgs::NavSatFix gps_prev_;     ///< previous fix message
-  geodesy::UTMPoint gps_msg_pt_;        ///< latest point [UTM]
-  geodesy::UTMPoint gps_prev_pt_;       ///< previous point [UTM]
+  sensor_msgs::NavSatFix fix_msg_;      ///< latest fix message
+  sensor_msgs::NavSatFix fix_prev_;     ///< previous fix message
+  geodesy::UTMPoint fix_msg_pt_;        ///< latest point [UTM]
+  geodesy::UTMPoint fix_prev_pt_;       ///< previous point [UTM]
 
-  sensor_msgs::Imu       imu_msg_;      ///< latest IMU message
-  sensor_msgs::Imu       imu_prev_;     ///< previous IMU message
+  sensor_msgs::Imu imu_msg_;            ///< latest IMU message
+  sensor_msgs::Imu imu_prev_;           ///< previous IMU message
 
   ros::Time pub_time_;                  ///< latest publication time
   geodesy::UTMPose prev_pose_;          ///< previous pose [UTM]

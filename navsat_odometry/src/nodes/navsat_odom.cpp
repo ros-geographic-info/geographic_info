@@ -57,7 +57,7 @@ velocity in three dimensions, including roll, pitch, and yaw.  All
 position data are in UTM coordinates.
 
  - @b tf: broadcast transform from @b /odom frame to @b /base_link.
-   (The actual frame IDs come from the GPS and IMU messages.)
+   (The actual frame IDs come from the fix and IMU messages.)
 
 */
 
@@ -71,8 +71,8 @@ NavSatOdom::NavSatOdom(ros::NodeHandle node, ros::NodeHandle priv_nh):
   // Connect to ROS topics, no delay: always the most recent data.
   ros::TransportHints noDelay = ros::TransportHints().tcpNoDelay(true);
 
-  gps_sub_ =
-    node_.subscribe("gps", 1, &NavSatOdom::processGps, this, noDelay);
+  fix_sub_ =
+    node_.subscribe("gps", 1, &NavSatOdom::processFix, this, noDelay);
   imu_sub_ =
     node_.subscribe("imu", 1, &NavSatOdom::processImu, this, noDelay);
 
@@ -81,16 +81,16 @@ NavSatOdom::NavSatOdom(ros::NodeHandle node, ros::NodeHandle priv_nh):
 }
 
 /** Navigation satellite message callback. */
-void NavSatOdom::processGps(const sensor_msgs::NavSatFix::ConstPtr &msgIn)
+void NavSatOdom::processFix(const sensor_msgs::NavSatFix::ConstPtr &msgIn)
 {
   // save previous message and its UTM point
-  gps_prev_ = gps_msg_;
-  gps_prev_pt_ = gps_msg_pt_;
+  fix_prev_ = fix_msg_;
+  fix_prev_pt_ = fix_msg_pt_;
 
   // save latest message, convert latitude and longitude to a UTM point
-  gps_msg_ = *msgIn;
-  geographic_msgs::GeoPoint latlon(geodesy::toMsg(gps_msg_));
-  convert(latlon, gps_msg_pt_);
+  fix_msg_ = *msgIn;
+  geographic_msgs::GeoPoint latlon(geodesy::toMsg(fix_msg_));
+  convert(latlon, fix_msg_pt_);
 
   if (haveNewData())
     publishOdom();
@@ -108,7 +108,7 @@ void NavSatOdom::processImu(const sensor_msgs::Imu::ConstPtr &msgIn)
 
 /** Publish odometry and transforms.
  *
- *  @pre Both gps_msg_ and imu_msg_ contain recent data to publish.
+ *  @pre Both fix_msg_ and imu_msg_ contain recent data to publish.
  */
 void NavSatOdom::publishOdom(void)
 {
@@ -116,20 +116,20 @@ void NavSatOdom::publishOdom(void)
   boost::shared_ptr<nav_msgs::Odometry> msg(new nav_msgs::Odometry);
 
   // Use the most recent input message time stamp, get odometry frame
-  // from GPS message, child frame from IMU message.
-  pub_time_ = gps_msg_.header.stamp;
+  // from fix message, child frame from IMU message.
+  pub_time_ = fix_msg_.header.stamp;
   if (imu_msg_.header.stamp > pub_time_)
     pub_time_ = imu_msg_.header.stamp;
   msg->header.stamp = pub_time_;
-  msg->header.frame_id = gps_msg_.header.frame_id;
+  msg->header.frame_id = fix_msg_.header.frame_id;
   msg->child_frame_id = imu_msg_.header.frame_id;;
 
-  /// @todo Provide options to override the GPS and IMU frame IDs
+  /// @todo Provide options to override the fix and IMU frame IDs
   /// (using tf_prefix, if defined).
 
-  // Create a UTM pose from the latest GPS point and the latest IMU
+  // Create a UTM pose from the latest fix and the latest IMU
   // orientation.
-  geodesy::UTMPose utm_pose(gps_msg_pt_, imu_msg_.orientation);
+  geodesy::UTMPose utm_pose(fix_msg_pt_, imu_msg_.orientation);
 
   if (isValid(prev_pose_))              // not the first time through?
     {
@@ -151,7 +151,7 @@ void NavSatOdom::publishOdom(void)
       for (int i = 0; i < 3; ++i)
         for (int j = 0; j < 3; ++j)
           {
-            msg->pose.covariance[6*i+j] = gps_msg_.position_covariance[3*i+j];
+            msg->pose.covariance[6*i+j] = fix_msg_.position_covariance[3*i+j];
           }
 
       // Unpack IMU data.  Copy the (3x3) orientation covariance to
@@ -178,11 +178,11 @@ void NavSatOdom::publishOdom(void)
 
       // Since twist.twist.linear is not directly available, compute
       // position change since the previous point divided by the time
-      // between the last two GPS messages.  Although position is in
+      // between the last two fix messages.  Although position is in
       // the parent frame, twist must be reported in the child frame.
-      btVector3 pt0(toBullet(gps_prev_pt_));
-      btVector3 pt1(toBullet(gps_msg_pt_));
-      ros::Duration dt(gps_msg_.header.stamp - gps_prev_.header.stamp);
+      btVector3 pt0(toBullet(fix_prev_pt_));
+      btVector3 pt1(toBullet(fix_msg_pt_));
+      ros::Duration dt(fix_msg_.header.stamp - fix_prev_.header.stamp);
       btVector3 vel((pt1 - pt0) / dt.toSec());
       /// @todo transform velocity into child frame
       tf::vector3TFToMsg(vel, msg->twist.twist.linear);
