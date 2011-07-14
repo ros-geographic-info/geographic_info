@@ -79,10 +79,10 @@ def test(hz):
         rospy.sleep(0.5/hz)
 
 if __name__ == '__main__':
-    rospy.init_node('gendata')
-    rospy.loginfo('starting navsat_odometry test')
+    rospy.init_node('genstatic')
+    rospy.loginfo('starting static navsat_odometry test')
     try:
         test(20.0)
     except rospy.ROSInterruptException: pass
 
-    rospy.loginfo('navsat_odometry test completed')
+    rospy.loginfo('static navsat_odometry test completed')
