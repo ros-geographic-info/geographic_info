@@ -20,4 +20,5 @@ add_subdirectory(src/nodes)
 
 # nodelet unit tests
 rosbuild_add_rostest(tests/no_data.test)
-rosbuild_add_rostest(tests/nodelet_hz.test)
+rosbuild_add_rostest(tests/nodelet_static.test)
+rosbuild_add_rostest(tests/nodelet_moving.test)

@@ -14,7 +14,7 @@
         args="standalone navsat_odom/nodelet" />
 
   <!-- run a test data generator -->
-  <node pkg="navsat_odometry" type="genstatic.py" name="genstatic" />
+  <node pkg="navsat_odometry" type="genmoving.py" name="genmoving" />
 
   <test test-name="nodelet_hz_test"
         pkg="rostest" type="hztest" name="nodelet_hz" >
