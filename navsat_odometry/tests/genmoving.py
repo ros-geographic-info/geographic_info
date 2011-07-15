@@ -14,6 +14,9 @@ import roslib;
 roslib.load_manifest(PKG_NAME)
 import rospy
 
+import numpy
+from tf.transformations import quaternion_from_euler
+
 # ROS messages
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import NavSatFix
@@ -27,9 +30,10 @@ def test(hz):
     fix = NavSatFix()
     fix.header.frame_id = "/odom"
 
-    # set position at University of Texas, Austin, Pickle Research Campus
+    # initial position at University of Texas, Austin, Pickle Research Campus
     fix.latitude = 30.385315
     fix.longitude = -97.728524
+    fix.altitude = 209.0
 
     # set covariance matrix to known, artificial values
     fix.position_covariance_type = NavSatFix.COVARIANCE_TYPE_KNOWN
@@ -43,12 +47,10 @@ def test(hz):
     fix.position_covariance[7] = 21.0
     fix.position_covariance[8] = 22.0
 
-    # set IMU not moving
+    # set IMU covariance matrices to known, artificial values
     imu = Imu()
     imu.header.frame_id = "/base_link"
-    imu.orientation.w = 1.0
 
-    # set IMU covariance matrices to known, artificial values
     imu.orientation_covariance[0] = 33.0
     imu.orientation_covariance[1] = 34.0
     imu.orientation_covariance[2] = 35.0
@@ -77,13 +79,20 @@ def test(hz):
         # stagger publication of the two topics
         fix.header.stamp = rospy.Time.now()
 
-        if yaw >= math.pi:
-            yaw = -math.pi
+        if yaw >= math.pi or yaw <= -math.pi:
+           deltaYaw = -deltaYaw
         yaw += deltaYaw
+
+        # set IMU to reflect yaw
+        # (does not look right yet)
+        q = quaternion_from_euler(0.0, 0.0, yaw, 'sxyz')
+        imu.orientation.x = q[0]
+        imu.orientation.y = q[1]
+        imu.orientation.z = q[2]
+        imu.orientation.w = q[3]
 
         fix.latitude += deltaDeg * math.cos(yaw);
         fix.longitude += deltaDeg * math.sin(yaw);
-        fix.altitude = 100.0 + yaw;
         gps_pub.publish(fix)
         rospy.sleep(0.5/hz)
 
