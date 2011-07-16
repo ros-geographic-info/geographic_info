@@ -12,6 +12,10 @@ import roslib;
 roslib.load_manifest(PKG_NAME)
 import rospy
 
+import math
+import numpy
+from tf.transformations import quaternion_from_euler
+
 # ROS messages
 from sensor_msgs.msg import Imu
 from sensor_msgs.msg import NavSatFix
@@ -45,7 +49,15 @@ def test(hz):
     # set IMU not moving
     imu = Imu()
     imu.header.frame_id = "/base_link"
-    imu.orientation.w = 1.0
+
+    # set Northeast heading (not correct yet)
+    #q = quaternion_from_euler(math.pi/4.0, 0.0, 0.0, 'rxyz')
+    #q = numpy.array([0.7071, 0., 0., 0.7071])
+    q = numpy.array([0.0, 0.0, 0.0, 1.0])
+    imu.orientation.x = q[0]
+    imu.orientation.y = q[1]
+    imu.orientation.z = q[2]
+    imu.orientation.w = q[3]
 
     # set IMU covariance matrices to known, artificial values
     imu.orientation_covariance[0] = 33.0

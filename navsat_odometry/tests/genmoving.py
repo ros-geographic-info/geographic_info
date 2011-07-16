@@ -103,9 +103,9 @@ def test(hz):
 
 if __name__ == '__main__':
     rospy.init_node('genstatic')
-    rospy.loginfo('starting static navsat_odometry test')
+    rospy.loginfo('starting moving navsat_odometry test')
     try:
         test(20.0)
     except rospy.ROSInterruptException: pass
 
-    rospy.loginfo('static navsat_odometry test completed')
+    rospy.loginfo('moving navsat_odometry test completed')
