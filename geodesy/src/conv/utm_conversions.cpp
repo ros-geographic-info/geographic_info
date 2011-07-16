@@ -312,9 +312,12 @@ bool isValid(const UTMPose &pose)
   if (!isValid(pose.position))
     return false;
 
-  /// @todo validate orientation quaternion (should be normalized)
-
-  return true;
+  // check that orientation quaternion is normalized
+  double len2 = (pose.orientation.x * pose.orientation.x
+                 + pose.orientation.y * pose.orientation.y
+                 + pose.orientation.z * pose.orientation.z
+                 + pose.orientation.w * pose.orientation.w);
+  return fabs(len2 - 1.0) <= tf::QUATERNION_TOLERANCE;
 }
 
 } // end namespace geodesy

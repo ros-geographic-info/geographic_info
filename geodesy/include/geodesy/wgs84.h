@@ -44,6 +44,7 @@
 #include <geographic_msgs/GeoPoint.h>
 #include <geographic_msgs/GeoPose.h>
 #include <sensor_msgs/NavSatFix.h>
+#include <tf/tf.h>
 
 /** @file
 
@@ -130,10 +131,17 @@ namespace geodesy
     return true;
   }
 
-  /** @return true if point is valid. */
+  /** @return true if pose is valid. */
   static inline bool isValid(const geographic_msgs::GeoPose &pose)
   {
-    /// @todo validate orientation quaternion (should be normalized)
+    // check that orientation quaternion is normalized
+    double len2 = (pose.orientation.x * pose.orientation.x
+                   + pose.orientation.y * pose.orientation.y
+                   + pose.orientation.z * pose.orientation.z
+                   + pose.orientation.w * pose.orientation.w);
+    if (fabs(len2 - 1.0) > tf::QUATERNION_TOLERANCE)
+      return false;
+
     return isValid(pose.position);
   }
 

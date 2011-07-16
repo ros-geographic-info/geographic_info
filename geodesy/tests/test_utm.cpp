@@ -223,8 +223,8 @@ TEST(UTMPose, nullConstructor)
   EXPECT_FALSE(geodesy::isValid(pose));
 }
 
-// Test pose copy constructor
-TEST(UTMPose, copyConstructor)
+// Test pose constructor from point and quaternion
+TEST(UTMPose, pointQuaternionConstructor)
 {
   double e = 1000.0;
   double n = 2400.0;
@@ -233,11 +233,11 @@ TEST(UTMPose, copyConstructor)
   char b = 'R';
   geodesy::UTMPoint pt(e, n, a, z, b);
 
-  geometry_msgs::Quaternion q;
-  q.w = 1.0;
-  q.x = 0.0;
+  geometry_msgs::Quaternion q;          // identity quaternion
+  q.x = 1.0;
   q.y = 0.0;
   q.z = 0.0;
+  q.w = 0.0;
   geodesy::UTMPose pose(pt, q);
 
   EXPECT_FALSE(geodesy::is2D(pose));
@@ -253,6 +253,50 @@ TEST(UTMPose, copyConstructor)
   EXPECT_EQ(pose.orientation.x, q.x);
   EXPECT_EQ(pose.orientation.y, q.y);
   EXPECT_EQ(pose.orientation.z, q.z);
+}
+
+// Test pose quaternion validation
+TEST(UTMPose, quaternionValidation)
+{
+  double e = 1000.0;
+  double n = 2400.0;
+  double a = 200.0;
+  uint8_t z = 14;
+  char b = 'R';
+  geodesy::UTMPoint pt(e, n, a, z, b);
+
+  // identity quaternion
+  geometry_msgs::Quaternion q;
+  q.x = 1.0;
+  q.y = 0.0;
+  q.z = 0.0;
+  q.w = 0.0;
+  geodesy::UTMPose pose1(pt, q);
+  EXPECT_TRUE(geodesy::isValid(pose1));
+
+  // valid quaternion
+  q.x = 0.7071;
+  q.y = 0.0;
+  q.z = 0.0;
+  q.w = 0.7071;
+  geodesy::UTMPose pose2(pt, q);
+  EXPECT_TRUE(geodesy::isValid(pose2));
+
+  // quaternion not normalized
+  q.x = 0.8071;
+  q.y = 0.0;
+  q.z = 0.0;
+  q.w = 0.8071;
+  geodesy::UTMPose pose3(pt, q);
+  EXPECT_FALSE(geodesy::isValid(pose3));
+
+  // zero quaternion (not normalized)
+  q.x = 0.0;
+  q.y = 0.0;
+  q.z = 0.0;
+  q.w = 0.0;
+  geodesy::UTMPose pose4(pt, q);
+  EXPECT_FALSE(geodesy::isValid(pose4));
 }
 
 // Test conversion from UTM to WGS 84 and back

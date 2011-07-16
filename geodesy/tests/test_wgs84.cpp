@@ -232,7 +232,25 @@ TEST(GeoPose, nullConstructor)
   geographic_msgs::GeoPose pose;
 
   EXPECT_FALSE(geodesy::is2D(pose));
+  EXPECT_FALSE(geodesy::isValid(pose));
+}
+
+// Test validity of various quaternions
+TEST(GeoPose, quaternionValidity)
+{
+  geographic_msgs::GeoPose pose;
+  EXPECT_FALSE(geodesy::isValid(pose));
+
+  pose.orientation.x = 1.0;             // identity quaternion
   EXPECT_TRUE(geodesy::isValid(pose));
+
+  pose.orientation.x = 0.7071;          // also valid
+  pose.orientation.y = 0.7071;
+  EXPECT_TRUE(geodesy::isValid(pose));
+
+  pose.orientation.x = 0.8071;          // not normalized
+  pose.orientation.y = 0.8071;
+  EXPECT_FALSE(geodesy::isValid(pose));
 }
 
 // Test trivial point conversion
