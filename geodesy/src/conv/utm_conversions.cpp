@@ -129,18 +129,11 @@ geographic_msgs::GeoPoint toMsg(const UTMPoint &from)
   double e1 = (1-sqrt(1-eccSquared))/(1+sqrt(1-eccSquared));
   double N1, T1, C1, R1, D, M;
   double LongOrigin;
-  double mu, phi1, phi1Rad;
-  int NorthernHemisphere; //1 for northern hemispher, 0 for southern
+  double mu, phi1Rad;
 
-  if((from.band - 'N') >= 0)
-    {
-      //point is in northern hemisphere
-      NorthernHemisphere = 1;
-    }
-  else
+  if ((from.band - 'N') < 0)
     {
       //point is in southern hemisphere
-      NorthernHemisphere = 0;
       //remove 10,000,000 meter offset used for southern hemisphere
       y -= 10000000.0;
     }
@@ -156,7 +149,6 @@ geographic_msgs::GeoPoint toMsg(const UTMPoint &from)
   phi1Rad = mu + ((3*e1/2-27*e1*e1*e1/32)*sin(2*mu) 
                   + (21*e1*e1/16-55*e1*e1*e1*e1/32)*sin(4*mu)
                   + (151*e1*e1*e1/96)*sin(6*mu));
-  phi1 = angles::to_degrees(phi1Rad);
 
   N1 = a/sqrt(1-eccSquared*sin(phi1Rad)*sin(phi1Rad));
   T1 = tan(phi1Rad)*tan(phi1Rad);
