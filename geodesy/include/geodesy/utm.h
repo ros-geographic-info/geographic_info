@@ -42,11 +42,8 @@
 #include <ctype.h>
 #include <iostream>
 #include <iomanip>
-#include <ros/ros.h>
 
-#include <LinearMath/btQuaternion.h>
-#include <LinearMath/btTransform.h>
-#include <LinearMath/btVector3.h>
+#include <ros/ros.h>
 #include <tf/tf.h>
 
 #include <geodesy/wgs84.h>
@@ -242,20 +239,6 @@ static inline bool sameGridZone(const UTMPoint &pt1, const UTMPoint &pt2)
 static inline bool sameGridZone(const UTMPose &pose1, const UTMPose &pose2)
 {
   return sameGridZone(pose1.position, pose2.position);
-}
-
-/** @return a bullet vector corresponding to a UTM point. */
-static inline btVector3 toBullet(const UTMPoint &from)
-{
-  return btVector3(from.easting, from.northing, from.altitude);
-}
-
-/** @return a bullet transform corresponding to a UTM pose. */
-static inline btTransform toBullet(const UTMPose &from)
-{
-  btQuaternion q;
-  tf::quaternionMsgToTF(from.orientation, q);
-  return btTransform(q, toBullet(from.position));
 }
 
 /** @return a geometry Point corresponding to a UTM point. */

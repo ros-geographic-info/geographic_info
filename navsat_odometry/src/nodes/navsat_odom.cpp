@@ -122,7 +122,7 @@ void NavSatOdom::publishOdom(void)
     pub_time_ = imu_msg_.header.stamp;
   msg->header.stamp = pub_time_;
   msg->header.frame_id = fix_msg_.header.frame_id;
-  msg->child_frame_id = imu_msg_.header.frame_id;;
+  msg->child_frame_id = imu_msg_.header.frame_id;
 
   /// @todo Provide options to override the fix and IMU frame IDs
   /// (using tf_prefix, if defined).
@@ -180,11 +180,17 @@ void NavSatOdom::publishOdom(void)
       // position change since the previous point divided by the time
       // between the last two fix messages.  Although position is in
       // the parent frame, twist must be reported in the child frame.
-      btVector3 pt0(toBullet(fix_prev_pt_));
-      btVector3 pt1(toBullet(fix_msg_pt_));
+      tf::Vector3 pt0(fix_prev_pt_.easting,
+                      fix_prev_pt_.northing,
+                      fix_prev_pt_.altitude);
+      tf::Vector3 pt1(fix_msg_pt_.easting,
+                      fix_msg_pt_.northing,
+                      fix_msg_pt_.altitude);
       ros::Duration dt(fix_msg_.header.stamp - fix_prev_.header.stamp);
-      btVector3 vel((pt1 - pt0) / dt.toSec());
+      tf::Vector3 vel((pt1 - pt0) / dt.toSec());
+
       /// @todo transform velocity into child frame
+
       tf::vector3TFToMsg(vel, msg->twist.twist.linear);
 
       odom_pub_.publish(msg);
