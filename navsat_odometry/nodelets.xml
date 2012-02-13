@@ -1,9 +1,0 @@
-<library path="lib/libnavsat_odom">
-  <class name="navsat_odom/nodelet"
-         type="navsat_odom::NavSatOdomNodelet"
-         base_class_type="nodelet::Nodelet">
-    <description> 
-      Navigation satellite odometry nodelet.
-    </description>
-  </class>
-</library>
