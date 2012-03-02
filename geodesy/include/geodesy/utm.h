@@ -88,7 +88,7 @@ class UTMPoint
   UTMPoint():
     easting(0.0),
     northing(0.0),
-    altitude(std::numeric_limits<double>::signaling_NaN()),
+    altitude(std::numeric_limits<double>::quiet_NaN()),
     zone(0),
     band(' ')
   {}
@@ -108,7 +108,7 @@ class UTMPoint
   UTMPoint(double _easting, double _northing, uint8_t _zone, char _band):
     easting(_easting),
     northing(_northing),
-    altitude(std::numeric_limits<double>::signaling_NaN()),
+    altitude(std::numeric_limits<double>::quiet_NaN()),
     zone(_zone),
     band(_band)
   {}

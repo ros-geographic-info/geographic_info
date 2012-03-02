@@ -165,7 +165,7 @@ namespace geodesy
     geographic_msgs::GeoPoint pt;
     pt.latitude = lat;
     pt.longitude = lon;
-    pt.altitude = std::numeric_limits<double>::signaling_NaN();
+    pt.altitude = std::numeric_limits<double>::quiet_NaN();
     return pt;
   }
 
