@@ -8,9 +8,8 @@
   <license>BSD</license>
   <review status="experimental" notes=""/>
   <url>http://ros.org/wiki/geographic_msgs</url>
+
   <depend package="geometry_msgs"/>
   <depend package="sensor_msgs"/>
 
 </package>
-
-
