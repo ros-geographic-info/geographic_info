@@ -4,5 +4,5 @@
 # the outlines of buildings and parking lots, etc.
 
 UniqueID   id           # Unique sequence identifier
-WayPoint[] point        # Points in the sequence
+WayPoint[] points       # Points in the sequence
 KeyValue[] tags         # Key/value tags for this sequence
