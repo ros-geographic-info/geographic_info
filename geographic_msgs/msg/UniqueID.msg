@@ -18,4 +18,4 @@
 #
 # Other map sources should use similar conventions.
 
-byte[128] uuid
+byte[16] uuid
