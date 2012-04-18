@@ -7,4 +7,5 @@ Header header           # stamp specifies time
 # box containing the map contents. Their altitudes are ignored.
 GeoPoint[2] bounds
 
-WaySequence[] elements  # Roads and other map components
+WayPoint[]  points      # way-points
+PointSet[]  features    # sets of points forming map features
