@@ -7,5 +7,5 @@ Header header           # stamp specifies time
 # box containing the map contents. Their altitudes are ignored.
 GeoPoint[2] bounds
 
-WayPoint[]  points      # way-points
-PointSet[]  features    # sets of points forming map features
+WayPoint[]   points      # way-points
+MapFeature[] features    # map features

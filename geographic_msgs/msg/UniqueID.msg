@@ -3,6 +3,9 @@
 #  http://en.wikipedia.org/wiki/Universally_unique_identifier
 #  http://tools.ietf.org/html/rfc4122.html
 #
+# For simplicity and human readability, the UUID is represented as a
+# string of hex digits and dashes.
+#
 # UUID generation is up to the programmer, but the intent is for
 # matching features within a domain such as Open Street Map to yield
 # the same UUID.  The recommended method is RFC 4122 variant 5,
@@ -18,4 +21,4 @@
 #
 # Other map sources should use similar conventions.
 
-byte[16] uuid
+string uuid     # format: 01234567-89ab-cdef-0123-456789abcdef
