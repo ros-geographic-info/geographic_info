@@ -9,11 +9,11 @@
 # computing the SHA-1 hash of a URL encoded using the map source.  For
 # example:
 #
-#  http://openstreetmap.org/node/<number>
-#  http://openstreetmap.org/way/<number>
-#  http://openstreetmap.org/relation/<number>
+#  http://openstreetmap.org/node/NUMBER
+#  http://openstreetmap.org/way/NUMBER
+#  http://openstreetmap.org/relation/NUMBER
 #
-# Here <number> is the decimal representation of the OSM node, way, or
+# Here NUMBER is the decimal representation of the OSM node, way, or
 # relation ID without leading zeros.
 #
 # Other map sources should use similar conventions.
