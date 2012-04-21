@@ -1,12 +1,15 @@
-# This service requests a geographic map.
+# This service requests a region of a geographic map.
 
 string url            # where to read map data
 
-# The latitudes and longitudes of these two points delimit a bounding
-# box for the desired map.  Their altitudes are ignored.  If these
-# limits are NaN, provide all data available from the specified URL.
-GeoPoint[2] bounds
+# Bounding box for the desired map.  If all zeros, provide all data
+# available from the specified URL.
+BoundingBox bounds
+
 ---
+
 bool success          # true if the call succeeded
-string status         # used to give more detail
-geographic_msgs/GeographicMap map # the requested map
+string status         # more details
+
+# The requested map, its bounds may differ from the requested bounds.
+geographic_msgs/GeographicMap map
