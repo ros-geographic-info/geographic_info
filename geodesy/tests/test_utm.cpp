@@ -416,7 +416,7 @@ TEST(OStream, pose)
 // Run all the tests that were declared with TEST()
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "geotypes_unit_test");
+  ros::init(argc, argv, "test_utm_cpp");
   testing::InitGoogleTest(&argc, argv);
 
   // run the tests in this thread

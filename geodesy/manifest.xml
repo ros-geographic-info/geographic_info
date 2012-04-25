@@ -11,6 +11,7 @@
   <depend package="angles"/>
   <depend package="geographic_msgs"/>
   <depend package="geometry_msgs"/>
+  <depend package="rosunit"/>
   <depend package="tf"/>
 
   <rosdep name="python-pyproj"/>
