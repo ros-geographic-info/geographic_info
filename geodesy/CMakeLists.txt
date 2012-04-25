@@ -19,7 +19,8 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 add_subdirectory(src/conv)
 
 # unit tests
-rosbuild_add_gtest(test_utm tests/test_utm.cpp)
-rosbuild_add_pyunit(tests/test_utm.py)
-target_link_libraries(test_utm geoconv)
 rosbuild_add_gtest(test_wgs84 tests/test_wgs84.cpp)
+rosbuild_add_gtest(test_utm tests/test_utm.cpp)
+target_link_libraries(test_utm geoconv)
+rosbuild_add_pyunit(tests/test_utm.py)
+rosbuild_add_pyunit(tests/test_uuid.py)
