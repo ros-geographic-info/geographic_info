@@ -60,6 +60,7 @@ import roslib; roslib.load_manifest(PKG_NAME)
 import rospy
 
 from geographic_msgs.msg import GeoPoint
+from geometry_msgs.msg   import Point
 
 class UTMPoint:
     """Universal Transverse Mercator point class.
@@ -99,8 +100,24 @@ class UTMPoint:
         """
         return self.altitude != self.altitude
 
+    def toPoint(self):
+        """Generate geometry_msgs/Point from UTMPoint
+
+           @todo: clamp message longitude to [-180..180]
+
+           @return: corresponding GeoPoint message
+        """
+        if not self.valid():
+            raise ValueError('invalid UTM point: ' + str(self))
+        utm_proj = pyproj.Proj(proj='utm', zone=self.zone, datum='WGS84')
+        pt = Point()
+        if not self.is2D:
+            pt.z = self.altitude
+        pt.x, pt.y = utm_proj(self.easting, self.northing, inverse=True)
+        return pt
+
     def toMsg(self):
-        """Generate UTM point from GeoPoint message.
+        """Generate GeoPoint message from UTMPoint.
 
            @todo: clamp message longitude to [-180..180]
 
@@ -121,27 +138,31 @@ class UTMPoint:
         """
         return (1 <= self.zone and self.zone <= 60 and self.band != ' ')
 
-def fromMsg(msg):
-    """Generate UTM point from GeoPoint message.
+def fromLatLong(latitude, longitude, altitude=float('nan')):
+    """Generate UTMPoint from latitude, longitude and (optional) altitude.
     """
-    z, b = getGridZone(msg)
-    utm = UTMPoint(altitude=msg.altitude, zone=z, band=b)
+    z, b = getGridZone(latitude, longitude)
     utm_proj = pyproj.Proj(proj='utm', zone=z, datum='WGS84')
-    utm.easting, utm.northing = utm_proj(msg.longitude, msg.latitude)
-    return utm
+    e, n = utm_proj(longitude, latitude)
+    return UTMPoint(easting=e, northing=n, altitude=altitude, zone=z, band=b)
 
-def getGridZone(msg):
+def fromMsg(msg):
+    """Generate UTMPoint from GeoPoint message.
+    """
+    return fromLatLong(msg.latitude, msg.longitude, msg.altitude)
+
+def getGridZone(lat, lon):
     """Get UTM zone and MGRS band for GeoPoint message.
 
-       @param: msg: GeoPoint lat/long message.
+       @param: latitude: latitude in degrees, negative is South
+       @param: longitude: longitude in degrees, negative is West
        @return: (zone, band) tuple
 
        @todo: handle polar (UPS) zones: A, B, Y, Z.
        @todo: normalize message longitude to [-180..180]
     """
-    zone = int((msg.longitude + 180.0)//6.0) + 1
+    zone = int((lon + 180.0)//6.0) + 1
     band = ' '
-    lat = msg.latitude
     if    84 >= lat and lat >= 72: band = 'X'
     elif  72 > lat and lat >= 64:  band = 'W'
     elif  64 > lat and lat >= 56:  band = 'V'
@@ -179,6 +200,7 @@ if __name__ == '__main__':
         pt.toMsg()
         raise ValueError('uninitialized UTMPoint should be invalid: ' + str(pt))
     except ValueError:
+        #print('uninitialized UTMPoint invalid, as expected')
         pass                            # expected result
 
     # UTM point in  Pickle Research Campus, University of Texas, Austin
@@ -199,16 +221,17 @@ if __name__ == '__main__':
         raise ValueError('GeoPoint conversion failed for: ' + str(pt))
 
     # same point, but without altitude
-    ll = GeoPoint(latitude = 30.385315,
-                  longitude = -97.728524,
-                  altitude = float('nan'))
-    pt = fromMsg(ll)
+    lat = 30.385315
+    lon = -97.728524
+    alt = float('nan')
+    pt = fromLatLong(lat, lon)
     if str(pt) != 'UTM: [622159.338, 3362168.303, nan, 14R]':
         raise ValueError('conversion failed: ' + str(pt))
     if not pt.valid():
         raise ValueError('invalid UTMPoint: ' + str(pt))
     if not pt.is2D():
         raise ValueError('this UTMPoint should be 2D: ' + str(pt))
+    ll = GeoPoint(lat, lon, alt)
     ll_back = pt.toMsg()
     if str(ll) != str(ll_back):
         print(ll)
