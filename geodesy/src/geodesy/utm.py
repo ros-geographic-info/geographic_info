@@ -109,11 +109,9 @@ class UTMPoint:
         """
         if not self.valid():
             raise ValueError('invalid UTM point: ' + str(self))
-        utm_proj = pyproj.Proj(proj='utm', zone=self.zone, datum='WGS84')
-        pt = Point()
+        pt = Point(x = self.easting, y = self.northing)
         if not self.is2D:
             pt.z = self.altitude
-        pt.x, pt.y = utm_proj(self.easting, self.northing, inverse=True)
         return pt
 
     def toMsg(self):
