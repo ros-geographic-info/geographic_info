@@ -44,7 +44,7 @@
     This implementation uses the pyproj wrapper for the proj4
     geographic coordinate projection library.
 
-    @author: Jack O'Quin
+    :Author: Jack O'Quin
 """
 
 # prepare for Python 3 migration some day
@@ -63,20 +63,20 @@ from geometry_msgs.msg   import Point
 class UTMPoint:
     """Universal Transverse Mercator point class.
 
-    @todo: add Universal Polar Stereographic support
+    :todo: add Universal Polar Stereographic support
     """
 
 
-    def __init__(self, easting=0.0, northing=0.0,
+    def __init__(self, easting=float('nan'), northing=float('nan'),
                  altitude=float('nan'), zone=0, band=' '):
         """Construct UTMPoint object.
 
-        @param easting: UTM easting (meters)
-        @param northing: UTM northing (meters)
-        @param altitude: altitude above the WGS84 ellipsoid (meters),
+        :param easting: UTM easting (meters)
+        :param northing: UTM northing (meters)
+        :param altitude: altitude above the WGS84 ellipsoid (meters),
                          none if NaN.
-        @param zone: UTM longitude zone
-        @param band: MGRS latitude band letter
+        :param zone: UTM longitude zone
+        :param band: MGRS latitude band letter
         """
 
         self.easting = easting
@@ -86,7 +86,10 @@ class UTMPoint:
         self.band = band
 
     def __str__(self):
-        """@return: string representation of UTMPoint"""
+        """Overloaded str() operator.
+        
+        :returns: string representation of UTMPoint
+        """
         # uses python3-compatible str.format() method:
         return 'UTM: [{0:.3f}, {1:.3f}, {2:.3f}, {3}{4}]'.format(
             self.easting, self.northing, self.altitude, self.zone, self.band)
@@ -94,16 +97,16 @@ class UTMPoint:
     def is2D(self):
         """UTM point is two-dimensional.
 
-           @return: True if altitude is not a number (NaN)
+           :returns: True if altitude is not a number (NaN)
         """
         return self.altitude != self.altitude
 
     def toPoint(self):
         """Generate geometry_msgs/Point from UTMPoint
 
-           @todo: clamp message longitude to [-180..180]
+           :todo: clamp message longitude to [-180..180]
 
-           @return: corresponding GeoPoint message
+           :returns: corresponding GeoPoint message
         """
         if not self.valid():
             raise ValueError('invalid UTM point: ' + str(self))
@@ -115,9 +118,9 @@ class UTMPoint:
     def toMsg(self):
         """Generate GeoPoint message from UTMPoint.
 
-           @todo: clamp message longitude to [-180..180]
+           :todo: clamp message longitude to [-180..180]
 
-           @return: corresponding GeoPoint message
+           :returns: corresponding GeoPoint message
         """
         if not self.valid():
             raise ValueError('invalid UTM point: ' + str(self))
@@ -130,12 +133,21 @@ class UTMPoint:
     def valid(self):
         """UTM point is valid.
 
-           @return: True if this is a valid UTM point.
+        :returns: True if this is a valid UTM point.
         """
         return (1 <= self.zone and self.zone <= 60 and self.band != ' ')
 
 def fromLatLong(latitude, longitude, altitude=float('nan')):
     """Generate UTMPoint from latitude, longitude and (optional) altitude.
+
+    Latitude and longitude are expressed in degrees, relative to the
+    WGS84 ellipsoid.
+
+    :param latitude: [degrees], negative is South.
+    :param longitude: [degrees], negative is West.
+    :param altitude: [meters], negative is below the ellipsoid.
+
+    :returns: UTMPoint object.
     """
     z, b = getGridZone(latitude, longitude)
     utm_proj = pyproj.Proj(proj='utm', zone=z, datum='WGS84')
@@ -144,18 +156,21 @@ def fromLatLong(latitude, longitude, altitude=float('nan')):
 
 def fromMsg(msg):
     """Generate UTMPoint from GeoPoint message.
+
+    :param msg: GeoPoint message.
+    :returns: UTMPoint object.
     """
     return fromLatLong(msg.latitude, msg.longitude, msg.altitude)
 
 def getGridZone(lat, lon):
     """Get UTM zone and MGRS band for GeoPoint message.
 
-       @param: latitude: latitude in degrees, negative is South
-       @param: longitude: longitude in degrees, negative is West
-       @return: (zone, band) tuple
+       :param latitude: latitude in degrees, negative is South
+       :param longitude: longitude in degrees, negative is West
+       :returns: (zone, band) tuple
 
-       @todo: handle polar (UPS) zones: A, B, Y, Z.
-       @todo: normalize message longitude to [-180..180]
+       :todo: handle polar (UPS) zones: A, B, Y, Z.
+       :todo: normalize message longitude to [-180..180]
     """
     zone = int((lon + 180.0)//6.0) + 1
     band = ' '

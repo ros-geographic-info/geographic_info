@@ -34,6 +34,8 @@
 
 """
 Generate UUIDs for Geographic Information Systems
+
+:Author: Jack O'Quin
 """
 
 # prepare for Python 3 migration some day
@@ -51,11 +53,13 @@ import uuid
 def generate(ns, id):
     """ Generate UUID for geographic data.
 
-    @param ns: name space
-    @type  ns: str
-    @param id: identifier, unique within ns name space
-    @type  id: int
-    @return standard Python uuid
+    :param ns: name space
+    :type  ns: str
+    :param id: identifier, unique within ns name space
+    :type  id: int
+
+    :returns: standard Python uuid object
+    :raises: :exc:`ValueError` if id not convertible to int.
 
   http://tools.ietf.org/html/rfc4122.html
 
@@ -68,8 +72,8 @@ identifiers are encoded like this:
   generate('http://openstreetmap.org/way/', way_id)
   generate('http://openstreetmap.org/relation/', rel_id)
 
-Here the *_id parameters are integer representations of OSM node, way,
-or relation identifiers.
+Here the `*_id` parameters are integer representations of OSM node,
+way, or relation identifiers.
 
 """
     url = ns + str(int(id))
@@ -79,11 +83,13 @@ or relation identifiers.
 def makeUniqueID(ns, id):
     """Return a UniqueID message for id number in name space ns.
 
-    @param ns: name space
-    @type  ns: str
-    @param id: identifier, unique within ns name space
-    @type  id: int
-    @return standard Python uuid
+    :param ns: name space
+    :type  ns: str
+    :param id: identifier, unique within ns name space
+    :type  id: int
+
+    :returns: geographic_msgs/UniqueID message
+    :raises: :exc:`ValueError` if id not convertible to int.
 
     See: generate() explanation of name space and identifier rules.
 

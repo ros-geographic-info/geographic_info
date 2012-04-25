@@ -19,6 +19,7 @@
   <export>
     <cpp cflags="-I${prefix}/include"
          lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lgeoconv"/>
+    <rosdoc config="rosdoc.yaml" />
   </export>
 
 </package>
