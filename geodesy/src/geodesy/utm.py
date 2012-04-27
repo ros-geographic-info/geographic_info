@@ -94,6 +94,11 @@ class UTMPoint:
         return 'UTM: [{0:.3f}, {1:.3f}, {2:.3f}, {3}{4}]'.format(
             self.easting, self.northing, self.altitude, self.zone, self.band)
 
+    def gridZone(self):
+        """Return MGRS zone and band tuple.
+        """
+        return (self.zone, self.band)
+
     def is2D(self):
         """UTM point is two-dimensional.
 
@@ -106,12 +111,12 @@ class UTMPoint:
 
            :todo: clamp message longitude to [-180..180]
 
-           :returns: corresponding GeoPoint message
+           :returns: corresponding geometry_msgs/Point
         """
         if not self.valid():
             raise ValueError('invalid UTM point: ' + str(self))
         pt = Point(x = self.easting, y = self.northing)
-        if not self.is2D:
+        if not self.is2D():
             pt.z = self.altitude
         return pt
 
@@ -133,9 +138,13 @@ class UTMPoint:
     def valid(self):
         """UTM point is valid.
 
+        Easting and northing will be NaN if a point is not valid.
+
         :returns: True if this is a valid UTM point.
         """
-        return (1 <= self.zone and self.zone <= 60 and self.band != ' ')
+        return (self.easting == self.easting
+                and self.northing == self.northing
+                and self.band != ' ')
 
 def fromLatLong(latitude, longitude, altitude=float('nan')):
     """Generate UTMPoint from latitude, longitude and (optional) altitude.
@@ -165,13 +174,16 @@ def fromMsg(msg):
 def getGridZone(lat, lon):
     """Get UTM zone and MGRS band for GeoPoint message.
 
-       :param latitude: latitude in degrees, negative is South
-       :param longitude: longitude in degrees, negative is West
+       :param lat: latitude in degrees, negative is South
+       :param lon: longitude in degrees, negative is West
        :returns: (zone, band) tuple
+       :raises: :exc:`ValueError` if lon not in [-180..180] or if lat
+                has no corresponding band letter.
 
        :todo: handle polar (UPS) zones: A, B, Y, Z.
-       :todo: normalize message longitude to [-180..180]
     """
+    if -180.0 > lon or lon > 180.0:
+        raise ValueError('invalid longitude: ' + str(lon))
     zone = int((lon + 180.0)//6.0) + 1
     band = ' '
     if    84 >= lat and lat >= 72: band = 'X'
@@ -194,5 +206,5 @@ def getGridZone(lat, lon):
     elif -56 > lat and lat >= -64: band = 'E'
     elif -64 > lat and lat >= -72: band = 'D'
     elif -72 > lat and lat >= -80: band = 'C'
-    else: raise ValueError('latitude out of UTM range')
+    else: raise ValueError('latitude out of UTM range: ' + str(lat))
     return (zone, band)
