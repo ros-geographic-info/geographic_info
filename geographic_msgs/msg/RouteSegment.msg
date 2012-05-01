@@ -9,7 +9,4 @@ UniqueID   id           # Unique identifier for this segment
 UniqueID   start        # beginning way point of segment
 UniqueID   end          # ending way point of segment
 
-# The speed limit is useful for route planning, when a minimum time
-# rather than minimum distance is desired.  When unknown, its value is
-# zero.
-float32    speed_limit  # speed limit for this segment [meters/second]
+KeyValue[] tags
