@@ -50,13 +50,13 @@ from geographic_msgs.msg import UniqueID
 
 import uuid
 
-def generate(ns, id):
+def generate(url, id=None):
     """ Generate UUID for geographic data.
 
-    :param ns: name space
-    :type  ns: str
-    :param id: identifier, unique within ns name space
-    :type  id: int
+    :param url: URL indicating generating source
+    :type  url: str
+    :param id: (optional) identifier, unique within URL name space
+    :type  id: int or string convertible to int
 
     :returns: standard Python uuid object
     :raises: :exc:`ValueError` if id not convertible to int.
@@ -75,18 +75,26 @@ identifiers are encoded like this:
 Here the `*_id` parameters are integer representations of OSM node,
 way, or relation identifiers.
 
+For RouteSegment graph edges we use:
+
+  generate('http://ros.org/wiki/PACKAGE_NAME/START_UUID/END_UUID')
+
+Where PACKAGE_NAME is the generating ROS package, START_UUID names the
+beginning way point, and END_UUID is the ending way point.
+
 """
-    url = ns + str(int(id))
+    if id is not None:
+        url += str(int(id))
     return uuid.uuid5(uuid.NAMESPACE_URL, url)
 
 
-def makeUniqueID(ns, id):
+def makeUniqueID(url, id=None):
     """Return a UniqueID message for id number in name space ns.
 
-    :param ns: name space
-    :type  ns: str
-    :param id: identifier, unique within ns name space
-    :type  id: int
+    :param url: URL indicating generating source
+    :type  url: str
+    :param id: (optional) identifier, unique within URL name space
+    :type  id: int or string convertible to int
 
     :returns: geographic_msgs/UniqueID message
     :raises: :exc:`ValueError` if id not convertible to int.
@@ -97,4 +105,4 @@ def makeUniqueID(ns, id):
           message.  That uses over twice the space of a byte string,
           but makes the messages human-readable.
     """
-    return UniqueID(uuid = str(generate(ns, id)))
+    return UniqueID(uuid = str(generate(url, id)))

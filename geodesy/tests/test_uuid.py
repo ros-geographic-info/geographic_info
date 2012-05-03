@@ -38,6 +38,14 @@ class TestPythonUUID(unittest.TestCase):
         self.assertNotEqual(x, y)
         self.assertEqual(str(y), '8e0b7d8a-c433-5c42-be2e-fbd97ddff9ac')
 
+    def test_route_segment(self):
+        start = 'da7c242f-2efe-5175-9961-49cc621b80b9'
+        end = '812f1c08-a34b-5a21-92b9-18b2b0cf4950'
+        x = generate('http://ros.org/wiki/road_network/' + start + '/' + end)
+        y = generate('http://ros.org/wiki/road_network/' + end + '/' + start)
+        self.assertNotEqual(x, y)
+        self.assertEqual(str(x), 'acaa906e-8411-5b45-a446-ccdc2fc39f29')
+
     def test_invalid_id_value(self):
         self.assertRaises(ValueError, generate,
                           'http://openstreetmap.org/way/', 'xxx')
@@ -52,6 +60,16 @@ class TestPythonUUID(unittest.TestCase):
         y = makeUniqueID('http://openstreetmap.org/way/', 1)
         self.assertNotEqual(x, y)
         self.assertEqual(y.uuid, 'b3180681-b125-5e41-bd04-3c8b046175b4')
+
+    def test_msg_route_segment(self):
+        start = 'da7c242f-2efe-5175-9961-49cc621b80b9'
+        end = '812f1c08-a34b-5a21-92b9-18b2b0cf4950'
+        x = makeUniqueID('http://ros.org/wiki/road_network/'
+                         + str(start) + '/' + str(end))
+        y = makeUniqueID('http://ros.org/wiki/road_network/'
+                         + str(end) + '/' + str(start))
+        self.assertNotEqual(x, y)
+        self.assertEqual(x.uuid, 'acaa906e-8411-5b45-a446-ccdc2fc39f29')
 
     def test_msg_invalid_value(self):
         self.assertRaises(ValueError, makeUniqueID,
