@@ -65,9 +65,9 @@ class TestPythonUUID(unittest.TestCase):
         start = 'da7c242f-2efe-5175-9961-49cc621b80b9'
         end = '812f1c08-a34b-5a21-92b9-18b2b0cf4950'
         x = makeUniqueID('http://ros.org/wiki/road_network/'
-                         + str(start) + '/' + str(end))
+                         + start + '/' + end)
         y = makeUniqueID('http://ros.org/wiki/road_network/'
-                         + str(end) + '/' + str(start))
+                         + end + '/' + start)
         self.assertNotEqual(x, y)
         self.assertEqual(x.uuid, 'acaa906e-8411-5b45-a446-ccdc2fc39f29')
 
