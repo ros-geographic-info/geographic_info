@@ -112,6 +112,10 @@ class TestWuPoint(unittest.TestCase):
             self.assertEqual(wupts[uuids[i]].uuid(), uuids[i])
             self.assertAlmostEqual(w.utm.easting, eastings[i], places=3)
             self.assertAlmostEqual(w.utm.northing, northings[i], places=3)
+            point_xy = w.toPointXY()
+            self.assertAlmostEqual(point_xy.x, eastings[i], places = 3)
+            self.assertAlmostEqual(point_xy.y, northings[i], places = 3)
+            self.assertAlmostEqual(point_xy.z, 0.0, places = 3)
             i += 1
         self.assertEqual(i, 3)
         self.assertEqual(len(wupts), 3)
