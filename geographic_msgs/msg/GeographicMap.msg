@@ -7,3 +7,4 @@ BoundingBox  bounds      # 2D bounding box containing map
 
 WayPoint[]   points      # way-points
 MapFeature[] features    # map features
+KeyValue[]   tags        # map properties
