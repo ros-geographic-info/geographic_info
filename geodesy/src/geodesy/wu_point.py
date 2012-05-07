@@ -33,14 +33,12 @@
 """
 .. module:: wu_point
 
-Convenience classes for manipulating way points and their associates
+Convenience classes for manipulating way points and their associated
 UTM coordinates.
 
 """
 
-from __future__ import print_function
-
-PKG = 'osm_cartography'
+PKG = 'geodesy'
 import roslib; roslib.load_manifest(PKG)
 import rospy
 

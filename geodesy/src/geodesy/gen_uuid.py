@@ -31,13 +31,10 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 """
-Generate UUIDs for Geographic Information Systems
+.. module:: gen_uuid: Generate UUIDs for Geographic Information Systems.
 
-:Author: Jack O'Quin
+:author: Jack O'Quin
 """
-
-# prepare for Python 3 migration some day
-from __future__ import print_function
 
 # unfortunately, the Python uuid package does not work with unicode strings:
 #from __future__ import unicode_literals

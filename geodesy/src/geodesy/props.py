@@ -31,10 +31,10 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 """
-:module:`props` KeyValue property interface for Geographic Information
-        Systems.
+.. module:: props: KeyValue property interface for Geographic
+            Information Systems.
 
-:todo: rename tags to props in all these messages
+:todo: rename 'tags' to 'props' in all these messages
 
 :author: Jack O'Quin
 """

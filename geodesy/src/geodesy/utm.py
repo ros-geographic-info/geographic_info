@@ -30,7 +30,8 @@
 # ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 # POSSIBILITY OF SUCH DAMAGE.
 
-"""Universal Transverse Mercator coordinates
+"""
+.. module:: utm: Universal Transverse Mercator coordinates
 
     For outdoor robotics applications, Euclidean projections like UTM
     are easier to work with than latitude and longitude.  This system
@@ -42,17 +43,14 @@
     This implementation uses the pyproj wrapper for the proj4
     geographic coordinate projection library.
 
-    :Author: Jack O'Quin
+    :author: Jack O'Quin
 """
-
-# prepare for Python 3 migration some day
-from __future__ import print_function
 
 import math
 import pyproj
 
-PKG_NAME = 'geodesy'
-import roslib; roslib.load_manifest(PKG_NAME)
+PKG = 'geodesy'
+import roslib; roslib.load_manifest(PKG)
 import rospy
 
 from geographic_msgs.msg import GeoPoint
