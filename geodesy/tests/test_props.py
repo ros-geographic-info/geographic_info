@@ -10,6 +10,7 @@ from geodesy.props import *     # module being tested
 
 from geographic_msgs.msg import KeyValue
 from geographic_msgs.msg import MapFeature
+from geographic_msgs.msg import RouteSegment
 from geographic_msgs.msg import WayPoint
 
 class TestPythonProps(unittest.TestCase):
@@ -22,13 +23,13 @@ class TestPythonProps(unittest.TestCase):
 
     def test_empty_property_set(self):
         f = MapFeature()
-        f.tags.append(KeyValue(key = 'valid', value = 'any'))
+        put(f, 'valid', 'any')
         self.assertIsNone(match(f, set()))
 
     def test_feature_match(self):
         f = MapFeature()
-        f.tags.append(KeyValue(key = 'different', value = 'none'))
-        f.tags.append(KeyValue(key = 'valid', value = 'any'))
+        put(f, 'different')
+        put(f, 'valid', 'any')
         prop = match(f, {'a', 'valid', 'property'})
         self.assertIsNotNone(prop)
         self.assertEqual(prop, ('valid', 'any'))
@@ -42,13 +43,35 @@ class TestPythonProps(unittest.TestCase):
 
     def test_waypoint_match(self):
         p = WayPoint()
-        p.tags.append(KeyValue(key = 'another', value = 'anything'))
-        p.tags.append(KeyValue(key = 'name', value = 'myself'))
+        put(p, 'another', 'anything')
+        put(p, 'name', 'myself')
         prop = match(p, {'name'})
         self.assertIsNotNone(prop)
         k, v = prop
         self.assertEqual(k, 'name')
         self.assertEqual(v, 'myself')
+
+    def test_segment_value_change(self):
+        s = RouteSegment()
+        put(s, 'another', 'anything')
+        put(s, 'name', 'myself')
+        self.assertEqual(get(s, 'name'), 'myself')
+        put(s, 'name', 'alias')
+        self.assertEqual(get(s, 'name'), 'alias')
+
+    def test_segment_null_value(self):
+        s = RouteSegment()
+        put(s, 'another', 'anything')
+        put(s, 'name')
+        self.assertEqual(get(s, 'name'), '')
+        put(s, 'name', 'myself')
+        self.assertEqual(get(s, 'name'), 'myself')
+
+    def test_invalid_key_set(self):
+        f = MapFeature()
+        put(f, 'notset', 'any')
+        self.assertEqual(get(f, 'notset'), 'any')
+        self.assertRaises(ValueError, match, f, 'notset')
 
 if __name__ == '__main__':
     import rosunit
