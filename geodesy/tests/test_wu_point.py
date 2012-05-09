@@ -85,7 +85,7 @@ class TestWuPoint(unittest.TestCase):
         uu = 'da7c242f-2efe-5175-9961-49cc621b80b9'
         with self.assertRaises(KeyError):
             x = wupts[uu]
-        self.assertIsNone(wupts.get(uu))
+        self.assertEqual(wupts.get(uu), None)
 
     def test_three_point_set(self):
         # test data
@@ -122,13 +122,13 @@ class TestWuPoint(unittest.TestCase):
 
         bogus = '00000000-c433-5c42-be2e-fbd97ddff9ac'
         self.assertFalse(bogus in wupts)
-        self.assertIsNone(wupts.get(bogus))
+        self.assertEqual(wupts.get(bogus), None)
 
         uu = uuids[1]
         self.assertTrue(uu in wupts)
         wpt = wupts[uu]
         self.assertEqual(wpt.uuid(), uu)
-        self.assertIsNotNone(wupts.get(uu))
+        self.assertNotEqual(wupts.get(uu), None)
         self.assertEqual(wupts.get(uu).uuid(), uu)
 
 if __name__ == '__main__':

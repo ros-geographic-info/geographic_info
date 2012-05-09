@@ -19,19 +19,19 @@ class TestPythonProps(unittest.TestCase):
 
     def test_empty_feature_match(self):
         f = MapFeature()
-        self.assertIsNone(match(f, set(['no', 'such', 'property'])))
+        self.assertEqual(match(f, set(['no', 'such', 'property'])), None)
 
     def test_empty_property_set(self):
         f = MapFeature()
         put(f, 'valid', 'any')
-        self.assertIsNone(match(f, set()))
+        self.assertEqual(match(f, set()), None)
 
     def test_feature_match(self):
         f = MapFeature()
         put(f, 'different')
         put(f, 'valid', 'any')
         prop = match(f, set(['a', 'valid', 'property']))
-        self.assertIsNotNone(prop)
+        self.assertNotEqual(prop, None)
         self.assertEqual(prop, ('valid', 'any'))
         k, v = prop
         self.assertEqual(k, 'valid')
@@ -39,14 +39,14 @@ class TestPythonProps(unittest.TestCase):
 
     def test_empty_waypoint_match(self):
         p = WayPoint()
-        self.assertIsNone(match(p, set(['nothing', 'defined'])))
+        self.assertEqual(match(p, set(['nothing', 'defined'])), None)
 
     def test_waypoint_match(self):
         p = WayPoint()
         put(p, 'another', 'anything')
         put(p, 'name', 'myself')
         prop = match(p, set(['name']))
-        self.assertIsNotNone(prop)
+        self.assertNotEqual(prop, None)
         k, v = prop
         self.assertEqual(k, 'name')
         self.assertEqual(v, 'myself')
