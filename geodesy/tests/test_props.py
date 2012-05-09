@@ -19,7 +19,7 @@ class TestPythonProps(unittest.TestCase):
 
     def test_empty_feature_match(self):
         f = MapFeature()
-        self.assertIsNone(match(f, {'no', 'such', 'property'}))
+        self.assertIsNone(match(f, set(['no', 'such', 'property'])))
 
     def test_empty_property_set(self):
         f = MapFeature()
@@ -30,7 +30,7 @@ class TestPythonProps(unittest.TestCase):
         f = MapFeature()
         put(f, 'different')
         put(f, 'valid', 'any')
-        prop = match(f, {'a', 'valid', 'property'})
+        prop = match(f, set(['a', 'valid', 'property']))
         self.assertIsNotNone(prop)
         self.assertEqual(prop, ('valid', 'any'))
         k, v = prop
@@ -39,13 +39,13 @@ class TestPythonProps(unittest.TestCase):
 
     def test_empty_waypoint_match(self):
         p = WayPoint()
-        self.assertIsNone(match(p, {'nothing', 'defined'}))
+        self.assertIsNone(match(p, set(['nothing', 'defined'])))
 
     def test_waypoint_match(self):
         p = WayPoint()
         put(p, 'another', 'anything')
         put(p, 'name', 'myself')
-        prop = match(p, {'name'})
+        prop = match(p, set(['name']))
         self.assertIsNotNone(prop)
         k, v = prop
         self.assertEqual(k, 'name')
