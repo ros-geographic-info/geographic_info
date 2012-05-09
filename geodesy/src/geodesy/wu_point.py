@@ -42,6 +42,7 @@ PKG = 'geodesy'
 import roslib; roslib.load_manifest(PKG)
 import rospy
 
+import math
 import geodesy.utm
 
 from geographic_msgs.msg import WayPoint
@@ -191,6 +192,21 @@ class WuPointSet():
             self.utm_points[index] = utm_pt
         return WuPoint(way_pt, utm=utm_pt)
 
+    def distance2D(self, idx1, idx2):
+        """ Compute 2D distance between points.
+
+        :param idx1: Index of first point.
+        :param idx2: Index of second point.
+
+        :returns: Distance in meters within the UTM XY
+                  plane. Altitudes are ignored.
+        """
+        p1 = self._get_point_with_utm(idx1)
+        p2 = self._get_point_with_utm(idx2)
+        dx = p2.utm.easting - p1.utm.easting
+        dy = p2.utm.northing - p1.utm.northing
+        return math.sqrt(dx*dx + dy*dy)
+
     def get(self, key, default=None):
         """ Get point, if defined.
 
@@ -203,6 +219,18 @@ class WuPointSet():
             return self._get_point_with_utm(index)
         else:
             return default
+
+    def index(self, key, default=None):
+        """ Get index of point, if defined.
+
+        :param key: UUID of desired point.
+        :param default: value to return if no such point.
+        :returns: Index of point, if successful; otherwise default.
+                  Beware: the index may be 0, which evaluates False as
+                  a predicate, use ``is not None`` to test for
+                  presence.
+        """
+        return self.way_point_ids.get(key, default)
 
     def next(self):
         """ Next point.

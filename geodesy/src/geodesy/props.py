@@ -49,7 +49,10 @@ def get(msg, key):
 
     :param msg: Message containing properties.
     :param key: Property key to match.
-    :returns:   Corresponding value, if defined; None otherwise.
+
+    :returns: Corresponding value, if defined; None otherwise.
+              Beware: the value may be '', which evaluates False as a
+              predicate, use ``is not None`` to test for presence.
     """
     for prop in msg.tags:
         if prop.key == key:
