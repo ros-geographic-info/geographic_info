@@ -1,0 +1,14 @@
+# Get a plan to traverse a route network from start to goal.
+#
+# Similar to nav_msgs/GetPlan, but constrained to use the route network.
+
+UniqueID        network         # route network to use
+UniqueID        start           # starting way point
+UniqueID        goal            # goal way point
+
+---
+
+bool            success         # true if the call succeeded
+string          status          # more details
+
+RoutePath       plan            # path to follow
