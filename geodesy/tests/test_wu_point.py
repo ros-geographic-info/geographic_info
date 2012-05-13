@@ -131,6 +131,11 @@ class TestWuPoint(unittest.TestCase):
         self.assertNotEqual(wupts.get(uu), None)
         self.assertEqual(wupts.get(uu).uuid(), uu)
 
+        # test index() function
+        for i in xrange(len(uuids)):
+            self.assertEqual(wupts.index(uuids[i]), i)
+            self.assertEqual(wupts.points[i].id.uuid, uuids[i])
+
 if __name__ == '__main__':
     import rosunit
     rosunit.unitrun(PKG, 'test_xml_map_py', TestWuPoint) 
