@@ -1,8 +1,9 @@
 # Geographic map for a specified region.
 
 Header header            # stamp specifies time
-                         # frame_id is normally /map
+                         # frame_id (normally /map)
 
+UniqueID     id          # identifier for this map
 BoundingBox  bounds      # 2D bounding box containing map
 
 WayPoint[]   points      # way-points
