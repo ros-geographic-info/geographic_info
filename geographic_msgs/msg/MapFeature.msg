@@ -8,4 +8,4 @@
 
 UniqueID   id           # Unique feature identifier
 UniqueID[] components   # Sequence of feature components
-KeyValue[] tags         # Key/value tags for this feature
+KeyValue[] props        # Key/value properties for this feature

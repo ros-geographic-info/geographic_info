@@ -9,4 +9,4 @@ UniqueID   id           # Unique identifier for this segment
 UniqueID   start        # beginning way point of segment
 UniqueID   end          # ending way point of segment
 
-KeyValue[] tags
+KeyValue[] props        # segment properties

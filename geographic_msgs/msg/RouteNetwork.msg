@@ -13,4 +13,4 @@ BoundingBox     bounds   # 2D bounding box for network
 WayPoint[]      points   # Way points in this network
 RouteSegment[]  segments # Directed edges of this network
 
-KeyValue[]      tags     # Key/value tags for this network
+KeyValue[]      props    # Network key/value properties

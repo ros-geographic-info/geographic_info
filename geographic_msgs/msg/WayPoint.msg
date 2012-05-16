@@ -2,4 +2,4 @@
 
 UniqueID   id           # Unique way-point identifier
 GeoPoint   position     # Position relative to WGS 84 ellipsoid
-KeyValue[] tags         # Key/value tags for this point
+KeyValue[] props        # Key/value properties for this point

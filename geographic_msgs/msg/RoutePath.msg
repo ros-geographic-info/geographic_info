@@ -6,6 +6,6 @@
 
 Header          header
 
-UniqueID        network  # route network containing this path
-UniqueID[]      segments # sequence of RouteSegment IDs
-KeyValue[]      tags     # Key/value properties
+UniqueID        network  # Route network containing this path
+UniqueID[]      segments # Sequence of RouteSegment IDs
+KeyValue[]      props    # Key/value properties

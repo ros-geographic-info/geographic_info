@@ -95,13 +95,6 @@ class WuPoint():
         """
         return self.way_pt.position
 
-    def tags(self):
-        """Get way point tags.
-
-        :returns: Corresponding KeyValue tags message.
-        """
-        return self.way_pt.tags
-
     def toPoint(self):
         """Generate geometry_msgs/Point from WuPoint
 
