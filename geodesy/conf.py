@@ -11,6 +11,8 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
+import roslib
+roslib.load_manifest('geodesy')
 import sys, os
 
 # If extensions (or modules to document with autodoc) are in another directory,
@@ -48,7 +50,7 @@ copyright = u'2012, Jack O\'Quin'
 # built documents.
 #
 # The short X.Y version.
-version = '0.2.0'
+version = '0.2'
 # The full version, including alpha/beta/rc tags.
 release = '0.2.0'
 
