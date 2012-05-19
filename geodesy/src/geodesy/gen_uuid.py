@@ -49,7 +49,6 @@ def generate(url, id=None):
     """ Generate UUID for geographic data.
 
     :param url: URL indicating generating source
-    :type  url: str
     :param id: (optional) identifier, unique within URL name space
     :type  id: int or string convertible to int
 
@@ -61,7 +60,7 @@ def generate(url, id=None):
 Matching features within each name space must yield the same UUID.
 The method used is RFC 4122 variant 5, computing the SHA-1 hash of a
 URL encoded using the map source.  For example, Open Street Map
-identifiers are encoded like this:
+identifiers are encoded like this::
 
   generate('http://openstreetmap.org/node/', node_id)
   generate('http://openstreetmap.org/way/', way_id)
@@ -70,7 +69,7 @@ identifiers are encoded like this:
 Here the `*_id` parameters are integer representations of OSM node,
 way, or relation identifiers.
 
-For RouteSegment graph edges we use:
+For RouteSegment graph edges we use::
 
   generate('http://ros.org/wiki/PACKAGE_NAME/START_UUID/END_UUID')
 
@@ -87,17 +86,17 @@ def makeUniqueID(url, id=None):
     """Return a UniqueID message for id number in name space ns.
 
     :param url: URL indicating generating source
-    :type  url: str
     :param id: (optional) identifier, unique within URL name space
     :type  id: int or string convertible to int
 
     :returns: geographic_msgs/UniqueID message
     :raises: :exc:`ValueError` if id not convertible to int.
 
-    See: generate() explanation of name space and identifier rules.
+    seealso:: generate() explanation of name space and identifier rules.
 
-    Note: we store the string representation of the UUID in the
-          message.  That uses over twice the space of a byte string,
-          but makes the messages human-readable.
+
+    note:: we store the string representation of the UUID in the
+           message.  That uses over twice the space of a 16-byte
+           array, but makes the messages human-readable.
     """
     return UniqueID(uuid = str(generate(url, id)))

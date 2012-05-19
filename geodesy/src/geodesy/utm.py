@@ -91,8 +91,7 @@ class UTMPoint:
             self.easting, self.northing, self.altitude, self.zone, self.band)
 
     def gridZone(self):
-        """Return MGRS zone and band tuple.
-        """
+        """:returns: MGRS zone and band tuple. """
         return (self.zone, self.band)
 
     def is2D(self):

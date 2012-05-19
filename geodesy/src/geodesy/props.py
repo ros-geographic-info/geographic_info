@@ -57,21 +57,6 @@ def get(msg, key):
             return prop.value
     return None
 
-def put(msg, key, val=''):
-    """ Add KeyValue to message properties.
-
-    :param msg:   Message to update.
-    :param key:   Property key name.
-    :param value: Corresponding value string (default '').
-    """
-    for prop in msg.props:
-        if prop.key == key:
-            # key already present, update value
-            prop.value = str(val)
-            return
-    # key missing, append a new KeyValue pair
-    msg.props.append(KeyValue(key=key, value=str(val)))
-
 def match(msg, key_set):
     """ Match message properties.
 
@@ -86,3 +71,18 @@ def match(msg, key_set):
         if prop.key in key_set:
             return (prop.key, prop.value)
     return None
+
+def put(msg, key, val=''):
+    """ Add KeyValue to message properties.
+
+    :param msg:   Message to update.
+    :param key:   Property key name.
+    :param value: Corresponding value string (default '').
+    """
+    for prop in msg.props:
+        if prop.key == key:
+            # key already present, update value
+            prop.value = str(val)
+            return
+    # key missing, append a new KeyValue pair
+    msg.props.append(KeyValue(key=key, value=str(val)))
