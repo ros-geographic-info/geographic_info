@@ -51,7 +51,7 @@ from geometry_msgs.msg import Point
 class WuPoint():
     """
     :class:`WuPoint` represents a map WayPoint with associated UTM
-    coordinates.
+    information.
     """
 
     def __init__(self, waypt, utm=None):
@@ -73,7 +73,7 @@ class WuPoint():
     def __str__(self):
         """Overloaded str() operator.
         
-        :returns: string representation of WuPoint
+        :returns: string representation of :class:`WuPoint`
         """
         # uses python3-compatible str.format() method:
         return str(self.way_pt) + '\n' + str(self.utm)
@@ -96,21 +96,21 @@ class WuPoint():
         return self.way_pt.position
 
     def toPoint(self):
-        """Generate geometry_msgs/Point from WuPoint
+        """Generate geometry_msgs/Point from :class:`WuPoint`
 
            :returns: corresponding geometry_msgs/Point
         """
         return self.utm.toPoint()
 
     def toPointXY(self):
-        """Convert WuPoint to flattened geometry_msgs/Point.
+        """Convert :class:`WuPoint` to flattened geometry_msgs/Point.
 
            :returns: geometry_msgs/Point with X and Y coordinates, Z is 0.
         """
         return Point(x = self.utm.easting, y = self.utm.northing)
 
     def toWayPoint(self):
-        """Convert WuPoint to geographic_msgs/WayPoint
+        """Convert :class:`WuPoint` to geographic_msgs/WayPoint
 
            :returns: corresponding geographic_msgs/WayPoint
         """
@@ -125,8 +125,8 @@ class WuPoint():
 
 class WuPointSet():
     """
-    :class:`WuPointSet` a container for the way points in a
-            GeographicMap or RouteNetwork.
+    :class:`WuPointSet` is a container for the way points in a
+            geographic_msgs GeographicMap or RouteNetwork message.
     """
 
     def __init__(self, points):
@@ -157,7 +157,7 @@ class WuPointSet():
         """ Points accessor.
 
         :param key: UUID of desired point.
-        :returns: Named WuPoint.
+        :returns: Named :class:`WuPoint`.
         :raises: :exc:`KeyError` if no such point
         """
         index = self.way_point_ids[key]
@@ -176,7 +176,7 @@ class WuPointSet():
         """ Get way point with UTM coordinates.
 
         :param index: Index of point in self.
-        :returns: Corresponding WuPoint object.
+        :returns: Corresponding :class:`WuPoint` object.
         """
         way_pt = self.points[index]
         utm_pt = self.utm_points[index]
@@ -205,7 +205,7 @@ class WuPointSet():
 
         :param key: UUID of desired point.
         :param default: value to return if no such point.
-        :returns: Named WuPoint, if successful; otherwise default.
+        :returns: Named :class:`WuPoint`, if successful; otherwise default.
         """
         index = self.way_point_ids.get(key)
         if index is not None:
@@ -228,7 +228,7 @@ class WuPointSet():
     def next(self):
         """ Next point.
 
-        :returns: Next WuPoint.
+        :returns: Next :class:`WuPoint`.
         :raises: :exc:`StopIteration` when finished.
         """
         i = self.iter_index

@@ -31,7 +31,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 """
-.. module:: utm: Universal Transverse Mercator coordinates
+    Universal Transverse Mercator coordinates
 
     For outdoor robotics applications, Euclidean projections like UTM
     are easier to work with than latitude and longitude.  This system
@@ -43,7 +43,6 @@
     This implementation uses the pyproj wrapper for the proj4
     geographic coordinate projection library.
 
-    :author: Jack O'Quin
 """
 
 import math
@@ -153,7 +152,7 @@ def fromLatLong(latitude, longitude, altitude=float('nan')):
 
     :returns: UTMPoint object.
     """
-    z, b = getGridZone(latitude, longitude)
+    z, b = gridZone(latitude, longitude)
     utm_proj = pyproj.Proj(proj='utm', zone=z, datum='WGS84')
     e, n = utm_proj(longitude, latitude)
     return UTMPoint(easting=e, northing=n, altitude=altitude, zone=z, band=b)
@@ -166,8 +165,8 @@ def fromMsg(msg):
     """
     return fromLatLong(msg.latitude, msg.longitude, msg.altitude)
 
-def getGridZone(lat, lon):
-    """Get UTM zone and MGRS band for GeoPoint message.
+def gridZone(lat, lon):
+    """Find UTM zone and MGRS band for latitude and longitude.
 
        :param lat: latitude in degrees, negative is South
        :param lon: longitude in degrees, negative is West

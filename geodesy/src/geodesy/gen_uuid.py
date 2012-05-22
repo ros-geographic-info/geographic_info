@@ -31,13 +31,19 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 """
-.. module:: gen_uuid: Generate UUIDs for Geographic Information Systems.
+Generate UUIDs for Geographic Information messages.
 
-:author: Jack O'Quin
+Map points, features and segments all have universally unique
+identifier names (UUID), using geographic_msgs/UniqueID messages.
+
+The intent is for matching features within a domain such as Open
+Street Map to yield the same UUID. This module implements the
+recommended method, which is RFC 4122 variant 5, computing the SHA-1
+hash of a URL encoded using the map source.
+
+  http://tools.ietf.org/html/rfc4122.html
+
 """
-
-# unfortunately, the Python uuid package does not work with unicode strings:
-#from __future__ import unicode_literals
 
 PKG='geodesy'
 import roslib; roslib.load_manifest(PKG)
@@ -54,8 +60,6 @@ def generate(url, id=None):
 
     :returns: standard Python uuid object
     :raises: :exc:`ValueError` if id not convertible to int.
-
-  http://tools.ietf.org/html/rfc4122.html
 
 Matching features within each name space must yield the same UUID.
 The method used is RFC 4122 variant 5, computing the SHA-1 hash of a

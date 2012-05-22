@@ -13,9 +13,6 @@ Contents:
 
    geodesy
 
-   .. automodule:: geodesy.props
-      :members:
-
 Indices and tables
 ==================
 

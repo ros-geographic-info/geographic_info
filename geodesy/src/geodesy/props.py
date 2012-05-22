@@ -31,10 +31,10 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 """
-.. module:: props: KeyValue property interface for Geographic
-            Information Systems.
+.. module:: props
 
-:author: Jack O'Quin
+KeyValue property interface for Geographic Information messages.
+
 """
 
 PKG='geodesy'
