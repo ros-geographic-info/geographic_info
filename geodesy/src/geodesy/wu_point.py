@@ -129,7 +129,9 @@ class WuPoint():
 class WuPointSet():
     """
     :class:`WuPointSet` is a container for the way points in a
-    geographic_msgs GeographicMap or RouteNetwork message.
+    geographic_msgs GeographicMap or RouteNetwork message.  UTM
+    coordinates are available for each way point, but they are
+    evaluated lazily, only when needed.
 
     :param points: array of geographic_msgs/WayPoint messages
 
@@ -256,7 +258,7 @@ class WuPointSet():
         return self.way_point_ids.get(key, default)
 
     def next(self):
-        """ Next point.
+        """ Next iteration point.
 
         :returns: Next :class:`WuPoint`.
         :raises: :exc:`StopIteration` when finished.
