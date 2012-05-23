@@ -96,11 +96,12 @@ def makeUniqueID(url, id=None):
     :returns: geographic_msgs/UniqueID message
     :raises: :exc:`ValueError` if id not convertible to int.
 
-    seealso:: generate() explanation of name space and identifier rules.
+    See: :func:`generate()` explanation of name space and identifier
+    rules.
 
+    Note: we store the string representation of the UUID in the
+    message.  That uses over twice the space of a 16-byte array, but
+    makes the messages human-readable.
 
-    note:: we store the string representation of the UUID in the
-           message.  That uses over twice the space of a 16-byte
-           array, but makes the messages human-readable.
     """
     return UniqueID(uuid = str(generate(url, id)))

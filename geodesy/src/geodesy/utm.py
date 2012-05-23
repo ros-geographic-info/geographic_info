@@ -31,18 +31,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 """
-    Universal Transverse Mercator coordinates
-
-    For outdoor robotics applications, Euclidean projections like UTM
-    are easier to work with than latitude and longitude.  This system
-    is slightly more general than strict UTM.  It is based on the
-    Military Grid Reference System (MGRS), which can be extended to
-    cover the poles, allowing well-defined transformations for every
-    latitude and longitude.
-
-    This implementation uses the pyproj wrapper for the proj4
-    geographic coordinate projection library.
-
+Universal Transverse Mercator coordinate module.
 """
 
 import math
@@ -58,6 +47,16 @@ from geometry_msgs.msg   import Point
 class UTMPoint:
     """Universal Transverse Mercator point class.
 
+    For outdoor robotics applications, Euclidean projections like UTM
+    are easier to work with than latitude and longitude.  This system
+    is slightly more general than strict UTM.  It is based on the
+    Military Grid Reference System (MGRS), which can be extended to
+    cover the poles, allowing well-defined transformations for every
+    latitude and longitude.
+
+    This implementation uses the pyproj wrapper for the proj4
+    geographic coordinate projection library.
+
     :param easting: UTM easting (meters)
     :param northing: UTM northing (meters)
     :param altitude: altitude above the WGS84 ellipsoid (meters),
@@ -71,9 +70,7 @@ class UTMPoint:
 
     def __init__(self, easting=float('nan'), northing=float('nan'),
                  altitude=float('nan'), zone=0, band=' '):
-        """Construct UTMPoint object.
-        """
-
+        """Construct UTMPoint object. """
         self.easting = easting
         self.northing = northing
         self.altitude = altitude
@@ -96,16 +93,16 @@ class UTMPoint:
     def is2D(self):
         """UTM point is two-dimensional.
 
-           :returns: True if altitude is not a number (NaN)
+        :returns: True if altitude is not a number (NaN)
         """
         return self.altitude != self.altitude
 
     def toPoint(self):
         """Generate geometry_msgs/Point from UTMPoint
 
-           :todo: clamp message longitude to [-180..180]
+        :returns: corresponding geometry_msgs/Point
 
-           :returns: corresponding geometry_msgs/Point
+        :todo: clamp message longitude to [-180..180]
         """
         if not self.valid():
             raise ValueError('invalid UTM point: ' + str(self))
@@ -117,9 +114,9 @@ class UTMPoint:
     def toMsg(self):
         """Generate GeoPoint message from UTMPoint.
 
-           :todo: clamp message longitude to [-180..180]
+        :returns: corresponding GeoPoint message
 
-           :returns: corresponding GeoPoint message
+        :todo: clamp message longitude to [-180..180]
         """
         if not self.valid():
             raise ValueError('invalid UTM point: ' + str(self))
@@ -131,8 +128,6 @@ class UTMPoint:
 
     def valid(self):
         """UTM point is valid.
-
-        Easting and northing will be NaN if a point is not valid.
 
         :returns: True if this is a valid UTM point.
         """
@@ -150,7 +145,7 @@ def fromLatLong(latitude, longitude, altitude=float('nan')):
     :param longitude: [degrees], negative is West.
     :param altitude: [meters], negative is below the ellipsoid.
 
-    :returns: UTMPoint object.
+    :returns: :class:`UTMPoint` object.
     """
     z, b = gridZone(latitude, longitude)
     utm_proj = pyproj.Proj(proj='utm', zone=z, datum='WGS84')
@@ -161,7 +156,7 @@ def fromMsg(msg):
     """Generate UTMPoint from GeoPoint message.
 
     :param msg: GeoPoint message.
-    :returns: UTMPoint object.
+    :returns: :class:`UTMPoint` object.
     """
     return fromLatLong(msg.latitude, msg.longitude, msg.altitude)
 
