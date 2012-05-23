@@ -52,15 +52,18 @@ class WuPoint():
     """
     :class:`WuPoint` represents a map WayPoint with associated UTM
     information.
+
+    :param waypt: Geographic_msgs/WayPoint message.
+
+    :param utm: Corresponding :class:`geodesy.utm.UTMPoint` object. If None
+                provided, the *utm* object will be created.
     """
 
     def __init__(self, waypt, utm=None):
         """Constructor.
 
         Collects relevant information from the way point message, and
-        creates the corresponding geodesy.utm.UTMPoint.
-
-        :param waypt: geographic_msgs/WayPoint message
+        creates the corresponding  :class:`geodesy.utm.UTMPoint`.
         """
         self.way_pt = waypt
 
@@ -126,7 +129,36 @@ class WuPoint():
 class WuPointSet():
     """
     :class:`WuPointSet` is a container for the way points in a
-            geographic_msgs GeographicMap or RouteNetwork message.
+    geographic_msgs GeographicMap or RouteNetwork message.
+
+    :param points: array of geographic_msgs/WayPoint messages
+
+    It supports these standard container operations:
+
+    .. describe:: len(wu_set)
+
+       Return the number of points in the set.
+
+    .. describe:: wu_set[uuid]
+ 
+       Return the point with key *uuid*.  Raises a :exc:`KeyError` if
+       *uuid* is not in the set.
+ 
+    .. describe:: uuid in wu_set
+ 
+       Return ``True`` if *wu_set* has a key *uuid*, else ``False``.
+ 
+    .. describe:: uuid not in wu_set
+ 
+       Equivalent to ``not uuid in wu_set``.
+ 
+    .. describe:: iter(wu_set)
+ 
+       Return an iterator over the points in the set.  This is a
+       shortcut for :meth:`iterkeys`.
+
+    These methods are also provided:
+
     """
 
     def __init__(self, points):
@@ -134,8 +166,6 @@ class WuPointSet():
 
         Collects relevant way point information from the geographic
         map message, and provides convenient access to the data.
-
-        :param points: array of geographic_msgs/WayPoint messages
         """
         self.points = points
 

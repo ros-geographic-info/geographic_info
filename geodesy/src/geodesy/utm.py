@@ -58,6 +58,13 @@ from geometry_msgs.msg   import Point
 class UTMPoint:
     """Universal Transverse Mercator point class.
 
+    :param easting: UTM easting (meters)
+    :param northing: UTM northing (meters)
+    :param altitude: altitude above the WGS84 ellipsoid (meters),
+                     none if NaN.
+    :param zone: UTM longitude zone
+    :param band: MGRS latitude band letter
+
     :todo: add Universal Polar Stereographic support
     """
 
@@ -65,13 +72,6 @@ class UTMPoint:
     def __init__(self, easting=float('nan'), northing=float('nan'),
                  altitude=float('nan'), zone=0, band=' '):
         """Construct UTMPoint object.
-
-        :param easting: UTM easting (meters)
-        :param northing: UTM northing (meters)
-        :param altitude: altitude above the WGS84 ellipsoid (meters),
-                         none if NaN.
-        :param zone: UTM longitude zone
-        :param band: MGRS latitude band letter
         """
 
         self.easting = easting
