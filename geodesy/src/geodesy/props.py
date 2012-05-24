@@ -33,7 +33,9 @@
 """
 .. module:: props
 
-KeyValue property interface for Geographic Information messages.
+`geographic_msgs/KeyValue`_ property interface for Geographic Information messages.
+
+.. _`geographic_msgs/KeyValue`: http://ros.org/doc/api/geographic_msgs/html/msg/KeyValue.html
 
 """
 

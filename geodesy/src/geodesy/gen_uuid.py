@@ -34,37 +34,13 @@
 Generate UUIDs for Geographic Information messages.
 
 Map points, features and segments all have universally unique
-identifier names (UUID), using geographic_msgs/UniqueID messages.
-
-The intent is for matching features within a domain such as Open
-Street Map to yield the same UUID. This module implements the
-recommended method, which is RFC 4122 variant 5, computing the SHA-1
-hash of a URL encoded using the map source.
-
-  http://tools.ietf.org/html/rfc4122.html
-
-"""
-
-PKG='geodesy'
-import roslib; roslib.load_manifest(PKG)
-from geographic_msgs.msg import UniqueID
-
-import uuid
-
-def generate(url, id=None):
-    """ Generate UUID for geographic data.
-
-    :param url: URL indicating generating source
-    :param id: (optional) identifier, unique within URL name space
-    :type  id: int or string convertible to int
-
-    :returns: standard Python uuid object
-    :raises: :exc:`ValueError` if id not convertible to int.
+identifier names (UUID_), using geographic_msgs/UniqueID messages.
 
 Matching features within each name space must yield the same UUID.
-The method used is RFC 4122 variant 5, computing the SHA-1 hash of a
-URL encoded using the map source.  For example, Open Street Map
-identifiers are encoded like this::
+The method used is `RFC 4122`_ variant 5, computing the SHA-1 hash of
+a URL encoded using the map source.  
+
+For example, Open Street Map identifiers are encoded like this::
 
   generate('http://openstreetmap.org/node/', node_id)
   generate('http://openstreetmap.org/way/', way_id)
@@ -80,6 +56,31 @@ For RouteSegment graph edges we use::
 Where PACKAGE_NAME is the generating ROS package, START_UUID names the
 beginning way point, and END_UUID is the ending way point.
 
+Note: we store the string representation of the UUID in the
+`geographic_msgs/UniqueID`_ message.  That uses over twice the space of a
+16-byte array, but makes the messages human-readable.
+
+.. _`geographic_msgs/UniqueID`: http://ros.org/doc/api/geographic_msgs/html/msg/UniqueID.html
+.. _`RFC 4122`: http://tools.ietf.org/html/rfc4122.html
+.. _UUID: http://en.wikipedia.org/wiki/Uuid
+
+"""
+
+PKG='geodesy'
+import roslib; roslib.load_manifest(PKG)
+from geographic_msgs.msg import UniqueID
+
+import uuid
+
+def generate(url, id=None):
+    """ Generate UUID_ for geographic data.
+
+    :param url: URL indicating generating source
+    :param id: (optional) identifier, unique within URL name space
+    :type  id: int or string convertible to int
+
+    :returns: standard Python uuid object
+    :raises: :exc:`ValueError` if *id* not convertible to int.
 """
     if id is not None:
         url += str(int(id))
@@ -87,21 +88,12 @@ beginning way point, and END_UUID is the ending way point.
 
 
 def makeUniqueID(url, id=None):
-    """Return a UniqueID message for id number in name space ns.
+    """Create a UniqueID message for *id* number in name space *ns*.
 
     :param url: URL indicating generating source
     :param id: (optional) identifier, unique within URL name space
     :type  id: int or string convertible to int
-
-    :returns: geographic_msgs/UniqueID message
-    :raises: :exc:`ValueError` if id not convertible to int.
-
-    See: :func:`generate()` explanation of name space and identifier
-    rules.
-
-    Note: we store the string representation of the UUID in the
-    message.  That uses over twice the space of a 16-byte array, but
-    makes the messages human-readable.
-
+    :returns: `geographic_msgs/UniqueID`_ message
+    :raises: :exc:`ValueError` if *id* not convertible to int.
     """
     return UniqueID(uuid = str(generate(url, id)))
