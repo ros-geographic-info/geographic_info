@@ -56,9 +56,11 @@ For RouteSegment graph edges we use::
 Where PACKAGE_NAME is the generating ROS package, START_UUID names the
 beginning way point, and END_UUID is the ending way point.
 
-Note: we store the string representation of the UUID in the
-`geographic_msgs/UniqueID`_ message.  That uses over twice the space of a
-16-byte array, but makes the messages human-readable.
+.. note::
+
+   We store the string representation of the UUID in the
+   `geographic_msgs/UniqueID`_ message.  That uses over twice the
+   space of a 16-byte array, but makes the messages human-readable.
 
 .. _`geographic_msgs/UniqueID`: http://ros.org/doc/api/geographic_msgs/html/msg/UniqueID.html
 .. _`RFC 4122`: http://tools.ietf.org/html/rfc4122.html
