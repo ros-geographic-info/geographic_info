@@ -146,8 +146,7 @@ class WuPointSet():
  
     .. describe:: iter(wu_set)
  
-       :returns: An iterator over the points in the set.  This is a
-                 shortcut for :meth:`iterkeys`.
+       :returns: An iterator over the points in the set.
 
     These methods are also provided:
 
