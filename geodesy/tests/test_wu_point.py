@@ -83,8 +83,6 @@ class TestWuPoint(unittest.TestCase):
         self.assertEqual(i, 0)
 
         uu = 'da7c242f-2efe-5175-9961-49cc621b80b9'
-        with self.assertRaises(KeyError):
-            x = wupts[uu]
         self.assertEqual(wupts.get(uu), None)
 
     def test_three_point_set(self):
