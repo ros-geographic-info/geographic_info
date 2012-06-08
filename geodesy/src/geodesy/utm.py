@@ -31,6 +31,8 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 """
+.. module:: utm
+
 Universal Transverse Mercator coordinate module.
 
 :todo: add Universal Polar Stereographic (UPS_) support

@@ -31,6 +31,8 @@
 # POSSIBILITY OF SUCH DAMAGE.
 
 """
+.. module:: gen_uuid
+
 Generate UUIDs for Geographic Information messages.
 
 Map points, features and segments all have universally unique
