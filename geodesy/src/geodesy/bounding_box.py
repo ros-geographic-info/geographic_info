@@ -52,22 +52,21 @@ def getLatLong(bbox):
     :param bbox: `geographic_msgs/BoundingBox`_.
     :returns: (min_lat, min_lon, max_lat, max_lon)
     """
-    return (bbox.min_latitude, bbox.min_longitude,
-            bbox.max_latitude, bbox.max_longitude)
+    return (bbox.min_pt.latitude, bbox.min_pt.longitude,
+            bbox.max_pt.latitude, bbox.max_pt.longitude)
 
-def isEmpty(bbox):
+def isGlobal(bbox):
     """
-    Empty bounding box predicate.
+    Global bounding box predicate.
 
     :param bbox: `geographic_msgs/BoundingBox`_.
-    :returns: True if *bbox* is empty.
+    :returns: True if *bbox* matches any global coordinate.
     """
-    return (bbox.min_latitude == 0.0 and bbox.min_longitude == 0.0 and 
-            bbox.max_latitude == 0.0 and bbox.max_longitude == 0.0)
+    return bbox.min_pt.latitude != bbox.min_pt.latitude
 
 def makeBounds2D(min_lat, min_lon, max_lat, max_lon):
     """
-    Create a 2D bounding box (ignoring altitudes).
+    Create a 2D geographic bounding box (ignoring altitudes).
 
     :param min_lat: Minimum latitude.
     :param min_lon: Minimum longitude.
@@ -75,12 +74,48 @@ def makeBounds2D(min_lat, min_lon, max_lat, max_lon):
     :param max_lon: Maximum longitude.
     :returns: `geographic_msgs/BoundingBox`_ object.
     """
-    return BoundingBox(min_lat, min_lon, max_lat, max_lon)
+    bbox = BoundingBox()
+    bbox.min_pt.latitude =  min_lat
+    bbox.min_pt.longitude = min_lon
+    bbox.min_pt.altitude =  float('nan')
+    bbox.max_pt.latitude =  max_lat
+    bbox.max_pt.longitude = max_lon
+    bbox.max_pt.altitude =  float('nan')
+    return bbox
 
-def makeEmpty():
+def makeBounds3D(min_lat, min_lon, min_alt,
+                 max_lat, max_lon, max_alt):
     """
-    Create an empty bounding box.
+    Create a 3D geographic bounding box (including altitudes).
+
+    :param min_lat: Minimum latitude.
+    :param min_lon: Minimum longitude.
+    :param min_alt: Minimum altitude.
+    :param max_lat: Maximum latitude.
+    :param max_lon: Maximum longitude.
+    :param max_alt: Maximum altitude.
+    :returns: `geographic_msgs/BoundingBox`_ object.
+    """
+    bbox = BoundingBox()
+    bbox.min_pt.latitude =  min_lat
+    bbox.min_pt.longitude = min_lon
+    bbox.min_pt.altitude =  min_alt
+    bbox.max_pt.latitude =  max_lat
+    bbox.max_pt.longitude = max_lon
+    bbox.max_pt.altitude =  max_alt
+    return bbox
+
+def makeGlobal():
+    """
+    Create a global bounding box, which matches any valid coordinate.
 
     :returns: `geographic_msgs/BoundingBox`_ object.
     """
-    return BoundingBox()
+    bbox = BoundingBox()
+    bbox.min_pt.latitude = float('nan')
+    bbox.min_pt.longitude = float('nan')
+    bbox.min_pt.altitude = float('nan')
+    bbox.max_pt.latitude = float('nan')
+    bbox.max_pt.longitude = float('nan')
+    bbox.max_pt.altitude = float('nan')
+    return bbox
