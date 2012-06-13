@@ -21,6 +21,7 @@ class TestPythonBoundingBox(unittest.TestCase):
         max_lon = -97.7230800
         bb = makeBounds2D(min_lat, min_lon, max_lat, max_lon)
         self.assertFalse(isGlobal(bb))
+        self.assertTrue(is2D(bb))
         min_lat2, min_lon2, max_lat2, max_lon2 = getLatLong(bb)
         self.assertEqual(min_lat, min_lat2)
         self.assertEqual(min_lon, min_lon2)
@@ -37,6 +38,7 @@ class TestPythonBoundingBox(unittest.TestCase):
         bb = makeBounds3D(min_lat, min_lon, min_alt,
                           max_lat, max_lon, max_alt)
         self.assertFalse(isGlobal(bb))
+        self.assertFalse(is2D(bb))
         min_lat2, min_lon2, max_lat2, max_lon2 = getLatLong(bb)
         self.assertEqual(min_lat, min_lat2)
         self.assertEqual(min_lon, min_lon2)

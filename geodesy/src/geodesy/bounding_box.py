@@ -55,6 +55,15 @@ def getLatLong(bbox):
     return (bbox.min_pt.latitude, bbox.min_pt.longitude,
             bbox.max_pt.latitude, bbox.max_pt.longitude)
 
+def is2D(bbox):
+    """
+    Two-dimensional bounding box predicate.
+
+    :param bbox: `geographic_msgs/BoundingBox`_.
+    :returns: True if *bbox* matches any altitude.
+    """
+    return bbox.min_pt.altitude != bbox.min_pt.altitude
+
 def isGlobal(bbox):
     """
     Global bounding box predicate.
