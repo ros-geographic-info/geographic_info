@@ -1,0 +1,6 @@
+- git:
+    local-name: id_msgs
+    uri:  https://kforge.ros.org/geographicinfo/id_msgs
+- git:
+    local-name: geographic_info
+    uri:  https://kforge.ros.org/geographicinfo/geographic_info
