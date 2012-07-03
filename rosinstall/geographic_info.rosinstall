@@ -1,5 +1,5 @@
 - git:
-    local-name: id_msgs
+    local-name: unique_identifier
     uri:  https://kforge.ros.org/geographicinfo/id_msgs
     version: master
 - git:
