@@ -10,11 +10,9 @@ Contents:
 
 .. toctree::
    :maxdepth: 2
+   :glob:
 
-   geodesy.gen_uuid
-   geodesy.props
-   geodesy.utm
-   geodesy.wu_point
+   geodesy.*
 
 Indices and tables
 ==================
