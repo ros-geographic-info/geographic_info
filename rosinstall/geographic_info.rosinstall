@@ -1,8 +1,8 @@
 - git:
-    local-name: unique_identifier
-    uri:  https://kforge.ros.org/geographicinfo/id_msgs
-    version: master
-- git:
     local-name: geographic_info
     uri:  https://kforge.ros.org/geographicinfo/geographic_info
+    version: master
+- git:
+    local-name: unique_identifier
+    uri:  https://kforge.ros.org/geographicinfo/unique_identifier
     version: master
