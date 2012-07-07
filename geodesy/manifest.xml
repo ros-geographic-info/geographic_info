@@ -14,6 +14,7 @@
   <depend package="rosunit"/>
   <depend package="tf"/>
   <depend package="unique_id"/>
+  <depend package="uuid_msgs"/>
 
   <rosdep name="python-pyproj"/>
 
