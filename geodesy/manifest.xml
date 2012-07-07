@@ -13,6 +13,7 @@
   <depend package="geometry_msgs"/>
   <depend package="rosunit"/>
   <depend package="tf"/>
+  <depend package="unique_id"/>
 
   <rosdep name="python-pyproj"/>
 

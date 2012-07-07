@@ -35,6 +35,10 @@
 
 Generate UUIDs for Geographic Information messages.
 
+.. deprecated::
+
+   Use the :py:mod:`unique_id` package, instead.
+
 Map points, features and segments all have universally unique
 identifier names (UUID_), using geographic_msgs/UniqueID messages.
 
@@ -73,6 +77,7 @@ beginning way point, and END_UUID is the ending way point.
 PKG='geodesy'
 import roslib; roslib.load_manifest(PKG)
 from uuid_msgs.msg import UniqueID
+import unique_id
 
 import uuid
 
@@ -100,4 +105,4 @@ def makeUniqueID(url, id=None):
     :returns: `geographic_msgs/UniqueID`_ message
     :raises: :exc:`ValueError` if *id* not convertible to int.
     """
-    return UniqueID(uuid = str(generate(url, id)))
+    return unique_id.toMsg(generate(url, id))

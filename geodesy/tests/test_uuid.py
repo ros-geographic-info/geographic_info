@@ -6,8 +6,10 @@ import roslib; roslib.load_manifest(PKG)
 import sys
 import unittest
 
-from geodesy.gen_uuid import *
 from uuid_msgs.msg import UniqueID
+import unique_id
+
+from geodesy.gen_uuid import *
 
 class TestPythonUUID(unittest.TestCase):
     """Unit tests for Python UUID generation.
@@ -53,13 +55,15 @@ class TestPythonUUID(unittest.TestCase):
     # UniqueID message generation tests
     def test_msg_creation(self):
         msg = makeUniqueID('http://openstreetmap.org/node/', 152370223)
-        self.assertEqual(msg.uuid, '8e0b7d8a-c433-5c42-be2e-fbd97ddff9ac')
+        self.assertEqual(unique_id.toString(msg),
+                         '8e0b7d8a-c433-5c42-be2e-fbd97ddff9ac')
         
     def test_msg_same_id_different_namespace(self):
         x = makeUniqueID('http://openstreetmap.org/node/', 1)
         y = makeUniqueID('http://openstreetmap.org/way/', 1)
         self.assertNotEqual(x, y)
-        self.assertEqual(y.uuid, 'b3180681-b125-5e41-bd04-3c8b046175b4')
+        self.assertEqual(unique_id.toString(y),
+                         'b3180681-b125-5e41-bd04-3c8b046175b4')
 
     def test_msg_route_segment(self):
         start = 'da7c242f-2efe-5175-9961-49cc621b80b9'
@@ -69,7 +73,8 @@ class TestPythonUUID(unittest.TestCase):
         y = makeUniqueID('http://ros.org/wiki/road_network/'
                          + end + '/' + start)
         self.assertNotEqual(x, y)
-        self.assertEqual(x.uuid, 'acaa906e-8411-5b45-a446-ccdc2fc39f29')
+        self.assertEqual(unique_id.toString(x),
+                         'acaa906e-8411-5b45-a446-ccdc2fc39f29')
 
     def test_msg_invalid_value(self):
         self.assertRaises(ValueError, makeUniqueID,
