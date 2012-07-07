@@ -13,5 +13,6 @@
   <depend package="actionlib_msgs"/>
   <depend package="geometry_msgs"/>
   <depend package="sensor_msgs"/>
+  <depend package="uuid_msgs"/>
 
 </package>

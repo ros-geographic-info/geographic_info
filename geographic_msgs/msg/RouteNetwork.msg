@@ -7,7 +7,7 @@
 
 Header          header
 
-UniqueID        id       # This route network identifier
+uuid_msgs/UniqueID id    # This route network identifier
 BoundingBox     bounds   # 2D bounding box for network
 
 WayPoint[]      points   # Way points in this network

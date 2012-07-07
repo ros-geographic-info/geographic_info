@@ -8,5 +8,6 @@
   <depend stack="common_msgs" />
   <depend stack="geometry" />
   <depend stack="ros" />
+  <depend stack="unique_identifier" />
 
 </stack>
