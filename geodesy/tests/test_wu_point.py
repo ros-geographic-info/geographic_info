@@ -7,9 +7,9 @@ import unittest
 
 from geographic_msgs.msg import GeographicMap
 from geographic_msgs.msg import GeoPoint
-from geographic_msgs.msg import UniqueID
 from geographic_msgs.msg import WayPoint
 from geometry_msgs.msg import Point
+from uuid_msgs.msg import UniqueID
 
 from geodesy.wu_point import *
 

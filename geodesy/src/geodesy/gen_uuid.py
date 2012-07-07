@@ -72,7 +72,7 @@ beginning way point, and END_UUID is the ending way point.
 
 PKG='geodesy'
 import roslib; roslib.load_manifest(PKG)
-from geographic_msgs.msg import UniqueID
+from uuid_msgs.msg import UniqueID
 
 import uuid
 

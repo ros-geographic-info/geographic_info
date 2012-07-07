@@ -7,7 +7,7 @@ import sys
 import unittest
 
 from geodesy.gen_uuid import *
-from geographic_msgs.msg import UniqueID
+from uuid_msgs.msg import UniqueID
 
 class TestPythonUUID(unittest.TestCase):
     """Unit tests for Python UUID generation.
