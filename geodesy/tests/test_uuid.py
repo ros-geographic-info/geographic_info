@@ -55,14 +55,14 @@ class TestPythonUUID(unittest.TestCase):
     # UniqueID message generation tests
     def test_msg_creation(self):
         msg = makeUniqueID('http://openstreetmap.org/node/', 152370223)
-        self.assertEqual(unique_id.toString(msg),
+        self.assertEqual(unique_id.toHexString(msg),
                          '8e0b7d8a-c433-5c42-be2e-fbd97ddff9ac')
         
     def test_msg_same_id_different_namespace(self):
         x = makeUniqueID('http://openstreetmap.org/node/', 1)
         y = makeUniqueID('http://openstreetmap.org/way/', 1)
         self.assertNotEqual(x, y)
-        self.assertEqual(unique_id.toString(y),
+        self.assertEqual(unique_id.toHexString(y),
                          'b3180681-b125-5e41-bd04-3c8b046175b4')
 
     def test_msg_route_segment(self):
@@ -73,7 +73,7 @@ class TestPythonUUID(unittest.TestCase):
         y = makeUniqueID('http://ros.org/wiki/road_network/'
                          + end + '/' + start)
         self.assertNotEqual(x, y)
-        self.assertEqual(unique_id.toString(x),
+        self.assertEqual(unique_id.toHexString(x),
                          'acaa906e-8411-5b45-a446-ccdc2fc39f29')
 
     def test_msg_invalid_value(self):
