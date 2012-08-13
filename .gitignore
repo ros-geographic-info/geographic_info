@@ -5,10 +5,6 @@
 *.so
 *.tar.gz
 *~
-*Action.msg
-*Feedback.msg
-*Goal.msg
-*Result.msg
 .build_version
 .rosgcov_files
 TAGS
