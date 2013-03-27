@@ -9,10 +9,6 @@ find_package(catkin REQUIRED
   uuid_msgs
 )
 
-# is this required?
-## We want boost/format.hpp, which isn't in its own component.
-#find_package(Boost REQUIRED)
-
 add_message_files(
   DIRECTORY msg
   FILES
@@ -46,4 +42,4 @@ generate_messages(
 
 catkin_package(
   CATKIN_DEPENDS message_runtime uuid_msgs std_msgs
-  DEPENDS Boost)
+)
