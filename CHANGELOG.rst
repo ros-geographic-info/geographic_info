@@ -13,6 +13,7 @@ Change log for geographic_info repository
 
  * Use unique_identifier for UUID interfaces.
  * Released to Fuerte.
+ * Released to Groovy: 2013-03-27.
 
 0.2.0 (2012-06-02)
 ------------------
@@ -20,7 +21,6 @@ Change log for geographic_info repository
  * Many new mapping messages and services added.
  * Use PROJ.4 library for Python geodesy API (C++ API not ported to PROJ.4 yet).
  * Released to Electric.
- * Released to Groovy.
 
 0.1.0 (2012-04-10)
 ------------------
