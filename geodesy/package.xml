@@ -1,0 +1,41 @@
+<package>
+
+  <name>geodesy</name>
+  <version>0.3.0</version>
+  <description>
+    Python and C++ interfaces for manipulating geodetic coordinates.
+  </description>
+  <maintainer email="jack.oquin@gmail.com">Jack O'Quin</maintainer>
+  <author>Jack O'Quin</author>
+  <license>BSD</license>
+
+  <url type="website">http://ros.org/wiki/geodesy</url>
+  <url type="bugtracker">https://github.com/ros-geographic-info/geographic_info/issues</url>
+  <url type="repository">https://github.com/ros-geographic-info/geographic_info.git</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>angles</build_depend>
+  <build_depend>geographic_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>unique_id</build_depend>
+  <build_depend>uuid_msgs</build_depend>
+
+  <run_depend>geographic_msgs</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+  <run_depend>python-pyproj</run_depend>
+  <run_depend>roscpp</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>unique_id</run_depend>
+  <run_depend>uuid_msgs</run_depend>
+
+  <test_depend>rosunit</test_depend>
+
+  <export>
+    <rosdoc config="rosdoc.yaml"/>
+  </export>
+
+</package>

@@ -39,9 +39,6 @@
 
 """
 
-PKG='geodesy'
-import roslib; roslib.load_manifest(PKG)
-
 from geographic_msgs.msg import KeyValue
 
 def get(msg, key):

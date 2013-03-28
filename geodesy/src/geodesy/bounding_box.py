@@ -39,10 +39,7 @@ Bounding box functions for geographic maps.
 
 """
 
-PKG = 'geodesy'
-import roslib; roslib.load_manifest(PKG)
 import rospy
-
 from geographic_msgs.msg import BoundingBox
 
 def getLatLong(bbox):

@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-PKG='geodesy'
-import roslib; roslib.load_manifest(PKG)
-
 import unittest
 
 from geographic_msgs.msg import GeographicMap
@@ -136,4 +133,5 @@ class TestWuPoint(unittest.TestCase):
 
 if __name__ == '__main__':
     import rosunit
+    PKG='geodesy'
     rosunit.unitrun(PKG, 'test_xml_map_py', TestWuPoint) 

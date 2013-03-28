@@ -47,10 +47,7 @@ Universal Transverse Mercator (UTM_) coordinates.
 
 """
 
-PKG = 'geodesy'
-import roslib; roslib.load_manifest(PKG)
 import rospy
-
 import math
 import geodesy.utm
 

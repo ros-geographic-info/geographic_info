@@ -50,9 +50,6 @@ Universal Transverse Mercator coordinate module.
 
 import math
 import pyproj
-
-PKG = 'geodesy'
-import roslib; roslib.load_manifest(PKG)
 import rospy
 
 from geographic_msgs.msg import GeoPoint

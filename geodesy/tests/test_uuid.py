@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-PKG='geodesy'
-import roslib; roslib.load_manifest(PKG)
-
 import sys
 import unittest
 
@@ -82,4 +79,5 @@ class TestPythonUUID(unittest.TestCase):
 
 if __name__ == '__main__':
     import rosunit
+    PKG='geodesy'
     rosunit.unitrun(PKG, 'test_uuid_py', TestPythonUUID) 

@@ -1,29 +1,49 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+# http://ros.org/doc/groovy/api/catkin/html/user_guide/supposed.html
+cmake_minimum_required(VERSION 2.8.3)
+project(geodesy)
+# Load catkin and all dependencies required for this package
+# TODO: remove all from COMPONENTS that are not catkin packages.
+find_package(catkin REQUIRED
+  COMPONENTS
+  angles
+  geographic_msgs
+  geometry_msgs
+  sensor_msgs
+  roscpp
+  tf
+  unique_id
+  uuid_msgs
+)
 
-# Set the build type.  Options are:
-#  Coverage       : w/ debug symbols, w/o optimization, w/ code-coverage
-#  Debug          : w/ debug symbols, w/o optimization
-#  Release        : w/o debug symbols, w/ optimization
-#  RelWithDebInfo : w/ debug symbols, w/ optimization
-#  MinSizeRel     : w/o debug symbols, w/ optimization, stripped binaries
-#set(ROS_BUILD_TYPE RelWithDebInfo)
+include_directories(include ${catkin_INCLUDE_DIRS})
+catkin_python_setup()
 
-rosbuild_init()
+# what other packages will need to use this one
+catkin_package(
+#    CATKIN-DEPENDS geographic_msgs geometry_msgs sensor_msgs tf unique_id uuid_msgs
+    INCLUDE_DIRS include
+    LIBRARIES geoconv
+)
 
-#set the default path for built executables to the "bin" directory
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-#set the default path for built libraries to the "lib" directory
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
-
-add_subdirectory(src/conv)
+# build C++ coordinate conversion library
+add_library(geoconv src/conv/utm_conversions.cpp)
+target_link_libraries(geoconv ${catkin_LIBRARIES})
 
 # unit tests
-rosbuild_add_gtest(test_wgs84 tests/test_wgs84.cpp)
-rosbuild_add_gtest(test_utm tests/test_utm.cpp)
-target_link_libraries(test_utm geoconv)
-rosbuild_add_pyunit(tests/test_bounding_box.py)
-rosbuild_add_pyunit(tests/test_props.py)
-rosbuild_add_pyunit(tests/test_utm.py)
-rosbuild_add_pyunit(tests/test_uuid.py)
-rosbuild_add_pyunit(tests/test_wu_point.py)
+catkin_add_gtest(test_wgs84 tests/test_wgs84.cpp)
+target_link_libraries(test_wgs84 ${catkin_LIBRARIES})
+catkin_add_gtest(test_utm tests/test_utm.cpp)
+target_link_libraries(test_utm geoconv ${catkin_LIBRARIES})
+catkin_add_nosetests(tests/test_bounding_box.py)
+catkin_add_nosetests(tests/test_props.py)
+catkin_add_nosetests(tests/test_utm.py)
+catkin_add_nosetests(tests/test_uuid.py)
+catkin_add_nosetests(tests/test_wu_point.py)
+
+install(
+  DIRECTORY include/ DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
+)
+install(
+  TARGETS geoconv
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+)

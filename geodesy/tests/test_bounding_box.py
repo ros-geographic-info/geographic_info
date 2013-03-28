@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-PKG='geodesy'
-import roslib; roslib.load_manifest(PKG)
-
 import unittest
 
 from geodesy.bounding_box import *     # module being tested
@@ -49,4 +46,5 @@ class TestPythonBoundingBox(unittest.TestCase):
 
 if __name__ == '__main__':
     import rosunit
+    PKG='geodesy'
     rosunit.unitrun(PKG, 'test_uuid_py', TestPythonBoundingBox) 

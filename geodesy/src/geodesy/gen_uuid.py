@@ -68,11 +68,8 @@ beginning way point, and END_UUID is the ending way point.
 
 """
 
-PKG='geodesy'
-import roslib; roslib.load_manifest(PKG)
 from uuid_msgs.msg import UniqueID
 import unique_id
-
 import uuid
 
 def generate(url, id=None):
