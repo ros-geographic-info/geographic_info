@@ -6,6 +6,7 @@ Change log for geographic_info repository
 -------------------
 
  * Convert to catkin build [3]_.
+ * Remove unnecessary roscpp and rospy dependencies [6]_.
  * Released to Hydro.
 
 0.2.1 (2012-08-13)
@@ -30,3 +31,4 @@ Change log for geographic_info repository
 Issues
 ======
 .. [3] `issue #3 <https://github.com/ros-geographic-info/geographic_info/issues/3>`_
+.. [6] `issue #6 <https://github.com/ros-geographic-info/geographic_info/issues/6>`_
