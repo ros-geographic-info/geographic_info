@@ -43,7 +43,6 @@
 #include <iostream>
 #include <iomanip>
 
-#include <ros/ros.h>
 #include <tf/tf.h>
 
 #include <geodesy/wgs84.h>

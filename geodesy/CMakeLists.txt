@@ -9,7 +9,6 @@ find_package(catkin REQUIRED
   geographic_msgs
   geometry_msgs
   sensor_msgs
-  roscpp
   tf
   unique_id
   uuid_msgs

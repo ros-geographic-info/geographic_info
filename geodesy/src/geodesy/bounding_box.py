@@ -39,7 +39,6 @@ Bounding box functions for geographic maps.
 
 """
 
-import rospy
 from geographic_msgs.msg import BoundingBox
 
 def getLatLong(bbox):

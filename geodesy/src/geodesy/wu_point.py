@@ -47,7 +47,6 @@ Universal Transverse Mercator (UTM_) coordinates.
 
 """
 
-import rospy
 import math
 import geodesy.utm
 

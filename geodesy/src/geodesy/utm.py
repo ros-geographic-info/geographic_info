@@ -50,7 +50,6 @@ Universal Transverse Mercator coordinate module.
 
 import math
 import pyproj
-import rospy
 
 from geographic_msgs.msg import GeoPoint
 from geometry_msgs.msg   import Point

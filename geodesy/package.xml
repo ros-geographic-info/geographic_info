@@ -26,7 +26,6 @@
   <run_depend>geographic_msgs</run_depend>
   <run_depend>geometry_msgs</run_depend>
   <run_depend>python-pyproj</run_depend>
-  <run_depend>roscpp</run_depend>
   <run_depend>tf</run_depend>
   <run_depend>sensor_msgs</run_depend>
   <run_depend>unique_id</run_depend>
