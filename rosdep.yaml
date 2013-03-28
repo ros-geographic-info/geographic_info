@@ -1,7 +1,0 @@
-python-pyproj:
-  ubuntu:
-    apt:
-      packages: [python-pyproj]
-  debian:
-    apt:
-      packages: [python-pyproj]
