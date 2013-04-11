@@ -6,6 +6,10 @@ Change history
 
  * Released to Hydro.
  * Convert to catkin build (`#3`_).
+ * Make **geographic_info** into a metapackage, depending on the
+   **geographic_msgs** and **geodesy** packages. It should only be
+   used for dependencies in dry stacks. Wet packages will depend
+   directly on **geographic_msgs** and **geodesy**.
 
 0.2.1 (2012-08-13)
 ------------------
