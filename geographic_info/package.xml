@@ -12,8 +12,10 @@
   <author>Jack O'Quin</author>
   <license>BSD</license>
   <url>http://ros.org/wiki/geographic_info</url>
+  <url type="repository">https://github.com/ros-geographic-info/geographic_info</url>
   <url type="bugtracker">https://github.com/ros-geographic-info/geographic_info/issues</url>
-  <url type="repository">https://github.com/ros-geographic-info/geographic_info.git</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
 
   <run_depend>geodesy</run_depend>
   <run_depend>geographic_msgs</run_depend>
