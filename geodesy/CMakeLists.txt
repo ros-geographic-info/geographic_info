@@ -38,16 +38,22 @@ install(TARGETS geoconv
         LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
 
 # unit tests
-catkin_add_gtest(test_wgs84 tests/test_wgs84.cpp)
-target_link_libraries(test_wgs84 ${catkin_LIBRARIES})
-add_dependencies(test_wgs84 ${catkin_EXPORTED_TARGETS})
+if (CATKIN_ENABLE_TESTING)
+  message("-- ${PROJECT_NAME} unit testing enabled")
 
-catkin_add_gtest(test_utm tests/test_utm.cpp)
-target_link_libraries(test_utm geoconv ${catkin_LIBRARIES})
-add_dependencies(test_utm ${catkin_EXPORTED_TARGETS})
-
-catkin_add_nosetests(tests/test_bounding_box.py)
-catkin_add_nosetests(tests/test_props.py)
-catkin_add_nosetests(tests/test_utm.py)
-catkin_add_nosetests(tests/test_uuid.py)
-catkin_add_nosetests(tests/test_wu_point.py)
+  catkin_add_gtest(test_wgs84 tests/test_wgs84.cpp)
+  target_link_libraries(test_wgs84 ${catkin_LIBRARIES})
+  add_dependencies(test_wgs84 ${catkin_EXPORTED_TARGETS})
+  
+  catkin_add_gtest(test_utm tests/test_utm.cpp)
+  target_link_libraries(test_utm geoconv ${catkin_LIBRARIES})
+  add_dependencies(test_utm ${catkin_EXPORTED_TARGETS})
+  
+  catkin_add_nosetests(tests/test_bounding_box.py)
+  catkin_add_nosetests(tests/test_props.py)
+  catkin_add_nosetests(tests/test_utm.py)
+  catkin_add_nosetests(tests/test_uuid.py)
+  catkin_add_nosetests(tests/test_wu_point.py)
+else ()
+  message("-- ${PROJECT_NAME} unit testing disabled")
+endif (CATKIN_ENABLE_TESTING)
