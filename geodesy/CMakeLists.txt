@@ -30,7 +30,7 @@ add_library(geoconv src/conv/utm_conversions.cpp)
 target_link_libraries(geoconv ${catkin_LIBRARIES})
 add_dependencies(geoconv ${catkin_EXPORTED_TARGETS})
 
-install(DIRECTORY include
+install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
 install(TARGETS geoconv
         RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
