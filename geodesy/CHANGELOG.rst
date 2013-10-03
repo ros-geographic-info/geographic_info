@@ -1,6 +1,11 @@
 Change history
 ==============
 
+0.3.1 (2013-10-03)
+------------------
+
+ * Fix ROS Hydro header install problem (`#9`_).
+
 0.3.0 (2013-08-03)
 ------------------
 
@@ -30,3 +35,4 @@ Change history
 
 .. _`#3`: https://github.com/ros-geographic-info/geographic_info/issues/3
 .. _`#6`: https://github.com/ros-geographic-info/geographic_info/issues/6
+.. _`#9`: https://github.com/ros-geographic-info/geographic_info/issues/9
