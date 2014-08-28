@@ -41,5 +41,5 @@ generate_messages(
 )
 
 catkin_package(
-  CATKIN_DEPENDS message_runtime uuid_msgs std_msgs
+  CATKIN_DEPENDS message_runtime geometry_msgs uuid_msgs std_msgs
 )
