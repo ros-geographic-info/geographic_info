@@ -1,6 +1,12 @@
 Change history
 ==============
 
+0.3.2 (2014-08-30)
+------------------
+
+ * Make C++ template declaration for WGS-84 header compatible with GCC
+   4.7 compiler (`#12`_), thanks to Mike Purvis and Dirk Thomas.
+
 0.3.1 (2013-10-03)
 ------------------
 
@@ -36,3 +42,4 @@ Change history
 .. _`#3`: https://github.com/ros-geographic-info/geographic_info/issues/3
 .. _`#6`: https://github.com/ros-geographic-info/geographic_info/issues/6
 .. _`#9`: https://github.com/ros-geographic-info/geographic_info/issues/9
+.. _`#12`: https://github.com/ros-geographic-info/geographic_info/issues/12

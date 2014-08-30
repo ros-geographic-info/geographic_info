@@ -1,6 +1,12 @@
 Change history
 ==============
 
+0.3.2 (2014-08-30)
+------------------
+
+ * Add missing ``geometry_msgs`` dependency to ``catkin_package()`` 
+   components in CMakeLists.txt (`#13`_), thanks to Timo Roehling.
+
 0.3.1 (2013-10-03)
 ------------------
 
@@ -28,3 +34,4 @@ Change history
 
 .. _`#3`: https://github.com/ros-geographic-info/geographic_info/issues/3
 .. _`#6`: https://github.com/ros-geographic-info/geographic_info/issues/6
+.. _`#13`: https://github.com/ros-geographic-info/geographic_info/pull/13
