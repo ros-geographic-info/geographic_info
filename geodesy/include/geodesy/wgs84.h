@@ -71,18 +71,11 @@ namespace geodesy
    *        toMsg() functions for both points and poses.
    */
   template <class From, class To>
-  void convert(const From &from, To &to)
-  {
-    fromMsg(toMsg(from), to);
-  }
+  void convert(const From &from, To &to);
 
   /** Convert any coordinate to itself. */
   template <class Same>
-  void convert(const Same &from, Same &to)
-  {
-    if (&from != &to)
-      to = from;
-  }
+  void convert(const Same &from, Same &to);
 
   /** Convert one WGS 84 geodetic point to another.
    *
@@ -228,6 +221,19 @@ namespace geodesy
     toMsg(const geographic_msgs::GeoPose &from)
   {
     return from;
+  }
+
+  template <class From, class To>
+  void convert(const From &from, To &to)
+  {
+    fromMsg(toMsg(from), to);
+  }
+
+  template <class Same>
+  void convert(const Same &from, Same &to)
+  {
+    if (&from != &to)
+      to = from;
   }
 
 }; // namespace geodesy
