@@ -13,6 +13,6 @@ changes are needed, we plan to provide a reasonable migration path.
 
 ROS documentation:
 
- * http://www.ros.org/wiki/geographic_info
- * http://www.ros.org/wiki/geographic_msgs
- * http://www.ros.org/wiki/geodesy
+ * http://wiki.ros.org/geographic_info
+ * http://wiki.ros.org/geographic_msgs
+ * http://wiki.ros.org/geodesy

@@ -11,7 +11,7 @@
   <maintainer email="jack.oquin@gmail.com">Jack O'Quin</maintainer>
   <author>Jack O'Quin</author>
   <license>BSD</license>
-  <url>http://ros.org/wiki/geographic_info</url>
+  <url>http://wiki.ros.org/geographic_info</url>
   <url type="repository">https://github.com/ros-geographic-info/geographic_info</url>
   <url type="bugtracker">https://github.com/ros-geographic-info/geographic_info/issues</url>
 

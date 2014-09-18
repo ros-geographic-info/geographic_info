@@ -9,7 +9,7 @@
   <author>Jack O'Quin</author>
   <license>BSD</license>
 
-  <url type="website">http://ros.org/wiki/geodesy</url>
+  <url type="website">http://wiki.ros.org/geodesy</url>
   <url type="bugtracker">https://github.com/ros-geographic-info/geographic_info/issues</url>
   <url type="repository">https://github.com/ros-geographic-info/geographic_info.git</url>
 

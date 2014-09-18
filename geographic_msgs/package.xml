@@ -9,7 +9,7 @@
   <author>Jack O'Quin</author>
   <license>BSD</license>
 
-  <url>http://ros.org/wiki/geographic_msgs</url>
+  <url>http://wiki.ros.org/geographic_msgs</url>
   <url type="bugtracker">https://github.com/ros-geographic-info/geographic_info/issues</url>
   <url type="repository">https://github.com/ros-geographic-info/geographic_info.git</url>
 
