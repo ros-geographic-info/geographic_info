@@ -5,9 +5,9 @@ geodesy.gen_uuid
 
 Generate UUIDs for Geographic Information messages.
 
-.. deprecated:: 0.2.2
+.. deprecated:: 0.3.0
 
-*This module was removed in ROS Indigo.*
+*This module was removed with version 0.4.0 in ROS Indigo.*
 
 Instead, use the `unique_id`_ package, which has been stable and
 available since ROS Fuerte:

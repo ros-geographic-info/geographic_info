@@ -1,9 +1,16 @@
 Change history
 ==============
 
+0.4.0 (2014-09-18)
+------------------
+
+ * Released to Indigo.
+ * Remove deprecated geodesy.gen_uuid module (`#4`_).
+
 0.3.2 (2014-08-30)
 ------------------
 
+ * Released to Indigo.
  * Make C++ template declaration for WGS-84 header compatible with GCC
    4.7 compiler (`#12`_), thanks to Mike Purvis and Dirk Thomas.
 
@@ -40,6 +47,7 @@ Change history
  * Initial release to Electric.
 
 .. _`#3`: https://github.com/ros-geographic-info/geographic_info/issues/3
+.. _`#4`: https://github.com/ros-geographic-info/geographic_info/issues/4
 .. _`#6`: https://github.com/ros-geographic-info/geographic_info/issues/6
 .. _`#9`: https://github.com/ros-geographic-info/geographic_info/issues/9
 .. _`#12`: https://github.com/ros-geographic-info/geographic_info/issues/12

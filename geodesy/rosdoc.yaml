@@ -4,5 +4,6 @@
    file_patterns: '*.c *.cpp *.h *.cc *.hh *.dox'
  - builder: sphinx
    name: Python API
+   sphinx_root_dir: doc
    output_dir: python
 
