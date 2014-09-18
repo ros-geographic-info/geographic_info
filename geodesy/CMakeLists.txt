@@ -39,7 +39,6 @@ install(TARGETS geoconv
 
 # unit tests
 if (CATKIN_ENABLE_TESTING)
-  message("-- ${PROJECT_NAME} unit testing enabled")
 
   catkin_add_gtest(test_wgs84 tests/test_wgs84.cpp)
   target_link_libraries(test_wgs84 ${catkin_LIBRARIES})
@@ -52,8 +51,6 @@ if (CATKIN_ENABLE_TESTING)
   catkin_add_nosetests(tests/test_bounding_box.py)
   catkin_add_nosetests(tests/test_props.py)
   catkin_add_nosetests(tests/test_utm.py)
-  catkin_add_nosetests(tests/test_uuid.py)
   catkin_add_nosetests(tests/test_wu_point.py)
-else ()
-  message("-- ${PROJECT_NAME} unit testing disabled")
+
 endif (CATKIN_ENABLE_TESTING)

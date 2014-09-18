@@ -13,6 +13,7 @@ Contents:
    :glob:
 
    geodesy.*
+   CHANGELOG
 
 Indices and tables
 ==================
