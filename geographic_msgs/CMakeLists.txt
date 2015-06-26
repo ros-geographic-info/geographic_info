@@ -15,6 +15,7 @@ add_message_files(
   BoundingBox.msg
   GeographicMapChanges.msg
   GeographicMap.msg
+  GeoPath.msg
   GeoPoint.msg
   GeoPose.msg
   KeyValue.msg
