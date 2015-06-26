@@ -6,7 +6,11 @@
 *.tar.gz
 *~
 .build_version
+.cproject
+.project
+.pydevproject
 .rosgcov_files
+.settings
 TAGS
 bin/
 build/
