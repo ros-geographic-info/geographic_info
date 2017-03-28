@@ -1,2 +1,2 @@
 Header header
-geographic_msgs/GeoPoint geo_point
+geographic_msgs/GeoPoint position
