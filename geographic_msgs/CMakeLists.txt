@@ -16,8 +16,8 @@ add_message_files(
   GeographicMapChanges.msg
   GeographicMap.msg
   GeoPoint.msg
-  GeoPose.msg
   GeoPointStamped.msg
+  GeoPose.msg
   GeoPoseStamped.msg
   KeyValue.msg
   MapFeature.msg
