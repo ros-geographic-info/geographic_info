@@ -1,7 +1,7 @@
 Change history
 ==============
 
-0.4.1 (2017-04-07)
+0.5.0 (2017-04-07)
 ------------------
 
  * Removed Python setup install_requires option.
