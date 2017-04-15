@@ -32,6 +32,7 @@ add_service_files(
   DIRECTORY srv
   FILES
   GetGeographicMap.srv
+  GetGeoPath.srv
   GetRoutePlan.srv
   UpdateGeographicMap.srv
 )
