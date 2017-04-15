@@ -1,6 +1,11 @@
 Change history
 ==============
 
+0.5.1 (forthcoming)
+-------------------
+
+* Add GeoPath message with poses.
+
 0.5.0 (2017-04-07)
 ------------------
 
