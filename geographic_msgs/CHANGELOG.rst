@@ -1,10 +1,11 @@
 Change history
 ==============
 
-0.5.1 (forthcoming)
--------------------
+0.5.1 (2017-04-15)
+------------------
 
 * Add GeoPath message with poses.
+* Add GetGeoPath service (`#7`_).
 
 0.5.0 (2017-04-07)
 ------------------
@@ -47,4 +48,5 @@ Change history
 
 .. _`#3`: https://github.com/ros-geographic-info/geographic_info/issues/3
 .. _`#6`: https://github.com/ros-geographic-info/geographic_info/issues/6
+.. _`#7`: https://github.com/ros-geographic-info/geographic_info/issues/7
 .. _`#13`: https://github.com/ros-geographic-info/geographic_info/pull/13
