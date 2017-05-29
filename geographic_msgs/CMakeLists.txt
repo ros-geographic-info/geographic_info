@@ -3,6 +3,8 @@ project(geographic_msgs)
 
 find_package(catkin REQUIRED
   COMPONENTS
+  roscpp
+  rospy
   message_generation
   geometry_msgs
   std_msgs
