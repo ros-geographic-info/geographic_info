@@ -128,19 +128,36 @@ class UTMPoint:
                 and self.northing == self.northing
                 and self.band != ' ')
 
-def fromLatLong(latitude, longitude, altitude=float('nan')):
+def fromLatLong(latitude, longitude, altitude=float('nan'),zone=None,band=None):
     """Generate :class:`UTMPoint` from latitude, longitude and (optional) altitude.
 
     Latitude and longitude are expressed in degrees, relative to the
     WGS84 ellipsoid.
 
+	Optionally a UTM zone and band may be specified (e.g. zone = '19T' or 
+	zone = 19, band = 'T'), which returns the UTM coordinates relative to 
+	the specified zone/band combination regardless of location. This 
+	facilitates robot movement across UTM zones. Users should generally 
+	not apply this method beyond 2 UTM zones lest the projection error 
+	exceed typical GPS uncertainty. 
+
     :param latitude: [degrees], negative is South.
     :param longitude: [degrees], negative is West.
     :param altitude: [meters], negative is below the ellipsoid.
-
+	:param zone: either string of combined zone and band ('19T') or interger value (1-60) of zone alone.
+	:param band: capital letter, (C-X), may be omitted if zone is in combined form. 
+	
     :returns: :class:`UTMPoint` object.
     """
-    z, b = gridZone(latitude, longitude)
+    
+    if zone and not band:
+    	z = zone[:2]
+    	b = zone[-1]
+    else if zone and band:
+    	z = str(zone)
+    	b = band    
+    else:
+	    z, b = gridZone(latitude, longitude)
     utm_proj = pyproj.Proj(proj='utm', zone=z, datum='WGS84')
     e, n = utm_proj(longitude, latitude)
     return UTMPoint(easting=e, northing=n, altitude=altitude, zone=z, band=b)
