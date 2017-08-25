@@ -153,7 +153,7 @@ def fromLatLong(latitude, longitude, altitude=float('nan'),zone=None,band=None):
     if zone and not band:
     	z = zone[:2]
     	b = zone[-1]
-    else if zone and band:
+    elif zone and band:
     	z = str(zone)
     	b = band    
     else:
