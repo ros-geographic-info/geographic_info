@@ -10,3 +10,8 @@ bool success                          # true if the call succeeded
 string status                         # more details
 
 geographic_msgs/GeoPath plan          # path to follow
+
+uuid_msgs/UniqueID network            # the uuid of the RouteNetwork
+uuid_msgs/UniqueID start_seg          # the uuid of the starting RouteSegment
+uuid_msgs/UniqueID goal_seg           # the uuid of the ending RouteSegment
+float64 distance                      # the length of the plan
