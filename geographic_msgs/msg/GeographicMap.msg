@@ -1,6 +1,6 @@
 # Geographic map for a specified region.
 
-Header header            # stamp specifies time
+std_msgs/Header header            # stamp specifies time
                          # frame_id (normally /map)
 
 uuid_msgs/UniqueID id    # identifier for this map
