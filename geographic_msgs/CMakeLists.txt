@@ -13,14 +13,31 @@ find_package(uuid_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 
-rosidl_generate_interfaces(${PROJECT_NAME} "msg/BoundingBox.msg"
-  "msg/GeographicMapChanges.msg" "msg/GeographicMap.msg" "msg/GeoPath.msg"
-  "msg/GeoPoint.msg" "msg/GeoPointStamped.msg" "msg/GeoPose.msg"
-  "msg/GeoPoseStamped.msg" "msg/KeyValue.msg" "msg/MapFeature.msg"
-  "msg/RouteNetwork.msg" "msg/RoutePath.msg" "msg/RouteSegment.msg"
-  "msg/WayPoint.msg" "srv/GetGeographicMap.srv"
-  "srv/GetGeoPath.srv" "srv/GetRoutePlan.srv" "srv/UpdateGeographicMap.srv"
-  DEPENDENCIES builtin_interfaces std_msgs geometry_msgs uuid_msgs)
+rosidl_generate_interfaces(${PROJECT_NAME} 
+  "msg/BoundingBox.msg"
+  "msg/GeographicMapChanges.msg" 
+  "msg/GeographicMap.msg" 
+  "msg/GeoPath.msg"
+  "msg/GeoPoint.msg"
+  "msg/GeoPointStamped.msg"
+  "msg/GeoPose.msg"
+  "msg/GeoPoseStamped.msg"
+  "msg/KeyValue.msg"
+  "msg/MapFeature.msg"
+  "msg/RouteNetwork.msg"
+  "msg/RoutePath.msg"
+  "msg/RouteSegment.msg"
+  "msg/WayPoint.msg"
+  "srv/GetGeographicMap.srv"
+  "srv/GetGeoPath.srv"
+  "srv/GetRoutePlan.srv"
+  "srv/UpdateGeographicMap.srv"
+  DEPENDENCIES 
+  builtin_interfaces
+  std_msgs
+  geometry_msgs 
+  uuid_msgs
+)
 
 set(INCLUDE_DIRS ${ament_cmake_INCLUDE_DIRS} ${std_msgs_INCLUDE_DIRS}
   ${geometry_msgs_INCLUDE_DIRS} ${uuid_msgs_INCLUDE_DIRS}
