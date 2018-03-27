@@ -1,6 +1,11 @@
 Change history
 ==============
 
+forthcoming
+-----------
+
+* Add additional information to ``GetGeoPath`` service response.
+
 0.5.2 (2017-04-15)
 ------------------
 
