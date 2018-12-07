@@ -40,10 +40,10 @@
 
 #include <limits>
 #include <ctype.h>
-#include <geographic_msgs/GeoPoint.h>
-#include <geographic_msgs/GeoPose.h>
-#include <sensor_msgs/NavSatFix.h>
-#include <tf/tf.h>
+#include <geographic_msgs/msg/geo_point.hpp>
+#include <geographic_msgs/msg/geo_pose.hpp>
+#include <sensor_msgs/msg/nav_sat_fix.hpp>
+#include <tf2/buffer_core.h>
 
 /** @file
 
@@ -82,8 +82,8 @@ namespace geodesy
    *  @param from WGS 84 point message.
    *  @param to another point.
    */
-  static inline void fromMsg(const geographic_msgs::GeoPoint &from,
-                             geographic_msgs::GeoPoint &to)
+  static inline void fromMsg(const geographic_msgs::msg::GeoPoint &from,
+                             geographic_msgs::msg::GeoPoint &to)
   {
     convert(from, to);
   }
@@ -93,26 +93,26 @@ namespace geodesy
    *  @param from WGS 84 pose message.
    *  @param to another pose.
    */
-  static inline void fromMsg(const geographic_msgs::GeoPose &from,
-                             geographic_msgs::GeoPose &to)
+  static inline void fromMsg(const geographic_msgs::msg::GeoPose &from,
+                             geographic_msgs::msg::GeoPose &to)
   {
     convert(from, to);
   }
 
   /** @return true if no altitude specified. */
-  static inline bool is2D(const geographic_msgs::GeoPoint &pt)
+  static inline bool is2D(const geographic_msgs::msg::GeoPoint &pt)
   {
     return (pt.altitude != pt.altitude);
   }
 
   /** @return true if pose has no altitude. */
-  static inline bool is2D(const geographic_msgs::GeoPose &pose)
+  static inline bool is2D(const geographic_msgs::msg::GeoPose &pose)
   {
     return is2D(pose.position);
   }
 
   /** @return true if point is valid. */
-  static inline bool isValid(const geographic_msgs::GeoPoint &pt)
+  static inline bool isValid(const geographic_msgs::msg::GeoPoint &pt)
   {
     if (pt.latitude < -90.0 || pt.latitude > 90.0)
       return false;
@@ -124,14 +124,18 @@ namespace geodesy
   }
 
   /** @return true if pose is valid. */
-  static inline bool isValid(const geographic_msgs::GeoPose &pose)
+  static inline bool isValid(const geographic_msgs::msg::GeoPose &pose)
   {
     // check that orientation quaternion is normalized
     double len2 = (pose.orientation.x * pose.orientation.x
                    + pose.orientation.y * pose.orientation.y
                    + pose.orientation.z * pose.orientation.z
                    + pose.orientation.w * pose.orientation.w);
-    if (fabs(len2 - 1.0) > tf::QUATERNION_TOLERANCE)
+    // if (fabs(len2 - 1.0) > tf::QUATERNION_TOLERANCE)
+    // if (fabs(len2 - 1.0) > tf2::QUATERNION_NORMALIZATION_TOLERANCE)
+    // tf2::QUATERNION_NORMALIZATION_TOLERANCE объявлена в cpp файле и недоступна нам, поэтому приходится использовать магическую константу
+    // кроме того, в tf эта константа имела значение 0.1, а в tf2 уже 10e-3, я произвольным образом выбрал для использования значение из tf 
+    if (fabs(len2 - 1.0) > 0.1) 
       return false;
 
     return isValid(pose.position);
@@ -144,7 +148,7 @@ namespace geodesy
    *  Normalizes the longitude to [-180, 180).
    *  Clamps latitude to [-90, 90].
    */
-  static inline void normalize(geographic_msgs::GeoPoint &pt)
+  static inline void normalize(geographic_msgs::msg::GeoPoint &pt)
   {
     pt.longitude =
       (fmod(fmod((pt.longitude + 180.0), 360.0) + 360.0, 360.0) - 180.0);
@@ -152,9 +156,9 @@ namespace geodesy
   }
 
   /** @return a 2D WGS 84 geodetic point message. */
-  static inline geographic_msgs::GeoPoint toMsg(double lat, double lon)
+  static inline geographic_msgs::msg::GeoPoint toMsg(double lat, double lon)
   {
-    geographic_msgs::GeoPoint pt;
+    geographic_msgs::msg::GeoPoint pt;
     pt.latitude = lat;
     pt.longitude = lon;
     pt.altitude = std::numeric_limits<double>::quiet_NaN();
@@ -162,10 +166,10 @@ namespace geodesy
   }
 
   /** @return a 3D WGS 84 geodetic point message. */
-  static inline geographic_msgs::GeoPoint
+  static inline geographic_msgs::msg::GeoPoint
     toMsg(double lat, double lon, double alt)
   {
-    geographic_msgs::GeoPoint pt;
+    geographic_msgs::msg::GeoPoint pt;
     pt.latitude = lat;
     pt.longitude = lon;
     pt.altitude = alt;
@@ -173,10 +177,10 @@ namespace geodesy
   }
 
   /** @return a WGS 84 geodetic point message from a NavSatFix. */
-  static inline geographic_msgs::GeoPoint
-    toMsg(const sensor_msgs::NavSatFix &fix)
+  static inline geographic_msgs::msg::GeoPoint
+    toMsg(const sensor_msgs::msg::NavSatFix &fix)
   {
-    geographic_msgs::GeoPoint pt;
+    geographic_msgs::msg::GeoPoint pt;
     pt.latitude = fix.latitude;
     pt.longitude = fix.longitude;
     pt.altitude = fix.altitude;
@@ -184,8 +188,8 @@ namespace geodesy
   }
 
   /** @return a WGS 84 geodetic point message from another. */
-  static inline geographic_msgs::GeoPoint
-    toMsg(const geographic_msgs::GeoPoint &from)
+  static inline geographic_msgs::msg::GeoPoint
+    toMsg(const geographic_msgs::msg::GeoPoint &from)
   {
     return from;
   }
@@ -193,11 +197,11 @@ namespace geodesy
   /** @return a WGS 84 geodetic pose message from a point and a
    *          quaternion.
    */
-  static inline geographic_msgs::GeoPose
-    toMsg(const geographic_msgs::GeoPoint &pt,
-          const geometry_msgs::Quaternion &q)
+  static inline geographic_msgs::msg::GeoPose
+    toMsg(const geographic_msgs::msg::GeoPoint &pt,
+          const geometry_msgs::msg::Quaternion &q)
   {
-    geographic_msgs::GeoPose pose;
+    geographic_msgs::msg::GeoPose pose;
     pose.position = pt;
     pose.orientation = q;
     return pose;
@@ -206,19 +210,19 @@ namespace geodesy
   /** @return a WGS 84 geodetic pose message from a NavSatFix and a
    *          quaternion.
    */
-  static inline geographic_msgs::GeoPose
-    toMsg(const sensor_msgs::NavSatFix &fix,
-          const geometry_msgs::Quaternion &q)
+  static inline geographic_msgs::msg::GeoPose
+    toMsg(const sensor_msgs::msg::NavSatFix &fix,
+          const geometry_msgs::msg::Quaternion &q)
   {
-    geographic_msgs::GeoPose pose;
+    geographic_msgs::msg::GeoPose pose;
     pose.position = toMsg(fix);
     pose.orientation = q;
     return pose;
   }
 
   /** @return a WGS 84 geodetic pose message from another. */
-  static inline geographic_msgs::GeoPose
-    toMsg(const geographic_msgs::GeoPose &from)
+  static inline geographic_msgs::msg::GeoPose
+    toMsg(const geographic_msgs::msg::GeoPose &from)
   {
     return from;
   }

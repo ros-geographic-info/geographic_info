@@ -43,11 +43,11 @@
 #include <iostream>
 #include <iomanip>
 
-#include <tf/tf.h>
+#include <tf2/buffer_core.h>
 
 #include <geodesy/wgs84.h>
-#include <geometry_msgs/Point.h>
-#include <geometry_msgs/Pose.h>
+#include <geometry_msgs/msg/point.hpp>
+#include <geometry_msgs/msg/pose.hpp>
 
 /** @file
 
@@ -101,7 +101,7 @@ class UTMPoint
     band(that.band)
   {}
   
-  UTMPoint(const geographic_msgs::GeoPoint &pt);
+  UTMPoint(const geographic_msgs::msg::GeoPoint &pt);
 
   /** Create a flattened 2-D grid point. */
   UTMPoint(double _easting, double _northing, uint8_t _zone, char _band):
@@ -149,36 +149,36 @@ class UTMPose
   {}
   
   /** Create from a WGS 84 geodetic pose. */
-  UTMPose(const geographic_msgs::GeoPose &pose):
+  UTMPose(const geographic_msgs::msg::GeoPose &pose):
     position(pose.position),
     orientation(pose.orientation)
   {}
 
   /** Create from a UTMPoint and a quaternion. */
   UTMPose(UTMPoint pt,
-          const geometry_msgs::Quaternion &q):
+          const geometry_msgs::msg::Quaternion &q):
     position(pt),
     orientation(q)
   {}
 
   /** Create from a WGS 84 geodetic point and a quaternion. */
-  UTMPose(const geographic_msgs::GeoPoint &pt,
-          const geometry_msgs::Quaternion &q):
+  UTMPose(const geographic_msgs::msg::GeoPoint &pt,
+          const geometry_msgs::msg::Quaternion &q):
     position(pt),
     orientation(q)
   {}
 
   // data members
   UTMPoint position;
-  geometry_msgs::Quaternion orientation;
+  geometry_msgs::msg::Quaternion orientation;
 
 }; // class UTMPose
 
 // conversion function prototypes
-void fromMsg(const geographic_msgs::GeoPoint &from, UTMPoint &to);
-void fromMsg(const geographic_msgs::GeoPose &from, UTMPose &to);
-geographic_msgs::GeoPoint toMsg(const UTMPoint &from);
-geographic_msgs::GeoPose toMsg(const UTMPose &from);
+void fromMsg(const geographic_msgs::msg::GeoPoint &from, UTMPoint &to);
+void fromMsg(const geographic_msgs::msg::GeoPose &from, UTMPose &to);
+geographic_msgs::msg::GeoPoint toMsg(const UTMPoint &from);
+geographic_msgs::msg::GeoPose toMsg(const UTMPose &from);
 
 /** @return true if no altitude specified. */
 static inline bool is2D(const UTMPoint &pt)
@@ -203,7 +203,7 @@ bool isValid(const UTMPose &pose);
  */
 static inline void normalize(UTMPoint &pt)
 {
-  geographic_msgs::GeoPoint ll(toMsg(pt));
+  geographic_msgs::msg::GeoPoint ll(toMsg(pt));
   normalize(ll);
   fromMsg(ll, pt);
 }
@@ -241,9 +241,9 @@ static inline bool sameGridZone(const UTMPose &pose1, const UTMPose &pose2)
 }
 
 /** @return a geometry Point corresponding to a UTM point. */
-static inline geometry_msgs::Point toGeometry(const UTMPoint &from)
+static inline geometry_msgs::msg::Point toGeometry(const UTMPoint &from)
 {
-  geometry_msgs::Point to;
+  geometry_msgs::msg::Point to;
   to.x = from.easting;
   to.y = from.northing;
   to.z = from.altitude;
@@ -251,9 +251,9 @@ static inline geometry_msgs::Point toGeometry(const UTMPoint &from)
 }
 
 /** @return a geometry Pose corresponding to a UTM pose. */
-static inline geometry_msgs::Pose toGeometry(const UTMPose &from)
+static inline geometry_msgs::msg::Pose toGeometry(const UTMPose &from)
 {
-  geometry_msgs::Pose to;
+  geometry_msgs::msg::Pose to;
   to.position = toGeometry(from.position);
   to.orientation = from.orientation;
   return to;
