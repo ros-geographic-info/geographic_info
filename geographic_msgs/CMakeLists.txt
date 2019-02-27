@@ -9,14 +9,14 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(std_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
-find_package(uuid_msgs REQUIRED)
+find_package(unique_identifier_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(builtin_interfaces REQUIRED)
 
-rosidl_generate_interfaces(${PROJECT_NAME} 
+rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/BoundingBox.msg"
-  "msg/GeographicMapChanges.msg" 
-  "msg/GeographicMap.msg" 
+  "msg/GeographicMapChanges.msg"
+  "msg/GeographicMap.msg"
   "msg/GeoPath.msg"
   "msg/GeoPoint.msg"
   "msg/GeoPointStamped.msg"
@@ -32,33 +32,40 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/GetGeoPath.srv"
   "srv/GetRoutePlan.srv"
   "srv/UpdateGeographicMap.srv"
-  DEPENDENCIES 
+  DEPENDENCIES
   builtin_interfaces
   std_msgs
-  geometry_msgs 
-  uuid_msgs
+  geometry_msgs
+  unique_identifier_msgs
 )
 
 set(INCLUDE_DIRS ${ament_cmake_INCLUDE_DIRS} ${std_msgs_INCLUDE_DIRS}
-  ${geometry_msgs_INCLUDE_DIRS} ${uuid_msgs_INCLUDE_DIRS}
+  ${geometry_msgs_INCLUDE_DIRS} ${unique_identifier_msgs_INCLUDE_DIRS}
   ${rosidl_default_generators_INCLUDE_DIRS})
 include_directories(${INCLUDE_DIRS})
 
 set(LIBRARY_DIRS ${ament_cmake_LIBRARY_DIRS} ${std_msgs_LIBRARY_DIRS}
-  ${geometry_msgs_LIBRARY_DIRS} ${uuid_msgs_LIBRARY_DIRS}
+  ${geometry_msgs_LIBRARY_DIRS} ${unique_identifier_msgs_LIBRARY_DIRS}
   ${rosidl_default_generators_LIBRARY_DIRS})
 
 link_directories(${LIBRARY_DIRS})
 
 set(LIBS ${ament_cmake_LIBRARIES} ${std_msgs_LIBRARIES}
-  ${geometry_msgs_LIBRARIES} ${uuid_msgs_LIBRARIES}
+  ${geometry_msgs_LIBRARIES} ${unique_identifier_msgs_LIBRARIES}
   ${rosidl_default_generators_LIBRARIES})
 
 ament_export_dependencies(ament_cmake)
 ament_export_dependencies(std_msgs)
 ament_export_dependencies(geometry_msgs)
-ament_export_dependencies(uuid_msgs)
+ament_export_dependencies(unique_identifier_msgs)
 ament_export_dependencies(rosidl_default_generators)
+ament_export_dependencies(rosidl_default_runtime)
+
 ament_export_include_directories(${INCLUDE_DIRS})
+
+install(
+  FILES geographic_msgs_mapping_rule.yaml
+  DESTINATION share/${PROJECT_NAME}
+)
 
 ament_package()
