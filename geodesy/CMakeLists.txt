@@ -48,9 +48,9 @@ if (CATKIN_ENABLE_TESTING)
   target_link_libraries(test_utm geoconv ${catkin_LIBRARIES})
   add_dependencies(test_utm ${catkin_EXPORTED_TARGETS})
   
-  catkin_add_nosetests(tests/test_bounding_box.py)
-  catkin_add_nosetests(tests/test_props.py)
-  catkin_add_nosetests(tests/test_utm.py)
-  catkin_add_nosetests(tests/test_wu_point.py)
+  #catkin_add_nosetests(tests/test_bounding_box.py)
+  #catkin_add_nosetests(tests/test_props.py)
+  #catkin_add_nosetests(tests/test_utm.py)
+  #catkin_add_nosetests(tests/test_wu_point.py)
 
 endif (CATKIN_ENABLE_TESTING)
