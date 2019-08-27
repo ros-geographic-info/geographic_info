@@ -6,6 +6,6 @@
 #
 # Feature lists may also contain other feature lists as members.
 
-uuid_msgs/UniqueID   id         # Unique feature identifier
-uuid_msgs/UniqueID[] components # Sequence of feature components
+unique_identifier_msgs/UUID   id         # Unique feature identifier
+unique_identifier_msgs/UUID[] components # Sequence of feature components
 KeyValue[] props                # Key/value properties for this feature

@@ -1,5 +1,6 @@
-<package>
-
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
   <name>geographic_info</name>
   <version>0.5.3</version>
   <description>
@@ -15,13 +16,9 @@
   <url type="repository">https://github.com/ros-geographic-info/geographic_info</url>
   <url type="bugtracker">https://github.com/ros-geographic-info/geographic_info/issues</url>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <run_depend>geodesy</run_depend>
-  <run_depend>geographic_msgs</run_depend>
-
-  <export>
-    <metapackage/>
-  </export>
+  <depend>geodesy</depend>
+  <depend>geographic_msgs</depend>
 
 </package>
