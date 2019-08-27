@@ -35,7 +35,7 @@
 *********************************************************************/
 
 //#include <exception>
-#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp> 
 #include <angles/angles.h>
 #include <geodesy/utm.h>
 
@@ -116,7 +116,7 @@ static char UTMBand(double Lat, double Lon)
  *  @param from WGS 84 point message.
  *  @return UTM point.
  */
-geographic_msgs::GeoPoint toMsg(const UTMPoint &from)
+geographic_msgs::msg::GeoPoint toMsg(const UTMPoint &from)
 {
   //remove 500,000 meter offset for longitude
   double x = from.easting - 500000.0;
@@ -157,7 +157,7 @@ geographic_msgs::GeoPoint toMsg(const UTMPoint &from)
   D = x/(N1*k0);
 
   // function result
-  geographic_msgs::GeoPoint to;
+  geographic_msgs::msg::GeoPoint to;
   to.altitude = from.altitude;
   to.latitude =
     phi1Rad - ((N1*tan(phi1Rad)/R1)
@@ -184,7 +184,7 @@ geographic_msgs::GeoPoint toMsg(const UTMPoint &from)
  *  @param from WGS 84 point message.
  *  @param to UTM point.
  */
-void fromMsg(const geographic_msgs::GeoPoint &from, UTMPoint &to)
+void fromMsg(const geographic_msgs::msg::GeoPoint &from, UTMPoint &to)
 {
   double Lat = from.latitude;
   double Long = from.longitude;
@@ -280,7 +280,7 @@ bool isValid(const UTMPoint &pt)
 }
  
 /** Create UTM point from WGS 84 geodetic point. */
-UTMPoint::UTMPoint(const geographic_msgs::GeoPoint &pt)
+UTMPoint::UTMPoint(const geographic_msgs::msg::GeoPoint &pt)
 {
   fromMsg(pt, *this);
 }
@@ -292,7 +292,7 @@ UTMPoint::UTMPoint(const geographic_msgs::GeoPoint &pt)
  *
  *  @todo define the orientation transformation properly
  */
-void fromMsg(const geographic_msgs::GeoPose &from, UTMPose &to)
+void fromMsg(const geographic_msgs::msg::GeoPose &from, UTMPose &to)
 {
   fromMsg(from.position, to.position);
   to.orientation = from.orientation;
