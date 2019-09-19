@@ -6,11 +6,6 @@ part of the ROS Geographic Information project.
 
  * http://en.wikipedia.org/wiki/Geographic_information_system
 
-*This API is experimental*. 
-
-We need experience with it before promising not to change it. If
-changes are needed, we plan to provide a reasonable migration path.
-
 ROS documentation:
 
  * http://wiki.ros.org/geographic_info
