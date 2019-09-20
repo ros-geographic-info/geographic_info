@@ -25,7 +25,7 @@
   <depend>python-pyproj</depend>
 
   <!-- these dependencies are only for testing -->
-  <test_depend>rosunit</test_depend>
+  <!-- <test_depend>rosunit</test_depend> -->
 
   <!-- documentation dependencies -->
   <build_depend>python-catkin-pkg</build_depend>
