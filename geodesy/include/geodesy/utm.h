@@ -43,11 +43,11 @@
 #include <iostream>
 #include <iomanip>
 
-#include <tf2/buffer_core.h> 
-
 #include <geodesy/wgs84.h>
-#include <geometry_msgs/msg/point.h>
-#include <geometry_msgs/msg/pose.h>
+#include "geographic_msgs/msg/geo_point.hpp"
+#include "geometry_msgs/msg/point.hpp"
+#include "geographic_msgs/msg/geo_pose.hpp"
+#include "geometry_msgs/msg/pose.hpp"
 
 /** @file
 

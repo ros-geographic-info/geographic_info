@@ -35,8 +35,7 @@
 *********************************************************************/
 
 //#include <exception>
-#include <rclcpp/rclcpp.hpp> 
-#include <angles/angles.h>
+#include "angles/angles.h"
 #include <geodesy/utm.h>
 
 /**  @file
@@ -71,7 +70,6 @@ namespace geodesy
 #define UTM_E4		(UTM_E2*UTM_E2)		// e^4
 #define UTM_E6		(UTM_E4*UTM_E2)		// e^6
 #define UTM_EP2		(UTM_E2/(1-UTM_E2))	// e'^2
-
 
 /**
  * Determine the correct UTM band letter for the given latitude.
@@ -309,7 +307,7 @@ bool isValid(const UTMPose &pose)
                  + pose.orientation.y * pose.orientation.y
                  + pose.orientation.z * pose.orientation.z
                  + pose.orientation.w * pose.orientation.w);
-  return fabs(len2 - 1.0) <= tf::QUATERNION_TOLERANCE;
+  return fabs(len2 - 1.0) <= TF_QUATERNION_TOLERANCE;
 }
 
 } // end namespace geodesy

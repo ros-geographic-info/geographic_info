@@ -40,10 +40,11 @@
 
 #include <limits>
 #include <ctype.h>
-#include <geographic_msgs/msg/geo_point.h>
-#include <geographic_msgs/msg/geo_pose.h>
-#include <sensor_msgs/msg/nav_sat_fix.h>
-#include <tf2/buffer_core.h> 
+#include "geographic_msgs/msg/geo_point.hpp"
+#include "geographic_msgs/msg/geo_pose.hpp"
+#include "sensor_msgs/msg/nav_sat_fix.hpp"
+
+#define TF_QUATERNION_TOLERANCE 0.1
 
 /** @file
 
@@ -131,7 +132,7 @@ namespace geodesy
                    + pose.orientation.y * pose.orientation.y
                    + pose.orientation.z * pose.orientation.z
                    + pose.orientation.w * pose.orientation.w);
-    if (fabs(len2 - 1.0) > tf::QUATERNION_TOLERANCE)
+    if (fabs(len2 - 1.0) > TF_QUATERNION_TOLERANCE)
       return false;
 
     return isValid(pose.position);
@@ -165,7 +166,7 @@ namespace geodesy
   static inline geographic_msgs::msg::GeoPoint
     toMsg(double lat, double lon, double alt)
   {
-    geographic_msgs::GeoPoint pt;
+    geographic_msgs::msg::GeoPoint pt;
     pt.latitude = lat;
     pt.longitude = lon;
     pt.altitude = alt;
@@ -176,7 +177,7 @@ namespace geodesy
   static inline geographic_msgs::msg::GeoPoint
     toMsg(const sensor_msgs::msg::NavSatFix &fix)
   {
-    geographic_msgs::GeoPoint pt;
+    geographic_msgs::msg::GeoPoint pt;
     pt.latitude = fix.latitude;
     pt.longitude = fix.longitude;
     pt.altitude = fix.altitude;
@@ -197,7 +198,7 @@ namespace geodesy
     toMsg(const geographic_msgs::msg::GeoPoint &pt,
           const geometry_msgs::msg::Quaternion &q)
   {
-    geographic_msgs::GeoPose pose;
+    geographic_msgs::msg::GeoPose pose;
     pose.position = pt;
     pose.orientation = q;
     return pose;
