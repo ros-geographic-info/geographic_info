@@ -4,4 +4,4 @@ std_msgs/Header header                   # stamp specifies time of change
                                 # frame_id (normally /map)
 
 GeographicMap diffs             # new and changed points and features
-uuid_msgs/UniqueID[] deletes    # deleted map components
+unique_identifier_msgs/UUID[] deletes    # deleted map components

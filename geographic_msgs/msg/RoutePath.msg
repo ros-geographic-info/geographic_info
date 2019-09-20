@@ -6,6 +6,6 @@
 
 std_msgs/Header header
 
-uuid_msgs/UniqueID   network    # Route network containing this path
-uuid_msgs/UniqueID[] segments   # Sequence of RouteSegment IDs
+unique_identifier_msgs/UUID   network    # Route network containing this path
+unique_identifier_msgs/UUID[] segments   # Sequence of RouteSegment IDs
 KeyValue[]           props      # Key/value properties

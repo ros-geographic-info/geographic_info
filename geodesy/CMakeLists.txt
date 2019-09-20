@@ -1,56 +1,41 @@
-# http://ros.org/doc/groovy/api/catkin/html/user_guide/supposed.html
-cmake_minimum_required(VERSION 2.8.3)
+cmake_minimum_required(VERSION 3.5)
 project(geodesy)
-find_package(catkin REQUIRED
-             COMPONENTS
-             angles
-             geographic_msgs
-             geometry_msgs
-             sensor_msgs
-             tf
-             unique_id
-             uuid_msgs)
+find_package(ament_cmake REQUIRED)
+find_package(angles REQUIRED)
+find_package(geographic_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(unique_identifier_msgs REQUIRED)
 
-include_directories(include ${catkin_INCLUDE_DIRS})
-catkin_python_setup()
+include_directories(
+  include
+)
 
-# what other packages will need to use this one
-catkin_package(CATKIN_DEPENDS
-               geographic_msgs
-               geometry_msgs
-               sensor_msgs
-               tf
-               unique_id
-               uuid_msgs
-               INCLUDE_DIRS include
-               LIBRARIES geoconv)
+set(dependencies
+  angles
+  geographic_msgs
+  geometry_msgs
+  sensor_msgs
+  unique_identifier_msgs
+)
+
+ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR src/${PROJECT_NAME})
 
 # build C++ coordinate conversion library
-add_library(geoconv src/conv/utm_conversions.cpp)
-target_link_libraries(geoconv ${catkin_LIBRARIES})
-add_dependencies(geoconv ${catkin_EXPORTED_TARGETS})
+add_library(geoconv STATIC src/conv/utm_conversions.cpp)
+ament_target_dependencies(geoconv 
+  ${dependencies}
+)
 
 install(DIRECTORY include/${PROJECT_NAME}/
-        DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION})
+        DESTINATION include/${PROJECT_NAME}/)
 install(TARGETS geoconv
-        RUNTIME DESTINATION ${CATKIN_GLOBAL_BIN_DESTINATION}
-        ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
-        LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION})
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib
+        RUNTIME DESTINATION lib/${PROJECT_NAME}
+)
 
-# unit tests
-if (CATKIN_ENABLE_TESTING)
-
-  catkin_add_gtest(test_wgs84 tests/test_wgs84.cpp)
-  target_link_libraries(test_wgs84 ${catkin_LIBRARIES})
-  add_dependencies(test_wgs84 ${catkin_EXPORTED_TARGETS})
-  
-  catkin_add_gtest(test_utm tests/test_utm.cpp)
-  target_link_libraries(test_utm geoconv ${catkin_LIBRARIES})
-  add_dependencies(test_utm ${catkin_EXPORTED_TARGETS})
-  
-  catkin_add_nosetests(tests/test_bounding_box.py)
-  catkin_add_nosetests(tests/test_props.py)
-  catkin_add_nosetests(tests/test_utm.py)
-  catkin_add_nosetests(tests/test_wu_point.py)
-
-endif (CATKIN_ENABLE_TESTING)
+ament_export_dependencies(${dependencies})
+ament_export_include_directories(include)
+ament_export_libraries(geoconv)
+ament_package()
