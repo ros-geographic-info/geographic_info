@@ -19,8 +19,7 @@ set(dependencies
   unique_identifier_msgs
 )
 
-# TODO(stevemacenski) port python libraries to ROS2
-# ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR src/${PROJECT_NAME})
+ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR src/${PROJECT_NAME})
 
 # build C++ coordinate conversion library
 add_library(geoconv STATIC src/conv/utm_conversions.cpp)
