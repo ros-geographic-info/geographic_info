@@ -237,6 +237,6 @@ namespace geodesy
       to = from;
   }
 
-}; // namespace geodesy
+}  // namespace geodesy
 
 #endif // _WGS84_H_

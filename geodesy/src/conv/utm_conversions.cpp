@@ -80,6 +80,7 @@ namespace geodesy
 static char UTMBand(double Lat, double Lon)
 {
   char LetterDesignator;
+  (void)Lon;
 
   if     ((84 >= Lat) && (Lat >= 72))  LetterDesignator = 'X';
   else if ((72 > Lat) && (Lat >= 64))  LetterDesignator = 'W';
