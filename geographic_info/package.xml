@@ -22,4 +22,7 @@
   <depend>geodesy</depend>
   <depend>geographic_msgs</depend>
 
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
 </package>
