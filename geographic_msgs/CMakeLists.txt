@@ -38,6 +38,11 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   DEPENDENCIES unique_identifier_msgs geometry_msgs std_msgs builtin_interfaces
 )
 
+install(
+  FILES geographic_msgs_mapping_rule.yaml
+  DESTINATION share/${PROJECT_NAME}
+)
+
 ament_export_dependencies(rosidl_default_runtime)
 
 ament_package()
