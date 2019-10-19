@@ -259,6 +259,6 @@ static inline geometry_msgs::msg::Pose toGeometry(const UTMPose &from)
   return to;
 }
 
-}; // namespace geodesy
+}  // namespace geodesy
 
 #endif // _UTM_H_
