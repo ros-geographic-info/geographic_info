@@ -127,7 +127,7 @@ class TestWuPoint(unittest.TestCase):
         self.assertEqual(wupts.get(uu).uuid(), uu)
 
         # test index() function
-        for i in xrange(len(uuids)):
+        for i in range(len(uuids)):
             self.assertEqual(wupts.index(uuids[i]), i)
             self.assertEqual(wupts.points[i].id.uuid, uuids[i])
 
