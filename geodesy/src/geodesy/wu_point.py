@@ -53,7 +53,7 @@ import geodesy.utm
 from geographic_msgs.msg import WayPoint
 from geometry_msgs.msg import Point
 
-class WuPoint():
+class WuPoint:
     """
     :class:`WuPoint` represents a map way point with associated UTM_
     information.
@@ -111,7 +111,7 @@ class WuPoint():
         """:returns: UUID_ of way point. """
         return self.way_pt.id.uuid
 
-class WuPointSet():
+class WuPointSet:
     """
     :class:`WuPointSet` is a container for the way points in a
     `geographic_msgs/GeographicMap`_ or
@@ -159,12 +159,12 @@ class WuPointSet():
         # Initialize way point information.
         self.way_point_ids = {}         # points symbol table
         self.n_points = len(self.points)
-        for wid in xrange(self.n_points):
-            self.way_point_ids[self.points[wid].id.uuid] = wid
+        for wid in range(self.n_points):
+            self.way_point_ids[str(self.points[wid].id.uuid)] = wid
 
         # Create empty list of UTM points, corresponding to map points.
         # They will be evaluated lazily, when first needed.
-        self.utm_points = [None for wid in xrange(self.n_points)]
+        self.utm_points = [None for wid in range(self.n_points)]
 
     def __contains__(self, item):
         """ Point set membership. """
@@ -187,6 +187,9 @@ class WuPointSet():
     def __len__(self):
         """Point set length."""
         return self.n_points
+
+    def __next__(self):
+        return self.next()
 
     def _get_point_with_utm(self, index):
         """Get way point with UTM coordinates.

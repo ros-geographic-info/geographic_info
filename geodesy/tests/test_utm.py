@@ -5,6 +5,9 @@ import unittest
 
 from geodesy.utm import *
 
+suite = unittest.TestSuite()
+
+
 ## A sample python unit test
 class TestUTMPoint(unittest.TestCase):
 
@@ -45,7 +48,7 @@ class TestUTMPoint(unittest.TestCase):
         self.assertTrue(pt.valid(), msg='invalid UTMPoint: ' + str(pt))
         self.assertTrue(pt.is2D(), msg='this UTMPoint should be 2D: ' + str(pt))
         self.assertEqual(pt.gridZone(), (14, 'R'))
-        self.assertEqual(str(pt.toMsg()), str(GeoPoint(lat, lon, alt)),
+        self.assertEqual(str(pt.toMsg()), str(GeoPoint(latitude=lat, longitude=lon, altitude=alt)),
                          msg='GeoPoint conversion failed for: ' + str(pt))
         point_xy = pt.toPoint()
         self.assertAlmostEqual(point_xy.x, 622159.338, places = 3)
@@ -53,6 +56,5 @@ class TestUTMPoint(unittest.TestCase):
         self.assertAlmostEqual(point_xy.z, 0.0, places = 3)
  
 if __name__ == '__main__':
-    import rosunit
-    PKG='geodesy'
-    rosunit.unitrun(PKG, 'test_utm_py', TestUTMPoint) 
+    runner = unittest.TextTestRunner(verbosity=3)
+    result = runner.run(suite)
