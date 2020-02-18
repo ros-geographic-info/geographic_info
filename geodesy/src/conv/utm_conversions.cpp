@@ -113,8 +113,8 @@ static char UTMBand(double Lat, double Lon)
  *
  *  Equations from USGS Bulletin 1532
  *
- *  @param from WGS 84 point message.
- *  @return UTM point.
+ *  @param from UTM point.
+ *  @return WGS 84 point message.
  */
 geographic_msgs::GeoPoint toMsg(const UTMPoint &from)
 {
@@ -283,6 +283,19 @@ bool isValid(const UTMPoint &pt)
 UTMPoint::UTMPoint(const geographic_msgs::GeoPoint &pt)
 {
   fromMsg(pt, *this);
+}
+
+/** Convert UTM pose to WGS 84 geodetic pose.
+ *
+ *  @param from UTM pose.
+ *  @return WGS 84 pose message.
+ */
+geographic_msgs::GeoPose toMsg(const UTMPose &from)
+{
+  geographic_msgs::GeoPose to;
+  to.position = toMsg(from.position);
+  to.orientation = from.orientation;
+  return to;
 }
 
 /** Convert WGS 84 geodetic pose to UTM pose.

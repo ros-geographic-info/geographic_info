@@ -36,6 +36,7 @@
 
 #include <sstream>
 #include <gtest/gtest.h>
+#include <angles/angles.h>
 #include "geodesy/utm.h"
 
 
@@ -297,6 +298,34 @@ TEST(UTMPose, quaternionValidation)
   q.w = 0.0;
   geodesy::UTMPose pose4(pt, q);
   EXPECT_FALSE(geodesy::isValid(pose4));
+}
+
+// Test UTM pose conversion
+TEST(UTMConvert, fromUtmPoseToLatLongAndBack)
+{
+  double e = 500000.0;                  // central meridian of each zone
+  double n = 1000.0;
+  double alt = 100.0;
+  char b = 'N';
+
+  // try every possible zone of longitude
+  for (uint8_t z = 1; z <= 60; ++z)
+  {
+    for (unsigned int heading = 0; heading < 360; heading++)
+    {
+      geodesy::UTMPose ps1(geodesy::UTMPoint(e, n, alt, z, b),
+                           tf::createQuaternionMsgFromYaw(angles::from_degrees(heading)));
+      geographic_msgs::GeoPose ll;
+      convert(ps1, ll);
+      geodesy::UTMPose ps2;
+      convert(ll, ps2);
+
+      EXPECT_TRUE(geodesy::isValid(ps1));
+      EXPECT_TRUE(geodesy::isValid(ps2));
+      check_utm_near(ps1.position, ps2.position, 0.000001);
+      EXPECT_DOUBLE_EQ(tf::getYaw(ps1.orientation), tf::getYaw(ps2.orientation));
+    }
+  }
 }
 
 // Test conversion from UTM to WGS 84 and back
