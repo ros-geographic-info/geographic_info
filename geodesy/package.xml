@@ -42,8 +42,8 @@
   <test_depend>rosunit</test_depend>
 
   <!-- documentation dependencies -->
-  <build_depend condition="$ROS_PYTHON_VERSION == 2">python-catkin-pkg</build_depend>
-  <build_depend condition="$ROS_PYTHON_VERSION == 3">python3-catkin-pkg</build_depend>
+  <build_depend condition="$ROS_PYTHON_VERSION == 2">python-catkin-pkg-modules</build_depend>
+  <build_depend condition="$ROS_PYTHON_VERSION == 3">python3-catkin-pkg-modules</build_depend>
 
   <export>
     <rosdoc config="rosdoc.yaml"/>
