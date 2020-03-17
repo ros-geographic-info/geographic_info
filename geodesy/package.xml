@@ -1,5 +1,6 @@
-<package>
-
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
   <name>geodesy</name>
   <version>0.5.4</version>
   <description>
@@ -24,19 +25,18 @@
   <build_depend>unique_id</build_depend>
   <build_depend>uuid_msgs</build_depend>
 
-  <run_depend>geographic_msgs</run_depend>
-  <run_depend>geometry_msgs</run_depend>
-  <run_depend>tf</run_depend>
-  <run_depend>sensor_msgs</run_depend>
-  <run_depend>unique_id</run_depend>
-  <run_depend>uuid_msgs</run_depend>
+  <exec_depend>geographic_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>tf</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>unique_id</exec_depend>
+  <exec_depend>uuid_msgs</exec_depend>
 
-  <run_depend condition="$ROS_PYTHON_VERSION == 2">python-pyproj</run_depend>
-  <run_depend condition="$ROS_PYTHON_VERSION == 3">python3-pyproj</run_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 2">python-pyproj</exec_depend>
+  <exec_depend condition="$ROS_PYTHON_VERSION == 3">python3-pyproj</exec_depend>
 
   <buildtool_depend condition="$ROS_PYTHON_VERSION == 2">python-setuptools</buildtool_depend>
   <buildtool_depend condition="$ROS_PYTHON_VERSION == 3">python3-setuptools</buildtool_depend>
-  <buildtool_export_depend condition="$ROS_PYTHON_VERSION == 3">python3-setuptools</buildtool_export_depend>
 
   <!-- these dependencies are only for testing -->
   <test_depend>rosunit</test_depend>
