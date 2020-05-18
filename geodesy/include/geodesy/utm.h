@@ -100,7 +100,7 @@ class UTMPoint
     zone(that.zone),
     band(that.band)
   {}
-  
+
   UTMPoint(const geographic_msgs::GeoPoint &pt);
 
   /** Create a flattened 2-D grid point. */
@@ -124,7 +124,7 @@ class UTMPoint
 
   // data members
   double easting;           ///< easting within grid zone [meters]
-  double northing;          ///< northing within grid zone [meters] 
+  double northing;          ///< northing within grid zone [meters]
   double altitude;          ///< altitude above ellipsoid [meters] or NaN
   uint8_t zone;             ///< UTM longitude zone number
   char   band;              ///< MGRS latitude band letter
@@ -147,7 +147,7 @@ class UTMPose
     position(that.position),
     orientation(that.orientation)
   {}
-  
+
   /** Create from a WGS 84 geodetic pose. */
   UTMPose(const geographic_msgs::GeoPose &pose):
     position(pose.position),
@@ -175,8 +175,10 @@ class UTMPose
 }; // class UTMPose
 
 // conversion function prototypes
-void fromMsg(const geographic_msgs::GeoPoint &from, UTMPoint &to);
-void fromMsg(const geographic_msgs::GeoPose &from, UTMPose &to);
+void fromMsg(const geographic_msgs::GeoPoint &from, UTMPoint &to,
+        const bool& force_zone=false, const char& band='A', const uint8_t& zone=0 );
+void fromMsg(const geographic_msgs::GeoPose &from, UTMPose &to,
+        const bool& force_zone=false, const char& band='A', const uint8_t& zone=0 );
 geographic_msgs::GeoPoint toMsg(const UTMPoint &from);
 geographic_msgs::GeoPose toMsg(const UTMPose &from);
 

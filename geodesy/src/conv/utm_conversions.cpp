@@ -40,7 +40,7 @@
 #include <geodesy/utm.h>
 
 /**  @file
-   
+
      @brief Universal Transverse Mercator transforms.
 
      Functions to convert WGS 84 (ellipsoidal) latitude and longitude
@@ -146,7 +146,7 @@ geographic_msgs::GeoPoint toMsg(const UTMPoint &from)
   mu = M/(a*(1-eccSquared/4-3*eccSquared*eccSquared/64
              -5*eccSquared*eccSquared*eccSquared/256));
 
-  phi1Rad = mu + ((3*e1/2-27*e1*e1*e1/32)*sin(2*mu) 
+  phi1Rad = mu + ((3*e1/2-27*e1*e1*e1/32)*sin(2*mu)
                   + (21*e1*e1/16-55*e1*e1*e1*e1/32)*sin(4*mu)
                   + (151*e1*e1*e1/96)*sin(6*mu));
 
@@ -184,7 +184,8 @@ geographic_msgs::GeoPoint toMsg(const UTMPoint &from)
  *  @param from WGS 84 point message.
  *  @param to UTM point.
  */
-void fromMsg(const geographic_msgs::GeoPoint &from, UTMPoint &to)
+void fromMsg(const geographic_msgs::GeoPoint &from, UTMPoint &to,
+        const bool& force_zone, const char& band, const uint8_t& zone)
 {
   double Lat = from.latitude;
   double Long = from.longitude;
@@ -196,7 +197,7 @@ void fromMsg(const geographic_msgs::GeoPoint &from, UTMPoint &to)
   double LongOrigin;
   double eccPrimeSquared;
   double N, T, C, A, M;
-	
+
   // Make sure the longitude is between -180.00 .. 179.9
   // (JOQ: this is broken for Long < -180, do a real normalize)
   double LongTemp = (Long+180)-int((Long+180)/360)*360-180;
@@ -205,13 +206,16 @@ void fromMsg(const geographic_msgs::GeoPoint &from, UTMPoint &to)
   double LongOriginRad;
 
   to.altitude = from.altitude;
-  to.zone = int((LongTemp + 180)/6) + 1;
-  
+  if (!force_zone)
+    to.zone = int((LongTemp + 180)/6) + 1;
+  else
+    to.zone = zone;
+
   if( Lat >= 56.0 && Lat < 64.0 && LongTemp >= 3.0 && LongTemp < 12.0 )
     to.zone = 32;
 
   // Special zones for Svalbard
-  if( Lat >= 72.0 && Lat < 84.0 ) 
+  if( Lat >= 72.0 && Lat < 84.0 )
     {
       if(      LongTemp >= 0.0  && LongTemp <  9.0 ) to.zone = 31;
       else if( LongTemp >= 9.0  && LongTemp < 21.0 ) to.zone = 33;
@@ -219,11 +223,17 @@ void fromMsg(const geographic_msgs::GeoPoint &from, UTMPoint &to)
       else if( LongTemp >= 33.0 && LongTemp < 42.0 ) to.zone = 37;
     }
   // +3 puts origin in middle of zone
-  LongOrigin = (to.zone - 1)*6 - 180 + 3; 
+  LongOrigin = (to.zone - 1)*6 - 180 + 3;
   LongOriginRad = angles::from_degrees(LongOrigin);
 
   // compute the UTM band from the latitude
-  to.band = UTMBand(Lat, LongTemp);
+  if (!force_zone)
+    to.band = UTMBand(Lat, LongTemp);
+  else
+    to.band = band;
+
+
+
 #if 0
   if (to.band == ' ')
     throw std::range_error;
@@ -237,13 +247,13 @@ void fromMsg(const geographic_msgs::GeoPoint &from, UTMPoint &to)
   A = cos(LatRad)*(LongRad-LongOriginRad);
 
   M = a*((1 - eccSquared/4 - 3*eccSquared*eccSquared/64
-          - 5*eccSquared*eccSquared*eccSquared/256) * LatRad 
+          - 5*eccSquared*eccSquared*eccSquared/256) * LatRad
          - (3*eccSquared/8 + 3*eccSquared*eccSquared/32
             + 45*eccSquared*eccSquared*eccSquared/1024)*sin(2*LatRad)
          + (15*eccSquared*eccSquared/256
-            + 45*eccSquared*eccSquared*eccSquared/1024)*sin(4*LatRad) 
+            + 45*eccSquared*eccSquared*eccSquared/1024)*sin(4*LatRad)
          - (35*eccSquared*eccSquared*eccSquared/3072)*sin(6*LatRad));
-	
+
   to.easting = (double)
     (k0*N*(A+(1-T+C)*A*A*A/6
            + (5-18*T+T*T+72*C-58*eccPrimeSquared)*A*A*A*A*A/120)
@@ -278,7 +288,7 @@ bool isValid(const UTMPoint &pt)
 
   return true;
 }
- 
+
 /** Create UTM point from WGS 84 geodetic point. */
 UTMPoint::UTMPoint(const geographic_msgs::GeoPoint &pt)
 {
@@ -305,9 +315,10 @@ geographic_msgs::GeoPose toMsg(const UTMPose &from)
  *
  *  @todo define the orientation transformation properly
  */
-void fromMsg(const geographic_msgs::GeoPose &from, UTMPose &to)
+void fromMsg(const geographic_msgs::GeoPose &from, UTMPose &to,
+        const bool& force_zone, const char& band, const uint8_t& zone)
 {
-  fromMsg(from.position, to.position);
+  fromMsg(from.position, to.position, force_zone, band, zone);
   to.orientation = from.orientation;
 }
 
