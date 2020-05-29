@@ -28,7 +28,7 @@
   <!-- <test_depend>rosunit</test_depend> -->
 
   <!-- documentation dependencies -->
-  <build_depend>python-catkin-pkg</build_depend>
+  <build_depend>python3-catkin-pkg</build_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
