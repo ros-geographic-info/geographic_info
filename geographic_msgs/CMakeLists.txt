@@ -25,6 +25,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   "msg/GeoPointStamped.msg"
   "msg/GeoPose.msg"
   "msg/GeoPoseStamped.msg"
+  "msg/GeoPoseWithCovariance.msg"
+  "msg/GeoPoseWithCovarianceStamped.msg"
   "msg/KeyValue.msg"
   "msg/MapFeature.msg"
   "msg/RouteNetwork.msg"
