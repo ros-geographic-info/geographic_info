@@ -117,9 +117,17 @@ class UTMPoint:
         if not self.valid():
             raise ValueError('invalid UTM point: ' + str(self))
         utm_proj = pyproj.Proj(proj='utm', zone=self.zone, datum='WGS84')
+        
+        #hemishphere adjustment as per cpp code. May also do this by properly 
+        #specifying pyproj projection for southern hemisphere. 
+        southern_hemisphere_adjustment=0.0
+        if ord(self.band) < ord('N'):
+            southern_hemisphere_adjustment=-10000000.0
+
         msg = GeoPoint(altitude=self.altitude)
-        msg.longitude, msg.latitude = utm_proj(self.easting, self.northing,
-                                               inverse=True)
+        msg.longitude, msg.latitude = utm_proj(self.easting, 
+                self.northing+southern_hemisphere_adjustment,
+                inverse=True)
         return msg
 
     def valid(self):
