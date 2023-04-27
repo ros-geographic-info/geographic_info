@@ -3,7 +3,7 @@
 <package format="3">
 
   <name>geographic_msgs</name>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <description>
      ROS messages for Geographic Information Systems.
   </description>
