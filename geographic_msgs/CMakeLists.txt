@@ -1,9 +1,8 @@
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.14)
 project(geographic_msgs)
 
-# Default to C++14
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 14)
+  set(CMAKE_CXX_STANDARD 17)
 endif()
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
@@ -40,11 +39,35 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   DEPENDENCIES unique_identifier_msgs geometry_msgs std_msgs builtin_interfaces
 )
 
+add_library(validation INTERFACE)
+add_library(${PROJECT_NAME}::validation ALIAS validation)
+include(GNUInstallDirs)
+add_subdirectory(include)
+
+include(CTest)
+if(BUILD_TESTING)
+  find_package(ament_lint_auto REQUIRED)
+  ament_lint_auto_find_test_dependencies()
+  add_subdirectory(test)
+endif()
+
 install(
   FILES geographic_msgs_mapping_rule.yaml
   DESTINATION share/${PROJECT_NAME}
 )
 
+install(
+  TARGETS validation
+  EXPORT export_${PROJECT_NAME}
+)
+
+install(
+  DIRECTORY include/
+  DESTINATION include/${PROJECT_NAME}
+  FILES_MATCHING PATTERN "*.hpp"
+)
+
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(rosidl_default_runtime)
 
 ament_package()

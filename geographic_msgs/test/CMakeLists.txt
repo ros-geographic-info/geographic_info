@@ -1,0 +1,3 @@
+find_package(ament_cmake_gtest CONFIG REQUIRED)
+ament_add_gtest(validation_test test_validation.cpp)
+target_link_libraries(validation_test ${PROJECT_NAME}::validation)
