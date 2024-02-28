@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.13)
 project(geographic_msgs)
 
 if(NOT CMAKE_CXX_STANDARD)
@@ -41,10 +41,8 @@ rosidl_generate_interfaces(${PROJECT_NAME}
 
 add_library(validation INTERFACE)
 add_library(${PROJECT_NAME}::validation ALIAS validation)
-include(GNUInstallDirs)
 add_subdirectory(include)
 
-include(CTest)
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
   ament_lint_auto_find_test_dependencies()
@@ -59,6 +57,9 @@ install(
 install(
   TARGETS validation
   EXPORT export_${PROJECT_NAME}
+  LIBRARY DESTINATION lib
+  ARCHIVE DESTINATION lib
+  RUNTIME DESTINATION bin
 )
 
 install(
