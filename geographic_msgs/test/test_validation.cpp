@@ -25,7 +25,7 @@ TEST(ElevationServerCore, ValidPoints)
   geographic_msgs::msg::GeoPoint point;
   point.latitude = 1.0;
   point.longitude = 10.0;
-  EXPECT_TRUE(geographic_msgs::HorizontalPositionValid(point));
+  EXPECT_TRUE(geographic_msgs::horizontalPositionValid(point));
 }
 
 TEST(ElevationServerCore, TooFarNorth)
@@ -33,7 +33,7 @@ TEST(ElevationServerCore, TooFarNorth)
   geographic_msgs::msg::GeoPoint point;
   point.latitude = 90.01;
   point.longitude = 0.0;
-  EXPECT_FALSE(geographic_msgs::HorizontalPositionValid(point));
+  EXPECT_FALSE(geographic_msgs::horizontalPositionValid(point));
 }
 
 TEST(ElevationServerCore, TooFarSouth)
@@ -41,7 +41,7 @@ TEST(ElevationServerCore, TooFarSouth)
   geographic_msgs::msg::GeoPoint point;
   point.latitude = -90.01;
   point.longitude = 0.0;
-  EXPECT_FALSE(geographic_msgs::HorizontalPositionValid(point));
+  EXPECT_FALSE(geographic_msgs::horizontalPositionValid(point));
 }
 
 TEST(ElevationServerCore, TooFarWest)
@@ -49,7 +49,7 @@ TEST(ElevationServerCore, TooFarWest)
   geographic_msgs::msg::GeoPoint point;
   point.latitude = 0.0;
   point.longitude = -180.1;
-  EXPECT_FALSE(geographic_msgs::HorizontalPositionValid(point));
+  EXPECT_FALSE(geographic_msgs::horizontalPositionValid(point));
 }
 
 TEST(ElevationServerCore, TooFarEast)
@@ -57,7 +57,7 @@ TEST(ElevationServerCore, TooFarEast)
   geographic_msgs::msg::GeoPoint point;
   point.latitude = 0.0;
   point.longitude = 180.1;
-  EXPECT_FALSE(geographic_msgs::HorizontalPositionValid(point));
+  EXPECT_FALSE(geographic_msgs::horizontalPositionValid(point));
 }
 
 TEST(ElevationServerCore, NorthPole)
@@ -65,7 +65,7 @@ TEST(ElevationServerCore, NorthPole)
   geographic_msgs::msg::GeoPoint point;
   point.latitude = 90.0;
   point.longitude = 42.0;
-  EXPECT_TRUE(geographic_msgs::HorizontalPositionValid(point));
+  EXPECT_TRUE(geographic_msgs::horizontalPositionValid(point));
 }
 
 TEST(ElevationServerCore, SouthPole)
@@ -73,7 +73,7 @@ TEST(ElevationServerCore, SouthPole)
   geographic_msgs::msg::GeoPoint point;
   point.latitude = -90.0;
   point.longitude = 42.0;
-  EXPECT_TRUE(geographic_msgs::HorizontalPositionValid(point));
+  EXPECT_TRUE(geographic_msgs::horizontalPositionValid(point));
 }
 
 TEST(ElevationServerCore, NorthPoleInvalidLng)
@@ -81,7 +81,7 @@ TEST(ElevationServerCore, NorthPoleInvalidLng)
   geographic_msgs::msg::GeoPoint point;
   point.latitude = 90.0;
   point.longitude = 999.0;
-  EXPECT_FALSE(geographic_msgs::HorizontalPositionValid(point));
+  EXPECT_FALSE(geographic_msgs::horizontalPositionValid(point));
 }
 
 TEST(ElevationServerCore, SouthPoleInvalidLng)
@@ -89,5 +89,5 @@ TEST(ElevationServerCore, SouthPoleInvalidLng)
   geographic_msgs::msg::GeoPoint point;
   point.latitude = -90.0;
   point.longitude = -999.0;
-  EXPECT_FALSE(geographic_msgs::HorizontalPositionValid(point));
+  EXPECT_FALSE(geographic_msgs::horizontalPositionValid(point));
 }
