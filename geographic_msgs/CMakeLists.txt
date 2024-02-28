@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.13)
+cmake_minimum_required(VERSION 3.5)
 project(geographic_msgs)
 
 if(NOT CMAKE_CXX_STANDARD)
@@ -39,9 +39,31 @@ rosidl_generate_interfaces(${PROJECT_NAME}
   DEPENDENCIES unique_identifier_msgs geometry_msgs std_msgs builtin_interfaces
 )
 
-add_library(validation INTERFACE)
-add_library(${PROJECT_NAME}::validation ALIAS validation)
-add_subdirectory(include)
+rosidl_get_typesupport_target(cpp_typesupport_target "${PROJECT_NAME}" rosidl_typesupport_cpp)
+
+if(TARGET "${cpp_typesupport_target}")
+  add_library(${PROJECT_NAME}::cpp_typesupport_target ALIAS ${cpp_typesupport_target})
+  add_library(validation INTERFACE)
+  add_library(${PROJECT_NAME}::validation ALIAS validation)
+  add_subdirectory(include)
+  target_link_libraries(validation INTERFACE ${PROJECT_NAME}::cpp_typesupport_target)
+
+  install(
+    TARGETS validation
+    EXPORT export_${PROJECT_NAME}
+    LIBRARY DESTINATION lib
+    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin
+  )
+
+  install(
+    DIRECTORY include/
+    DESTINATION include/${PROJECT_NAME}
+    FILES_MATCHING PATTERN "*.hpp"
+  )
+
+  ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+endif()
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -54,21 +76,6 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
-install(
-  TARGETS validation
-  EXPORT export_${PROJECT_NAME}
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
-  RUNTIME DESTINATION bin
-)
-
-install(
-  DIRECTORY include/
-  DESTINATION include/${PROJECT_NAME}
-  FILES_MATCHING PATTERN "*.hpp"
-)
-
-ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
 ament_export_dependencies(rosidl_default_runtime)
 
 ament_package()
