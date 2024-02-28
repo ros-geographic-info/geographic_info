@@ -26,7 +26,17 @@
 
   <test_depend>ament_cmake_gtest</test_depend>
   <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_common</test_depend>
+  <!--
+    Skip using ament_lint_auto because ament_lint_copyright does not support "BSD" license.
+    https://robotics.stackexchange.com/questions/109592/how-to-use-ament-lint-commons-ament-copyright-on-a-bsd-licensed-package-such
+    For now, the C++, CMake, and XML linters are enabled.
+   -->
+  <test_depend>ament_cmake_cppcheck</test_depend>
+  <test_depend>ament_cmake_cpplint</test_depend>
+  <test_depend>ament_cmake_lint_cmake</test_depend>
+  <test_depend>ament_cmake_uncrustify</test_depend>
+  <test_depend>ament_cmake_xmllint</test_depend>
+
 
   <member_of_group>rosidl_interface_packages</member_of_group>
   <export>
