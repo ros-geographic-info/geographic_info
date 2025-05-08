@@ -33,7 +33,13 @@ ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR src/${PROJECT_NAME})
 # build C++ coordinate conversion library
 add_library(geoconv STATIC src/conv/utm_conversions.cpp)
 target_link_libraries(geoconv PUBLIC
-  ${dependencies}
+  ${geographic_msgs_TARGETS}
+  ${geometry_msgs_TARGETS}
+  ${sensor_msgs_TARGETS}
+  ${unique_identifier_msgs_TARGETS}
+  angles::angles
+  geographic_msgs::validation
+  sensor_msgs::sensor_msgs_library
 )
 
 install(DIRECTORY include/${PROJECT_NAME}/
