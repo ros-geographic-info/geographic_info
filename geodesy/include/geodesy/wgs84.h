@@ -35,8 +35,8 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-#ifndef _WGS84_H_
-#define _WGS84_H_
+#ifndef GEODESY__WGS84_H_
+#define GEODESY__WGS84_H_
 
 #include <limits>
 #include <ctype.h>
@@ -252,4 +252,4 @@ namespace geodesy
 
 }  // namespace geodesy
 
-#endif // _WGS84_H_
+#endif  // GEODESY__WGS84_H_

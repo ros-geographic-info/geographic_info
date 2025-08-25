@@ -34,8 +34,8 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-#include <sstream>
 #include <gtest/gtest.h>
+#include <sstream>
 #include "geodesy/utm.h"
 
 
@@ -410,7 +410,6 @@ TEST(OStream, pose)
 
 TEST(ForceUTMZone, point)
 {
-
     geographic_msgs::msg::GeoPoint zone2, zone3;
     zone2.latitude = 24.02;
     zone2 = geodesy::toMsg(24.02, 5.999);
@@ -425,12 +424,12 @@ TEST(ForceUTMZone, point)
     double diffy = pt2.northing - pt3.northing;
     double distance = std::sqrt(diffx * diffx + diffy * diffy);
 
-    //Now force the pt3 into pt2's grid zone
+    // Now force the pt3 into pt2's grid zone
     geodesy::fromMsg(zone3, pt4, true, pt2.band, pt2.zone);
     diffx = pt2.easting - pt4.easting;
     diffy = pt2.northing - pt4.northing;
     double distance2 = std::sqrt(diffx * diffx + diffy * diffy);
-    //ROS_INFO("Prev Distance %f, Actual Distance %f", distance, distance2);
+    // ROS_INFO("Prev Distance %f, Actual Distance %f", distance, distance2);
     EXPECT_LT(distance2, distance);
 }
 

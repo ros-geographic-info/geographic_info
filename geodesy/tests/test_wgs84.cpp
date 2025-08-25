@@ -223,7 +223,6 @@ TEST(GeoPoint, normalize)
  check_normalize(-105, 0, -90, 0);
  check_normalize(-89.999999, 0, -89.999999, 0);
  check_normalize(-90.000001, 0, -90, 0);
-
 }
 
 // Test null pose constructor

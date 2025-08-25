@@ -1,5 +1,39 @@
-#include <cmath>
+/*********************************************************************
+* Software License Agreement (BSD License)
+*
+*  Copyright (c) 2025 Roland Arsenault
+*  All rights reserved.
+*
+*  Redistribution and use in source and binary forms, with or without
+*  modification, are permitted provided that the following conditions
+*  are met:
+*
+*   * Redistributions of source code must retain the above copyright
+*     notice, this list of conditions and the following disclaimer.
+*   * Redistributions in binary form must reproduce the above
+*     copyright notice, this list of conditions and the following
+*     disclaimer in the documentation and/or other materials provided
+*     with the distribution.
+*   * Neither the name of the author nor other contributors may be
+*     used to endorse or promote products derived from this software
+*     without specific prior written permission.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+*  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+*  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+*  FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+*  COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+*  INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+*  BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+*  LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+*  CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+*  LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+*  ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+*  POSSIBILITY OF SUCH DAMAGE.
+*********************************************************************/
+
 #include <gtest/gtest.h>
+#include <cmath>
 #include "geodesy/ecef.h"
 
 ///////////////////////////////////////////////////////////////
@@ -119,7 +153,7 @@ TEST(ECEFPoint, fromGeoPointAtZeroZeroZero)
   geodesy::ECEFPoint pt(geo_point);
 
   EXPECT_TRUE(geodesy::isValid(pt));
-  EXPECT_NEAR(pt.x, 6378137.0, 0.01); // ECEF X at equator
+  EXPECT_NEAR(pt.x, 6378137.0, 0.01);  // ECEF X at equator
   EXPECT_NEAR(pt.y, 0.0, 0.01);        // ECEF Y at equator
   EXPECT_NEAR(pt.z, 0.0, 0.01);        // ECEF Z at equator
 }
@@ -134,62 +168,62 @@ TEST(ECEFPoint, fromGeoPointAtZeroZeroZero)
 TEST(ECEFPoint, fromGeoPointAtNorthPole)
 {
   geographic_msgs::msg::GeoPoint geo_point;
-  geo_point.latitude = 90.0; // North Pole
+  geo_point.latitude = 90.0;  // North Pole
   geo_point.longitude = 0.0;
   geo_point.altitude = 0.0;
 
   geodesy::ECEFPoint pt(geo_point);
 
   EXPECT_TRUE(geodesy::isValid(pt));
-  EXPECT_NEAR(pt.x, 0.0, 0.01); // ECEF X at North Pole
-  EXPECT_NEAR(pt.y, 0.0, 0.01); // ECEF Y at North Pole
-  EXPECT_NEAR(pt.z, 6356752.31, 0.01); // ECEF Z at North Pole
+  EXPECT_NEAR(pt.x, 0.0, 0.01);  // ECEF X at North Pole
+  EXPECT_NEAR(pt.y, 0.0, 0.01);  // ECEF Y at North Pole
+  EXPECT_NEAR(pt.z, 6356752.31, 0.01);  // ECEF Z at North Pole
 
   geographic_msgs::msg::GeoPoint geo_point2;
-  geo_point2.latitude = 90.0; // North Pole
+  geo_point2.latitude = 90.0;  // North Pole
   geo_point2.longitude = 45.0;
   geo_point2.altitude = 0.0;
 
   geodesy::ECEFPoint pt2(geo_point2);
 
   EXPECT_TRUE(geodesy::isValid(pt2));
-  EXPECT_NEAR(pt2.x, pt.x, 0.01); // ECEF X should be the same
-  EXPECT_NEAR(pt2.y, pt.y, 0.01); // ECEF Y should be the same
-  EXPECT_NEAR(pt2.z, pt.z, 0.01); // ECEF Z should be the same
+  EXPECT_NEAR(pt2.x, pt.x, 0.01);  // ECEF X should be the same
+  EXPECT_NEAR(pt2.y, pt.y, 0.01);  // ECEF Y should be the same
+  EXPECT_NEAR(pt2.z, pt.z, 0.01);  // ECEF Z should be the same
 }
 
 TEST(ECEFPoint, fromGeoPointAtSouthPole)
 {
   geographic_msgs::msg::GeoPoint geo_point;
-  geo_point.latitude = -90.0; // South Pole
+  geo_point.latitude = -90.0;  // South Pole
   geo_point.longitude = 0.0;
   geo_point.altitude = 0.0;
 
   geodesy::ECEFPoint pt(geo_point);
 
   EXPECT_TRUE(geodesy::isValid(pt));
-  EXPECT_NEAR(pt.x, 0.0, 0.01); // ECEF X at South Pole
-  EXPECT_NEAR(pt.y, 0.0, 0.01); // ECEF Y at South Pole
-  EXPECT_NEAR(pt.z, -6356752.31, 0.01); // ECEF Z at South Pole
+  EXPECT_NEAR(pt.x, 0.0, 0.01);  // ECEF X at South Pole
+  EXPECT_NEAR(pt.y, 0.0, 0.01);  // ECEF Y at South Pole
+  EXPECT_NEAR(pt.z, -6356752.31, 0.01);  // ECEF Z at South Pole
 }
 
 TEST(ECEFPoint, fromGeoPointAtInternationalDateLine)
 {
   geographic_msgs::msg::GeoPoint geo_point;
-  geo_point.latitude = 0.0; // Equator
-  geo_point.longitude = 180.0; // International Date Line
+  geo_point.latitude = 0.0;  // Equator
+  geo_point.longitude = 180.0;  // International Date Line
   geo_point.altitude = 0.0;
 
   geodesy::ECEFPoint pt(geo_point);
 
   EXPECT_TRUE(geodesy::isValid(pt));
-  EXPECT_NEAR(pt.x, -6378137.0, 0.01); // ECEF X at IDL
-  EXPECT_NEAR(pt.y, 0.0, 0.01);        // ECEF Y at IDL
-  EXPECT_NEAR(pt.z, 0.0, 0.01);        // ECEF Z at IDL
+  EXPECT_NEAR(pt.x, -6378137.0, 0.01);  // ECEF X at IDL
+  EXPECT_NEAR(pt.y, 0.0, 0.01);         // ECEF Y at IDL
+  EXPECT_NEAR(pt.z, 0.0, 0.01);         // ECEF Z at IDL
 
   geographic_msgs::msg::GeoPoint geo_point2;
-  geo_point2.latitude = 0.0; // Equator
-  geo_point2.longitude = -180.0; // International Date Line
+  geo_point2.latitude = 0.0;  // Equator
+  geo_point2.longitude = -180.0;  // International Date Line
   geo_point2.altitude = 0.0;
 
   geodesy::ECEFPoint pt2(geo_point2);
@@ -208,12 +242,12 @@ TEST(ECEFPoint, symmetry)
   gp.altitude = 0.0;
 
   geographic_msgs::msg::GeoPoint gp2;
-  gp2.latitude = -gp.latitude; // Symmetric latitude
+  gp2.latitude = -gp.latitude;  // Symmetric latitude
   gp2.longitude = gp.longitude;
   gp2.altitude = gp.altitude;
 
   geographic_msgs::msg::GeoPoint gp3;
-  gp3.latitude = gp.latitude; // Symmetric latitude
+  gp3.latitude = gp.latitude;  // Symmetric latitude
   gp3.longitude = -gp.longitude;
   gp3.altitude = gp.altitude;
 
@@ -226,14 +260,13 @@ TEST(ECEFPoint, symmetry)
   EXPECT_TRUE(geodesy::isValid(pt3));
 
   // Check symmetry
-  EXPECT_NEAR(pt.x, pt2.x, 0.01); // X should be the same
-  EXPECT_NEAR(pt.y, pt2.y, 0.01); // Y should be the same
-  EXPECT_NEAR(pt.z, -pt2.z, 0.01); // Z should be opposite
+  EXPECT_NEAR(pt.x, pt2.x, 0.01);  // X should be the same
+  EXPECT_NEAR(pt.y, pt2.y, 0.01);  // Y should be the same
+  EXPECT_NEAR(pt.z, -pt2.z, 0.01);  // Z should be opposite
 
-  EXPECT_NEAR(pt.x, pt3.x, 0.01); // X should be the same
-  EXPECT_NEAR(pt.y, -pt3.y, 0.01); // Y should be opposite
-  EXPECT_NEAR(pt.z, pt3.z, 0.01); // Z should be the same
-
+  EXPECT_NEAR(pt.x, pt3.x, 0.01);  // X should be the same
+  EXPECT_NEAR(pt.y, -pt3.y, 0.01);  // Y should be opposite
+  EXPECT_NEAR(pt.z, pt3.z, 0.01);  // Z should be the same
 }
 
 TEST(GeoPoint, centerOfEarth)

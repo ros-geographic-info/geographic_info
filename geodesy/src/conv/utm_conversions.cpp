@@ -34,7 +34,6 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-//#include <exception>
 #include "angles/angles.h"
 #include <geodesy/utm.h>
 
@@ -136,7 +135,7 @@ static char UTMBand(double Lat, double Lon)
  */
 geographic_msgs::msg::GeoPoint toMsg(const UTMPoint & from)
 {
-  //remove 500,000 meter offset for longitude
+  // remove 500,000 meter offset for longitude
   double x = from.easting - 500000.0;
   double y = from.northing;
 
@@ -150,12 +149,12 @@ geographic_msgs::msg::GeoPoint toMsg(const UTMPoint & from)
   double mu, phi1Rad;
 
   if ((from.band - 'N') < 0) {
-      //point is in southern hemisphere
-      //remove 10,000,000 meter offset used for southern hemisphere
+      // point is in southern hemisphere
+      // remove 10,000,000 meter offset used for southern hemisphere
     y -= 10000000.0;
   }
 
-  //+3 puts origin in middle of zone
+  // +3 puts origin in middle of zone
   LongOrigin = (from.zone - 1) * 6 - 180 + 3;
   eccPrimeSquared = (eccSquared) / (1 - eccSquared);
 
@@ -288,7 +287,7 @@ void fromMsg(
     (61 - 58 * T + T * T + 600 * C - 330 * eccPrimeSquared) * A * A * A * A * A * A / 720)));
 
   if(Lat < 0) {
-      //10000000 meter offset for southern hemisphere
+      // 10000000 meter offset for southern hemisphere
     to.northing += 10000000.0;
   }
 }
@@ -350,4 +349,4 @@ bool isValid(const UTMPose & pose)
   return fabs(len2 - 1.0) <= TF_QUATERNION_TOLERANCE;
 }
 
-} // end namespace geodesy
+}  // end namespace geodesy
