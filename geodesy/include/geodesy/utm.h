@@ -35,8 +35,8 @@
 *  POSSIBILITY OF SUCH DAMAGE.
 *********************************************************************/
 
-#ifndef _UTM_H_
-#define _UTM_H_
+#ifndef GEODESY__UTM_H_
+#define GEODESY__UTM_H_
 
 #include <limits>
 #include <ctype.h>
@@ -81,128 +81,135 @@ namespace geodesy
  */
 class UTMPoint
 {
- public:
-
-  /** Null constructor. Makes a 2D, invalid point object. */
-  UTMPoint():
-    easting(0.0),
+public:
+/** Null constructor. Makes a 2D, invalid point object. */
+  UTMPoint()
+    : easting(0.0),
     northing(0.0),
-    altitude(std::numeric_limits<double>::quiet_NaN()),
+    altitude(std::numeric_limits < double > ::quiet_NaN()),
     zone(0),
     band(' ')
-  {}
+{
+  }
 
-  /** Copy constructor. */
-  UTMPoint(const UTMPoint &that):
-    easting(that.easting),
+/** Copy constructor. */
+  UTMPoint(const UTMPoint & that)
+    : easting(that.easting),
     northing(that.northing),
     altitude(that.altitude),
     zone(that.zone),
     band(that.band)
-  {}
-  UTMPoint(const geographic_msgs::msg::GeoPoint &pt);
+{
+  }
+  UTMPoint(const geographic_msgs::msg::GeoPoint & pt);
 
-  /** Create a flattened 2-D grid point. */
-  UTMPoint(double _easting, double _northing, uint8_t _zone, char _band):
-    easting(_easting),
+/** Create a flattened 2-D grid point. */
+  UTMPoint(double _easting, double _northing, uint8_t _zone, char _band)
+    : easting(_easting),
     northing(_northing),
-    altitude(std::numeric_limits<double>::quiet_NaN()),
+    altitude(std::numeric_limits < double > ::quiet_NaN()),
     zone(_zone),
     band(_band)
-  {}
+{
+  }
 
-  /** Create a 3-D grid point. */
+/** Create a 3-D grid point. */
   UTMPoint(double _easting, double _northing, double _altitude,
-            uint8_t _zone, char _band):
-    easting(_easting),
+          uint8_t _zone, char _band)
+    : easting(_easting),
     northing(_northing),
     altitude(_altitude),
     zone(_zone),
     band(_band)
-  {}
+{
+  }
 
-  // data members
-  double easting;           ///< easting within grid zone [meters]
-  double northing;          ///< northing within grid zone [meters]
-  double altitude;          ///< altitude above ellipsoid [meters] or NaN
-  uint8_t zone;             ///< UTM longitude zone number
-  char   band;              ///< MGRS latitude band letter
-
-}; // class UTMPoint
+// data members
+  double easting;         ///< easting within grid zone [meters]
+  double northing;        ///< northing within grid zone [meters]
+  double altitude;        ///< altitude above ellipsoid [meters] or NaN
+  uint8_t zone;           ///< UTM longitude zone number
+  char   band;            ///< MGRS latitude band letter
+};  // class UTMPoint
 
 /** Universal Transverse Mercator (UTM) pose */
 class UTMPose
 {
- public:
-
-  /** Null constructor. Makes a 2D, invalid pose object. */
-  UTMPose():
-    position(),
+public:
+/** Null constructor. Makes a 2D, invalid pose object. */
+  UTMPose()
+    : position(),
     orientation()
-  {}
+{
+  }
 
-  /** Copy constructor. */
-  UTMPose(const UTMPose &that):
-    position(that.position),
+/** Copy constructor. */
+  UTMPose(const UTMPose & that)
+    : position(that.position),
     orientation(that.orientation)
-  {}
+{
+  }
 
-  /** Create from a WGS 84 geodetic pose. */
-  UTMPose(const geographic_msgs::msg::GeoPose &pose):
-    position(pose.position),
+/** Create from a WGS 84 geodetic pose. */
+  UTMPose(const geographic_msgs::msg::GeoPose & pose)
+    : position(pose.position),
     orientation(pose.orientation)
-  {}
+{
+  }
 
-  /** Create from a UTMPoint and a quaternion. */
+/** Create from a UTMPoint and a quaternion. */
   UTMPose(UTMPoint pt,
-          const geometry_msgs::msg::Quaternion &q):
-    position(pt),
+        const geometry_msgs::msg::Quaternion & q)
+    : position(pt),
     orientation(q)
-  {}
+{
+  }
 
-  /** Create from a WGS 84 geodetic point and a quaternion. */
-  UTMPose(const geographic_msgs::msg::GeoPoint &pt,
-          const geometry_msgs::msg::Quaternion &q):
-    position(pt),
+/** Create from a WGS 84 geodetic point and a quaternion. */
+  UTMPose(const geographic_msgs::msg::GeoPoint & pt,
+        const geometry_msgs::msg::Quaternion & q)
+    : position(pt),
     orientation(q)
-  {}
+{
+  }
 
-  // data members
+// data members
   UTMPoint position;
   geometry_msgs::msg::Quaternion orientation;
-
-}; // class UTMPose
+};  // class UTMPose
 
 // conversion function prototypes
-void fromMsg(const geographic_msgs::msg::GeoPoint &from, UTMPoint &to,
-        const bool& force_zone=false, const char& band='A', const uint8_t& zone=0 );
-void fromMsg(const geographic_msgs::msg::GeoPose &from, UTMPose &to,
-        const bool& force_zone=false, const char& band='A', const uint8_t& zone=0 );
-geographic_msgs::msg::GeoPoint toMsg(const UTMPoint &from);
-geographic_msgs::msg::GeoPose toMsg(const UTMPose &from);
+void fromMsg(
+  const geographic_msgs::msg::GeoPoint & from, UTMPoint & to,
+  const bool & force_zone = false, const char & band = 'A', const uint8_t & zone = 0);
+void fromMsg(
+  const geographic_msgs::msg::GeoPose & from, UTMPose & to,
+  const bool & force_zone = false, const char & band = 'A', const uint8_t & zone = 0);
+geographic_msgs::msg::GeoPoint toMsg(const UTMPoint & from);
+geographic_msgs::msg::GeoPose toMsg(const UTMPose & from);
 
 /** @return true if no altitude specified. */
-static inline bool is2D(const UTMPoint &pt)
+static inline bool is2D(const UTMPoint & pt)
 {
-  // true if altitude is a NaN
-  return (pt.altitude != pt.altitude);
+// true if altitude is a NaN
+  return  pt.altitude != pt.altitude;
 }
 
 /** @return true if no altitude specified. */
-static inline bool is2D(const UTMPose &pose)
+static inline bool is2D(const UTMPose & pose)
 {
-  // true if position has no altitude
+// true if position has no altitude
   return is2D(pose.position);
 }
 
-bool isValid(const UTMPoint &pt);
-bool isValid(const UTMPose &pose);
+bool isValid(const UTMPoint & pt);
+bool isValid(const UTMPose & pose);
 
 /** Normalize UTM point.
  *
  *  Ensures the point is within its canonical grid zone.
  */
-static inline void normalize(UTMPoint &pt)
+static inline void normalize(UTMPoint & pt)
 {
   geographic_msgs::msg::GeoPoint ll(toMsg(pt));
   normalize(ll);
@@ -210,39 +217,38 @@ static inline void normalize(UTMPoint &pt)
 }
 
 /** Output stream operator for UTM point. */
-static inline std::ostream& operator<<(std::ostream& out, const UTMPoint &pt)
+static inline std::ostream & operator << (std::ostream & out, const UTMPoint & pt)
 {
   out << "(" << std::setprecision(10) << pt.easting << ", "
-      << pt.northing << ", " << std::setprecision(6) << pt.altitude
-      << " [" << (unsigned) pt.zone << pt.band << "])";
+  << pt.northing << ", " << std::setprecision(6) << pt.altitude
+  << " [" << (unsigned) pt.zone << pt.band << "])";
   return out;
 }
 
 /** Output stream operator for UTM pose. */
-static inline std::ostream& operator<<(std::ostream& out, const UTMPose &pose)
+static inline std::ostream & operator << (std::ostream & out, const UTMPose & pose)
 {
   out << pose.position << ", (["
-      << pose.orientation.x << ", "
-      << pose.orientation.y << ", "
-      << pose.orientation.z << "], "
-      << pose.orientation.w << ")";
+  << pose.orientation.x << ", "
+  << pose.orientation.y << ", "
+  << pose.orientation.z << "], "
+  << pose.orientation.w << ")";
   return out;
 }
 
 /** @return true if two points have the same Grid Zone Designator */
-static inline bool sameGridZone(const UTMPoint &pt1, const UTMPoint &pt2)
+static inline bool sameGridZone(const UTMPoint & pt1, const UTMPoint & pt2)
 {
-  return ((pt1.zone == pt2.zone) && (pt1.band == pt2.band));
+  return  (pt1.zone == pt2.zone) && (pt1.band == pt2.band);
 }
 
 /** @return true if two poses have the same Grid Zone Designator */
-static inline bool sameGridZone(const UTMPose &pose1, const UTMPose &pose2)
+static inline bool sameGridZone(const UTMPose & pose1, const UTMPose & pose2)
 {
   return sameGridZone(pose1.position, pose2.position);
 }
-
 /** @return a geometry Point corresponding to a UTM point. */
-static inline geometry_msgs::msg::Point toGeometry(const UTMPoint &from)
+static inline geometry_msgs::msg::Point toGeometry(const UTMPoint & from)
 {
   geometry_msgs::msg::Point to;
   to.x = from.easting;
@@ -252,7 +258,7 @@ static inline geometry_msgs::msg::Point toGeometry(const UTMPoint &from)
 }
 
 /** @return a geometry Pose corresponding to a UTM pose. */
-static inline geometry_msgs::msg::Pose toGeometry(const UTMPose &from)
+static inline geometry_msgs::msg::Pose toGeometry(const UTMPose & from)
 {
   geometry_msgs::msg::Pose to;
   to.position = toGeometry(from.position);
@@ -262,4 +268,4 @@ static inline geometry_msgs::msg::Pose toGeometry(const UTMPose &from)
 
 }  // namespace geodesy
 
-#endif // _UTM_H_
+#endif  // GEODESY__UTM_H_

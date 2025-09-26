@@ -31,7 +31,10 @@ set(dependencies
 ament_python_install_package(${PROJECT_NAME} PACKAGE_DIR src/${PROJECT_NAME})
 
 # build C++ coordinate conversion library
-add_library(geoconv STATIC src/conv/utm_conversions.cpp)
+add_library(geoconv STATIC
+  src/conv/utm_conversions.cpp
+  src/conv/ecef_conversions.cpp)
+  
 target_link_libraries(geoconv PUBLIC
   ${geographic_msgs_TARGETS}
   ${geometry_msgs_TARGETS}
@@ -41,6 +44,32 @@ target_link_libraries(geoconv PUBLIC
   geographic_msgs::validation
   sensor_msgs::sensor_msgs_library
 )
+
+if(BUILD_TESTING)
+  find_package(ament_cmake_gtest REQUIRED)
+
+  ament_add_gtest(${PROJECT_NAME}_ecef_test tests/test_ecef.cpp)
+  target_include_directories(${PROJECT_NAME}_ecef_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+  target_link_libraries(${PROJECT_NAME}_ecef_test geoconv)
+
+  ament_add_gtest(${PROJECT_NAME}_geodesics_test tests/test_geodesics.cpp)
+  target_include_directories(${PROJECT_NAME}_geodesics_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+  target_link_libraries(${PROJECT_NAME}_geodesics_test geoconv)
+
+  ament_add_gtest(${PROJECT_NAME}_utm_test tests/test_utm.cpp)
+  target_include_directories(${PROJECT_NAME}_utm_test PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+  )
+  target_link_libraries(${PROJECT_NAME}_utm_test geoconv)
+
+endif()
 
 install(DIRECTORY include/${PROJECT_NAME}/
         DESTINATION include/${PROJECT_NAME}/)
