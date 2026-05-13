@@ -1,5 +1,65 @@
-Change history
-==============
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Changelog for package geodesy
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Forthcoming
+-----------
+* Add ECEF support as well as WGS84 geodesics calculations. (`#60 <https://github.com/ros-geographic-info/geographic_info/issues/60>`_)
+  * Add ECEF support as well as WGS84 geodesics calculations.
+  * Add documentation, tests and uncrustify
+  * Fix ament_cpplint issues
+* Fix targets (`#59 <https://github.com/ros-geographic-info/geographic_info/issues/59>`_)
+* [kilted] Update deprecated call to ament_target_dependencies (`#58 <https://github.com/ros-geographic-info/geographic_info/issues/58>`_)
+* Contributors: David V. Lu!!, Roland Arsenault
+
+1.0.6 (2024-04-04)
+------------------
+* bump to 1.0.6 for release
+* Contributors: Steve Macenski
+
+1.0.5 (2023-04-27)
+------------------
+* Bump to 1.0.5 (`#55 <https://github.com/ros-geographic-info/geographic_info/issues/55>`_)
+  Co-authored-by: Ryan Friedman <ryan.friedman.con@avinc.com>
+* Contributors: Ryan
+
+1.0.4 (2020-06-01)
+------------------
+* bump to 1.0.4 (`#47 <https://github.com/ros-geographic-info/geographic_info/issues/47>`_)
+* Update python3 pyproj (`#46 <https://github.com/ros-geographic-info/geographic_info/issues/46>`_)
+* Contributors: Steve Macenski
+
+1.0.3 (2020-05-29 14:18)
+------------------------
+* bump 1.0.3
+* Update python-catkin-pkg to python3-catkin-pkg (`#45 <https://github.com/ros-geographic-info/geographic_info/issues/45>`_)
+* Contributors: Steve Macenski, stevemacenski
+
+1.0.2 (2020-05-29 14:09)
+------------------------
+* bump to 1.0.2 for foxy release (`#44 <https://github.com/ros-geographic-info/geographic_info/issues/44>`_)
+* Added an option to force zones on conversionfrom WGS84 to utm. This will allow for smoother transitions across zonal boundaries (`#43 <https://github.com/ros-geographic-info/geographic_info/issues/43>`_)
+  Co-authored-by: Peter Milani <peter@emesent.io>
+* Python3 fixes (`#35 <https://github.com/ros-geographic-info/geographic_info/issues/35>`_)
+  * Python3 fixes
+  * fixed tests
+* Add compile flags from 23 (`#33 <https://github.com/ros-geographic-info/geographic_info/issues/33>`_)
+  * add standard ROS 2 flags
+  * remove extra semi-colon to suppress pedantic warning
+* Contributors: Andreas Klintberg, Mikael Arguedas, Peter, Steve Macenski
+
+1.0.1 (2019-09-20 16:36)
+------------------------
+* separately bumping 1.0.1 release (`#31 <https://github.com/ros-geographic-info/geographic_info/issues/31>`_)
+* Remove rosunit from testing in geodesy & remove experimental API claim on ROS2 branch (`#30 <https://github.com/ros-geographic-info/geographic_info/issues/30>`_)
+  * remove experimental warning, its been pretty stable for a long time
+  * removing rosunit from package.xml
+* Contributors: Steven Macenski
+
+1.0.0 (2019-09-20 16:13)
+------------------------
+* ROS2 port of geographic_msgs and geographic_info for robot_localization
+* Contributors: Steven Macenski
 
 0.5.3 (2018-03-27)
 ------------------
