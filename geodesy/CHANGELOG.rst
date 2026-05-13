@@ -2,8 +2,8 @@
 Changelog for package geodesy
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+1.0.7 (2026-05-13)
+------------------
 * Add ECEF support as well as WGS84 geodesics calculations. (`#60 <https://github.com/ros-geographic-info/geographic_info/issues/60>`_)
   * Add ECEF support as well as WGS84 geodesics calculations.
   * Add documentation, tests and uncrustify
