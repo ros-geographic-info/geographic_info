@@ -35,6 +35,7 @@
 #ifndef GEODESY__ECEF_H_
 #define GEODESY__ECEF_H_
 
+#include <iomanip>
 #include <limits>
 
 #include "geodesy/wgs84.h"
