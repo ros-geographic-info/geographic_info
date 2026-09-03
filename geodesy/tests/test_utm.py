@@ -51,7 +51,36 @@ class TestUTMPoint(unittest.TestCase):
         self.assertAlmostEqual(point_xy.x, 622159.338, places = 3)
         self.assertAlmostEqual(point_xy.y, 3362168.303, places = 3)
         self.assertAlmostEqual(point_xy.z, 0.0, places = 3)
- 
+
+    def test_geopoint_from_utm(self):
+        lat = 30.385315
+        lon = -97.728524
+        alt = float('nan')
+        pt = fromLatLong(lat, lon)
+        self.assertEqual(str(pt), 'UTM: [622159.338, 3362168.303, nan, 14R]',
+                         msg='conversion failed: ' + str(pt))
+        self.assertTrue(pt.valid(), msg='invalid UTMPoint: ' + str(pt))
+        self.assertTrue(pt.is2D(), msg='this UTMPoint should be 2D: ' + str(pt))
+        self.assertEqual(pt.gridZone(), (14, 'R'))
+        self.assertEqual(str(pt.toMsg()), str(GeoPoint(lat, lon, alt)),
+                         msg='GeoPoint conversion failed for: ' + str(pt))
+        point_xy = pt.toPoint()
+        self.assertAlmostEqual(point_xy.x, 622159.338, places = 3)
+        self.assertAlmostEqual(point_xy.y, 3362168.303, places = 3)
+        self.assertAlmostEqual(point_xy.z, 0.0, places = 3)
+
+
+        # Now for southern hemisphere
+        latS = -27.52279105401131
+        lonS = 152.8222634237585
+
+        ptS = fromLatLong(latS, lonS)
+        self.assertEqual(ptS.gridZone(), (56, 'J'))
+        self.assertEqual(str(ptS.toMsg()), str(GeoPoint(latS, lonS)),
+                         msg='GeoPoint conversion failed for: ' + str(pt))
+
+
+
 if __name__ == '__main__':
     import rosunit
     PKG='geodesy'
